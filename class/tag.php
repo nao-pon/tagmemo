@@ -252,15 +252,18 @@ class TagmemoTagHandler extends XoopsTableObjectHandler
     */
 		
 	function getTagArrayForCloud(){
-		$wk_tags = $this->getTags(0,'tag ASC');
+		$wk_tags = $this->getTags(0,'f_count DESC');
 
 		$count = $this->getCount();
 
 		$most_popular_count = ceil($count/25);
-		$very_popular_count = ceil($count/10);
-		$popular_count      = ceil($count/5);
+		$very_popular_count = $most_popular_count + ceil($count/10);
+		$popular_count      = $very_popular_count + ceil($count/5);
+		
 		$fresh_count        = ceil($count/25);
-
+		
+		echo 'c:'.$popular_count.':'.$very_popular_count.':'.$most_popular_count;
+		
 		$wk_tags_fresh = $this->getTags(0, 'timestamp DESC', 1, $fresh_count);
 		$wk_tag_fresh = array_shift($wk_tags_fresh);
 		$wk_fresh_timestamp = intval($wk_tag_fresh["timestamp"]);
@@ -278,18 +281,15 @@ class TagmemoTagHandler extends XoopsTableObjectHandler
 			
 			// popular
 			switch(TRUE){
-				case ($current_count > $popular_count):
-					$wk_arr_tagdata["popular"] = 'populartags';
-				break;
-				
-				case ($current_count > $very_popular_count):
+				case ($current_count < $most_popular_count):
+					$wk_arr_tagdata["popular"] = 'mostpopulartags';
+				break;		
+				case ($current_count < $very_popular_count):
 					$wk_arr_tagdata["popular"] = 'verypopulartags';
 				break;
-				
-				case ($current_count > $most_popular_count):
-					$wk_arr_tagdata["popular"] = 'mostpopulartags';
+				case ($current_count < $popular_count):
+					$wk_arr_tagdata["popular"] = 'populartags';
 				break;
-				
 				default:
 					$wk_arr_tagdata["popular"] = 'nomaltags';
 				break;
@@ -302,13 +302,17 @@ class TagmemoTagHandler extends XoopsTableObjectHandler
 			}
 
 			$ret[] = $wk_arr_tagdata;
+			
 			unset($wk_arr_tagdata);
 		}
+		usort($ret, "cmp");
 		return $ret;
 		
 	}
-
-
-
 }
+
+function cmp($a, $b){
+   return strcmp($a["tag"], $b["tag"]);
+}
+
 ?>
