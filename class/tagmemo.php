@@ -84,7 +84,7 @@ class TagmemoTagmemoHandler extends XoopsObjectHandler{
 		$arr_tags =& $this->_tag2array($arg_tags);
 		$this->_rel_handler->removeRelation($wk_memo_id);
 		foreach($arr_tags as $wk_tag){
-		 $wk_tag_id=$this->getTagId($wk_tag);
+		 $wk_tag_id=$this->getTagId($wk_tag,true);
 		 $this->setRelation($wk_memo_id, $wk_tag_id);
 		}
 		return $wk_memo_id;
@@ -105,9 +105,12 @@ class TagmemoTagmemoHandler extends XoopsObjectHandler{
 * @return bool
 */
 	/* $tag_varの存在確認 */
-	function isExistTag($tag_var){
-		$this->_getTag2Cache();
-		$ret =& in_array($tag_var, $this->_tags);
+	function isExistTag(&$tag_var){
+
+		$wk_tag_id = $this->getTagId($tag_var);
+		$ret = ($wk_tag_id > 0) ? 1 : 0; 
+//		$this->_getTag2Cache();
+//		$ret =& in_array($tag_var, $this->_tags);
 		//$ret =& in_array($this->_tags); hey!hey!	
 		return $ret;
 	}
@@ -119,22 +122,14 @@ class TagmemoTagmemoHandler extends XoopsObjectHandler{
 * @param bool
 * @return integer tagmemo_id
 */
- 	function getTagId($tag_var, $force = false){
-		$this->_getTag2Cache();
-		//ここから下おかしいかも
-		$wk_criteria = new Criteria("tag",$tag_var);
-		$wk_tags = $this->_tag_handler->getObjects($wk_criteria);
-		if(count($wk_tags) > 0){
-			$ret = $wk_tags[0]->getVar("tag_id");
-		//ここまで　＞おかしいかも
-		}else{
-			$this->_ready(true, false, false);
+ 	function getTagId(&$tag_var, $force = false){
+ 		$ret = $this->_tag_handler->getTagId($tag_var);
+ 		if($ret < 1 and $force){
 			$wk_obj_tag =& $this->_tag_handler->create(true);
 			$wk_obj_tag->setVar("tag",$tag_var);
 			$this->_tag_handler->insert($wk_obj_tag, $force);
-		$wk_obj_tag->isnew();
-			$ret = $wk_obj_tag->getVar("tag_id");
-		}
+ 			$ret = $wk_obj_tag->getVar("tag_id");
+	 		}
 		return $ret;
 	} 
 
@@ -262,7 +257,8 @@ $this->_set_condition_memo($memo_id);
 */
 	function &getAllTagsEx(){
 		$ret = array();
-		$ret = $this->_tag_handler->getAllTagsEx();
+		$ret = $this->_tag_handler->getTagArrayForCloud();
+//		$ret = $this->_tag_handler->getAllTagsEx();
 		return $ret;
 	}
 
@@ -338,7 +334,14 @@ function getRelatedTags(){
 */
 	function search($keyword){
 		/**  @todo impliment cirteria */
-		$this->_keyword = $this->_kwd2array($keyword);
+		$wk_array_kwd = $this->_kwd2array($keyword);
+		$this->_keyword = $wk_array_kwd ;
+		foreach($wk_array_kwd as $wk_kwd){
+			$wk_tag_id =$this->getTagId($wk_kwd);
+			if ($wk_tag_id > 0){
+				$this->_set_condition_tag($wk_tag_id);
+			}
+		}
 		$this->_flg_chenge_condition_memo = true;
 	}
 
@@ -638,7 +641,7 @@ function getRelatedTags(){
 	*@return void
 	*/
 	function _set_condition_tag($tag_ids){
-	$wk_array = array();
+	$wk_array = $this->_condition_tag;
 		if(is_array($tag_ids)){
 			foreach($tag_ids as $wk_tag_id){
 				$wk_id = intval($wk_tag_id);
@@ -651,8 +654,9 @@ function getRelatedTags(){
 			if($wk_id>0){}
 			$wk_array[] = $wk_id;
 		}
+		
 		$this->_flg_chenge_condition_memo = true;
-	$this->_condition_tag = $wk_array;
+	$this->_condition_tag = array_unique($wk_array);
 	}
 	/**
 * @access protected
