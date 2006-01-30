@@ -145,7 +145,10 @@ class TagmemoTagHandler extends XoopsTableObjectHandler
 	*/
 	function getTagId(&$tag_var){
 		$ret = 0;
-		return $ret;
+		$sql = "SELECT tag_id FROM %s WHERE tag = '%s'";
+		$result =& $this->query($sql);
+		list($ret) = $this->db->fetchRow($result);
+        return $ret;		
 	}
     /**
     * タグを付加情報とともに取得
