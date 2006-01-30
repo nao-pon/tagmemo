@@ -1,0 +1,31 @@
+<div id="tagmemo_tag_block">
+<div class="search_box">
+<form  action="<{$xoops_url}>/modules/tagmemo/index.php" method="get">
+<input type="text" name="query" size="14" />
+		<input type="submit" value="<{$smarty.const._MD_TAGMEMO_SEARCH}>"/><br />
+<{if $block.query}>		
+		<input type="radio" name="from" value="all">全体
+		<input type="radio" name="from" value="sub" checked>この中から<br />
+		<input type="hidden" name="tag_id" value="<{$block.tag_condition.simple}>"/>
+<{/if}>
+</form>
+</div></div>
+<div id="tagmemo_tag_block">
+<{if $block.query}>
+<{$block.query_condition}><br />
+<{foreach item=tag_detail from=$block.tag_condition.detail}>
+<a href="<{$xoops_url}>/modules/tagmemo/index.php?tag_id=<{$tag_detail.url}>&query=<{$query_condition_url}>"><img src="<{$xoops_url}>/modules/tagmemo/images/sub.gif"></a>
+<a href="<{$xoops_url}>/modules/tagmemo/index.php?tag_id=<{$tag_detail.id}>" style="font-size:150%;"><{$tag_detail.string}></a>
+<br />
+<{/foreach}>
+<{/if}>
+</div>
+<{foreach item=reltag from=$block.reltags}>
+<div id="tagmemo_tag_block">
+<{if $block.query}>
+<a href="<{$xoops_url}>/modules/tagmemo/index.php?tag_id=<{$block.tag_condition.url}><{$reltag.tag_id}>&query=<{$block.query_condition_url}>"><img src="<{$xoops_url}>/modules/tagmemo/images/add.gif"></a>
+<{/if}>
+<a href="<{$xoops_url}>/modules/tagmemo/index.php?tag_id=<{$reltag.tag_id}>"><{$reltag.tag}></a>
+<br />
+</div>
+<{/foreach}>

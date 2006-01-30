@@ -1,0 +1,64 @@
+<link rel="stylesheet" type="text/css" media="screen" href="./include/tagmemo.css" />
+<div id="tagmemo_content">
+
+
+	<div class="mainlink_box">
+		<a href="./index.php" class="mainlink">
+			<img src="./images/page_text.gif"></a>
+		<a href="./edit.php" class="mainlink">
+			<img src="./images/page_edit.gif"></a>
+		<a href="./tagcloud.php"  class="mainlink">
+			<img src="./images/tagscloud.gif"></a>
+	</div>
+
+
+
+<div class="navi_box">
+<{if $query}>
+<p class="navi_box_first"><{$query_condition}></p>
+<p class="navi_box_first">
+<{foreach item=tag_detail from=$tag_condition.detail}>
+<a href="index.php?tag_id=<{$tag_detail.id}>"><{$tag_detail.string}></a>
+<a href="index.php?tag_id=<{$tag_detail.url}>&query=<{$query_condition_url}>"><img src="./images/sub.gif"></a>
+<{/foreach}>
+</p>
+<{else}>
+<{/if}>
+</div>
+
+
+<div class="tagmemo_list">
+
+		<{foreach item=memo from=$memos}>
+		<div id="tagmemo_list_box">	
+
+			<span class="tagmemo_list_title">
+				<a href="detail.php?tagmemo_id=<{$memo.tagmemo_id}>">
+				<{$memo.title}></a>
+				<{if $memo.owner == 1}>
+				<span class="edit">
+				<a href="edit.php?tagmemo_id=<{$memo.tagmemo_id}>"><img src="./images/pencil.gif"></a>
+				</span>
+				<{/if}>
+			</span>
+		
+			<div class="list_date">
+				<{$memo.timestamp|date_format:"%Y/%m/%d/%H:%M"}>
+			</div>
+			<div class="list_tag">
+				<{foreach item=tag key="tag_id" from=$memo.tags}>
+					[<a href="index.php?tag_id=<{$tag_id}>"><{$tag}></a>]  
+				<{/foreach}>
+			</div>
+		</div>
+
+	<{/foreach}>	
+	</div>
+	<div align="center">
+<{$pagenav}>
+</div>
+	<div id="bookmarklet">
+		Bookmarklet!<br/>
+		<a href="<{$bookmarklet}>"><{$xoops_sitename}> たぐめも</a>
+	</div>
+</div>

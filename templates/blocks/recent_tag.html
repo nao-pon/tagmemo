@@ -1,0 +1,5 @@
+	<{foreach item=recentTag from=$block}>
+	<div id="tagmemo_tag_block">
+		<span><a href="<{$xoops_url}>/modules/tagmemo/index.php?tag_id=<{$recentTag.tag_id}>"><{$recentTag.tag}></a></span>
+	</div>
+	<{/foreach}>

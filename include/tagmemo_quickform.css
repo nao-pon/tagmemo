@@ -1,0 +1,66 @@
+/* thanks in advance, comodita */
+
+#tagmemo_quickform_shutter {
+background: #333;
+position: fixed;
+top: 0;
+left: 0;
+height: 100%;
+width: 100%;
+opacity: .8;
+z-index: 1000;
+}
+
+
+#tagmemo_quickform_container{
+font-family:Verdana, Arial, sans-serif;
+width: 400px;
+height: 350px;
+top: 30px;
+left: 50%;
+
+position: fixed!important;
+position: absolute;
+
+background: transparent;
+background-image: url('memo.png');
+color: #cccccc;
+font-size:13px;
+font-weight: bold;
+line-height: 150%;
+text-align: right;
+margin-left: -180px;
+z-index: 1001;
+}
+
+textarea{
+font-family:Verdana, Arial, sans-serif;
+width: 340px;
+height:200px;
+color: #333333;
+font-size:small;
+text-align: left;
+margin-top: 50px;
+margin-right: 33px;
+margin-bottom: 15px;
+border: 1px inset #cccccc;
+}
+
+input{
+margin-right: 33px;
+}
+
+#tagmemo_quickform_tags{
+font-family:Verdana, Arial, sans-serif;
+width:290px;
+height:15px;
+background-color: #ffffff;
+color: #333333;
+font-size:small;
+font-weight: 100;
+text-align: left;
+margin: 0px;
+margin-right: 33px;
+margin-bottom: 15px;
+border: 1px inset #cccccc;
+}

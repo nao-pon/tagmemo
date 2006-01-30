@@ -1,0 +1,67 @@
+<script src="./include/prototype140.js" type="text/javascript"></script>
+<script src="./include/tagmemo.js" type="text/javascript"></script>
+<link rel="stylesheet" type="text/css" media="screen" href="./include/tagmemo.css" />
+<div id="tagmemo_content">
+<script type="text/javascript">
+<!--
+/* twodash 作 */
+function delete_memo(){
+    if(confirm('<{$smarty.const._MD_TAGMEMO_MESSAGE_DELETE_CONFIRM}>')){
+        document.forms["tagmemo_form"].action = "delete.php";
+        document.forms["tagmemo_form"].submit();
+    }
+}
+function delete_tag(arg){
+    var wk_item ;
+    wk_item = arg.parentNode;
+    wk_item.removeChild(arg);
+}
+/* twodash 作 ここまで*/
+
+var tagmemo = null;
+window.onload = function(){
+	tagmemo = new Tagmemo('<{$xoops_url}>');
+//	setTimeout('tagmemo.autosave()',5000); 	
+}
+
+//-->
+</script>
+<div class="navi_box">
+	<div class="mainlink_box">
+		<a href="./index.php" class="mainlink">
+			<img src="./images/page_text.gif"></a>
+		<a href="./edit.php" class="mainlink">
+			<img src="./images/page_edit.gif"></a>
+		<a href="./tagcloud.php"  class="mainlink">
+			<img src="./images/tagscloud.gif"></a>
+	</div>
+</div>
+
+<div id="tagmemo_container">
+		<form name="tagmemo_form" id="tagmemo_form" method='post' action="post.php">
+			<input type="hidden" name="tagmemo_id" value="<{$memo.tagmemo_id}>" />
+			<textarea cols="43" name="tagmemo_memo" id="tagmemo_memo" class="edit_text" ><{$memo.content}></textarea>
+			<div id='tagmemo_tags'>
+				<div id="tagmemo_tag_list">tags : 
+
+				<{foreach item=tag key="tag_id" from=$memo.tags}>
+					<span id='s_tag_id_<{$tag_id}>'><{$tag}></span>
+				<{/foreach}>
+				<input type="hidden" name="tagmemo_tag_hidden" id="tagmemo_tag_hidden" value="">
+
+				</div>
+				<input type="text" size="25" id="tagmemo_tag_input" name="tagmemo_tag_input" autocomplete='off' class="form_text">
+				<img src="./images/arrow_turn.gif">
+				<{$xoopsGTicket_html}>
+			</div>
+			<div id="tagmemo_buttons">
+				<input type="submit" name="tagmemo_done"    class="button" value="<{$smarty.const._MD_TAGMEMO_DONE}>" >
+				<input type="button" name="tagmemo_delete"  onclick="delete_memo()" class="button" value="<{$smarty.const._MD_TAGMEMO_DELETE}>">
+				<input type="button" name="tagmemo_save"    class="button" value="<{$smarty.const._MD_TAGMEMO_SAVE}>" >				
+			</div>  			
+		</form>		
+</div>	
+
+
+
+</div>

@@ -1,0 +1,10 @@
+var TextScreen = Class.create();
+TextScreen.prototype = {
+	srcObject,
+	initialize:function(){
+	},
+	dump:function(src){
+	},
+	clear:function(){
+	}
+}
