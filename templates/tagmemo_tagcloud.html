@@ -1,4 +1,8 @@
+
+<!--
 <link rel="stylesheet" type="text/css" media="screen" href="./include/tagmemo.css" />
+-->
+
 <div id="tagmemo_content">
 
 <div class="navi_box">
@@ -13,29 +17,10 @@
 </div>
 
 <div id="tagmemo_container">
-<{*
-	<div class="tagmemo_tag_h-box">
-	<p class="tag_box_title"><{$smarty.const._MD_TAGMEMO_TAGS_N}></p>
-	<{foreach item=recentTag from=$recentTags}>
-	<div class="tagmemo_tag">
-		<span><a href="index.php?tag_id=<{$recentTag.tag_id}>"><{$recentTag.tag}></a><small>(<{$recentTag.date|date_format:"%Y/%m/%d"}>)</small></span>
-	</div>
-	<{/foreach}>
-</div>
 
-
-	<div class="tagmemo_tag_h-box">
-	<p class="tag_box_title"><{$smarty.const._MD_TAGMEMO_TAGS_P}></p>
-	<{foreach item=poptag from=$populartags}>
-	<div class="tagmemo_tag">
-		<span><a href="index.php?tag_id=<{$poptag.tag_id}>"><{$poptag.tag}></a>(<{$poptag.count}>)</span>
-	</div>
-	<{/foreach}>
-</div><br clear="all" />
-Á´¥¿¥°*}>
-<div class="alltagex">
-	<{foreach item=tag from=$alltags_ex}>
-		<a href="index.php?tag_id=<{$tag.tag_id}>"><span class="<{$tag.populer}>"><span class="<{$tag.latest}>"><{$tag.tag}><span><span></a>
+<div class="tag_cloud">
+	<{foreach item=tag from=$cloud}>
+		<a href="index.php?tag_id=<{$tag.tag_id}>"><span class="<{$tag.popular}>"><span class="<{$tag.fresh}>"><{$tag.tag}><span><span></a>
 	<{/foreach}>
 </div>
 </div>

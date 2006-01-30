@@ -229,5 +229,83 @@ class TagmemoTagHandler extends XoopsTableObjectHandler
 				}
 			return $ret;
 		}
+		
+
+    /**
+    * get count of all tags
+    *@return int count of all tags
+    */
+	
+	function getCount(){
+		$sql = "select count(*) from ".$this->db->prefix('tagmemo_rel');		
+		$result =& $this->query($sql);
+		list($count) = $this->db->fetchRow($result);
+		return $count;		
+	}
+		
+    /**
+    * get array for tag cloud.
+    *@return array array for tag cloud, containing tags with css 'class' selector.
+    */
+		
+	function getTagArrayForCloud(){
+		$wk_tags = $this->getTags(0,'tag ASC');
+
+		$count = $this->getCount();
+
+		$most_popular_count = ceil($count/25);
+		$very_popular_count = ceil($count/10);
+		$popular_count      = ceil($count/5);
+		$fresh_count        = ceil($count/25);
+
+		$wk_tags_fresh = $this->getTags(0, 'timestamp DESC', 1, $fresh_count);
+		$wk_tag_fresh = array_shift($wk_tags_fresh);
+		$wk_fresh_timestamp = intval($wk_tag_fresh["timestamp"]);
+
+		$ret = array();
+		$current_count = 0;
+		
+		foreach($wk_tags as $wk_tag){
+			
+			$wk_arr_tagdata = array(); 
+			$current_count += intval($wk_tag["count"]);
+			
+			$wk_arr_tagdata["tag"] = $wk_tag["tag"];
+			$wk_arr_tagdata["tag_id"] = $wk_tag["tag_id"];
+			
+			// popular
+			switch(TRUE){
+				case ($current_count > $popular_count):
+					$wk_arr_tagdata["popular"] = 'populartags';
+				break;
+				
+				case ($current_count > $very_popular_count):
+					$wk_arr_tagdata["popular"] = 'verypopulartags';
+				break;
+				
+				case ($current_count > $most_popular_count):
+					$wk_arr_tagdata["popular"] = 'mostpopulartags';
+				break;
+				
+				default:
+					$wk_arr_tagdata["popular"] = 'nomaltags';
+				break;
+			}
+			//fresh
+			if(intval($wk_tag["timestamp"]) >= $wk_fresh_timestamp){
+				$wk_arr_tagdata["fresh"] = 'fleshtags';
+			} else {
+				$wk_arr_tagdata["fresh"] = 'oldtags';
+			}
+
+			$ret[] = $wk_arr_tagdata;
+			unset($wk_arr_tagdata);
+		}
+		return $ret;
+		
+	}
+
+
+
 }
 ?>
