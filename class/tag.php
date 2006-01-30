@@ -145,7 +145,7 @@ class TagmemoTagHandler extends XoopsTableObjectHandler
 	*/
 	function getTagId(&$tag_var){
 		$ret = 0;
-		$sql = "SELECT tag_id FROM %s WHERE tag = '%s'";
+		$sql = sprintf("SELECT tag_id FROM %s WHERE tag = '%s'", $this->db->prefix('tagmemo_tag'),$tag_var);
 		$result =& $this->query($sql);
 		list($ret) = $this->db->fetchRow($result);
         return $ret;		
