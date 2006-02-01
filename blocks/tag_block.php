@@ -8,6 +8,10 @@
 *@return array
 */
 function b_tagmemo_poulartag(){
+	global $tagmemo_block_popular_hide;
+	if($tagmemo_block_popular_hide == true){
+		return false;
+	}
 	$tagmemo_tag_handeler =& xoops_getmodulehandler("tag", 'tagmemo');
 	$ret = $tagmemo_tag_handeler->getPopularTag();
 	return $ret;
@@ -18,6 +22,10 @@ function b_tagmemo_poulartag(){
 *@return array
 */
 function b_tagmemo_recenttag(){
+	global $tagmemo_block_recent_hide;
+	if($tagmemo_block_recent_hide == true){
+		return false;
+	}
 	$tagmemo_tag_handeler =& xoops_getmodulehandler("tag", 'tagmemo');
 	$ret = $tagmemo_tag_handeler->getResentTag();
 	return $ret;
