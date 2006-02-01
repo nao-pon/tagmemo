@@ -312,7 +312,7 @@ class TagmemoTagHandler extends XoopsTableObjectHandler
 }
 
 function cmp($a, $b){
-   return strcmp($a["tag"], $b["tag"]);
+   return strcasecmp($a["tag"], $b["tag"]);
 }
 
 ?>
