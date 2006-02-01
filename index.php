@@ -3,9 +3,9 @@
 * @package Page
 */
 
-// É¬Í×¤Ê¥Õ¥¡¥¤¥ë¤ò°ìµ¤¤Ë¼è¤ê¹þ¤à¤ª¤Þ¤¸¤Ê¤¤¡£
+// É¬Í×¤Ê¥Õ¥¡¥¤¥?¤ò°?µ¤¤Ë¼è¤?¹?¤à¤ª¤Þ¤¸¤Ê¤¤¡£
 /**
-* XOOPSÍÑ¥Õ¥¡¥¤¥ë¤Î¼è¤ê¹þ¤ß
+* XOOPSÍÑ¥Õ¥¡¥¤¥?¤Î¼è¤?¹?¤ß
 */
 require_once '../../mainfile.php';
 $myts =& MyTextSanitizer::getInstance();
@@ -48,7 +48,7 @@ $xoopsOption['template_main'] = 'tagmemo_list.html';
 // echo 'my uid =' . $xoopsUser->getVar("uid");
 // ¥Ø¥Ã¥À¤ò½ñ¤¯¤ª¤Þ¤¸¤Ê¤¤¡£
 /**
-* XOOPS¤Î¥Æ¥ó¥×¥ì¡¼¥È¤Î¥Ø¥Ã¥À¡¼
+* XOOPS¤Î¥Æ¥ó¥×¥?¡¼¥È¤Î¥Ø¥Ã¥À¡¼
 */
 include XOOPS_ROOT_PATH.'/header.php';
 $xoopsTpl->assign("memos", $memo_array);
@@ -62,7 +62,7 @@ if(strlen($condition)>0){
 
 	$xoopsTpl->assign("query",false);
 $maxcount = $tagmemo_handler->getMemoCount();
-echo $maxcount;
+//echo $maxcount;
 include_once XOOPS_ROOT_PATH.'/class/pagenav.php';
 $nav = new XoopsPageNav($maxcount, $count, $start);
 	$xoopsTpl->assign('pagenav', $nav->renderNav());
@@ -71,7 +71,7 @@ $nav = new XoopsPageNav($maxcount, $count, $start);
 $xoopsTpl->assign('bookmarklet','javascript: tagmemo_quickform_script = document.createElement(\'script\'); tagmemo_quickform_script.src = \''.XOOPS_URL.'/modules/tagmemo/quickform.php\'; tagmemo_quickform_script.type = \'text/javascript\'; void(document.body.appendChild(tagmemo_quickform_script));');
 
 /**
-* XOOPS¤Î¥Æ¥ó¥×¥ì¡¼¥È¤Î¥Õ¥Ã¥¿¡¼
+* XOOPS¤Î¥Æ¥ó¥×¥?¡¼¥È¤Î¥Õ¥Ã¥¿¡¼
 */
 include(XOOPS_ROOT_PATH.'/footer.php');
 ?>

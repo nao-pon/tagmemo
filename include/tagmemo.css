@@ -298,7 +298,23 @@ span.latest{
 	font-weight:bold;
 }
 
+/* style by yosha_01 (for testing purpose) */
 
+span.freshtags{
+		color: #0000ff;
+}
 
+span.mostpopulartags{
+		font-size:250%;
+		font-weight:bold;		
+}
 
+span.verypopulartags{
+		font-size:170%;
+		font-weight:bold;		
+}
+
+span.populartags{
+		font-size:130%;	
+}
 	

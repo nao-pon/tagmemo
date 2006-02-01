@@ -256,13 +256,13 @@ class TagmemoTagHandler extends XoopsTableObjectHandler
 
 		$count = $this->getCount();
 
-		$most_popular_count = ceil($count/25);
-		$very_popular_count = $most_popular_count + ceil($count/10);
-		$popular_count      = $very_popular_count + ceil($count/5);
-		
+		$most_popular_count = ceil($count/5);
+		$very_popular_count = $most_popular_count + ceil($count/4);
+		$popular_count      = $very_popular_count + ceil($count/3);
+
 		$fresh_count        = ceil($count/25);
 		
-		echo 'c:'.$popular_count.':'.$very_popular_count.':'.$most_popular_count;
+		// echo 'all: '.$count.' p:'.$popular_count.' v:'.$very_popular_count.' m:'.$most_popular_count;
 		
 		$wk_tags_fresh = $this->getTags(0, 'timestamp DESC', 1, $fresh_count);
 		$wk_tag_fresh = array_shift($wk_tags_fresh);
@@ -296,7 +296,7 @@ class TagmemoTagHandler extends XoopsTableObjectHandler
 			}
 			//fresh
 			if(intval($wk_tag["timestamp"]) >= $wk_fresh_timestamp){
-				$wk_arr_tagdata["fresh"] = 'fleshtags';
+				$wk_arr_tagdata["fresh"] = 'freshtags';
 			} else {
 				$wk_arr_tagdata["fresh"] = 'oldtags';
 			}

@@ -1,7 +1,4 @@
-
-<!--
 <link rel="stylesheet" type="text/css" media="screen" href="./include/tagmemo.css" />
--->
 
 <div id="tagmemo_content">
 
@@ -17,10 +14,15 @@
 </div>
 
 <div id="tagmemo_container">
-
-<div class="tag_cloud">
+<div class="tagcloud">
 	<{foreach item=tag from=$cloud}>
-		<a href="index.php?tag_id=<{$tag.tag_id}>"><span class="<{$tag.popular}>"><span class="<{$tag.fresh}>"><{$tag.tag}><span><span></a>
+		<a href="index.php?tag_id=<{$tag.tag_id}>">
+			<span class="<{$tag.popular}>">
+				<span class="<{$tag.fresh}>">
+					<{$tag.tag}>
+				<span>
+			<span>
+		</a>
 	<{/foreach}>
 </div>
 </div>
