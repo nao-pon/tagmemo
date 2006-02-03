@@ -1,11 +1,11 @@
 <div id="tagmemo_tag_block">
 <div class="search_box">
 <form  action="<{$xoops_url}>/modules/tagmemo/index.php" method="get">
-<input type="text" name="query" size="14" />
+<input type="text" name="query" size="14" value="<{$block.query_condition}>"/>
 		<input type="submit" value="<{$smarty.const._MD_TAGMEMO_SEARCH}>"/><br />
 <{if $block.query}>		
-		<input type="radio" name="from" value="all">全体
-		<input type="radio" name="from" value="sub" checked>この中から<br />
+<{*		<input type="radio" name="from" value="all">全体
+		<input type="radio" name="from" value="sub" checked>この中から<br />*}>
 		<input type="hidden" name="tag_id" value="<{$block.tag_condition.simple}>"/>
 <{/if}>
 </form>

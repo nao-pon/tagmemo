@@ -13,18 +13,18 @@ $tag_id = empty($_GET["tag_id"]) ? "" :$_GET["tag_id"];
 $condition = $tag_id;
 $tag_id = explode(",",$tag_id);
 $keyword = empty($_GET["query"]) ? "" :$_GET["query"];
-$keyword = $myts->addSlashes($keyword);
+//$keyword = $myts->addSlashes($keyword);
 $condition .= $keyword;
 $count = (strlen($condition)>0) ? 0 : 10;/* @todo set from configure */
-$search_from = empty($_GET["from"]) ? "sub" :$_GET["from"];
+//$search_from = empty($_GET["from"]) ? "sub" :$_GET["from"];
 $start = empty($_GET["start"]) ? 0 : intval($_GET["start"]);
 $tagmemo_handler =& xoops_getmodulehandler('tagmemo');
 
 if(strlen($keyword)>0){
 	$tagmemo_handler->search($keyword);
-	if($search_from=="all"){
-		$tag_id  =array();
-	}
+//	if($search_from=="all"){
+		$tag_id  = array();
+//	}
 }
 
 if(is_object($xoopsUser)){
@@ -38,8 +38,9 @@ $memo_array =& $tagmemo_handler->getMemosArray($tag_id,$count,$start);
 global $tagmemo_related_tags;
 if(strlen($condition)>0){
 	$tagmemo_query=true;
-	$query_condition = htmlspecialchars($tagmemo_handler->getQueryCondition());
+	$query_condition = $tagmemo_handler->getQueryCondition();
 	$query_condition = stripslashes($query_condition );
+	$query_condition = htmlspecialchars($query_condition );
 	$tag_condition = $tagmemo_handler->getTagCondition();
 }else{
 	$tagmemo_query=false;

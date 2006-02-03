@@ -90,7 +90,7 @@ class TagmemoTagmemoHandler extends XoopsObjectHandler {
 			$this->setRelation($wk_memo_id, $wk_tag_id);
 		}
 		return $wk_memo_id;*/
-		$wk_memo_id = $this->insertMemo(&$arg_memo, $force);
+		$wk_memo_id = $this->insertMemo($arg_memo, $force);
 		$this->insertTags($wk_memo_id,$arg_tags);
 		return $wk_memo_id;
 		
@@ -361,14 +361,18 @@ class TagmemoTagmemoHandler extends XoopsObjectHandler {
 	function search($keyword) {
 		/**  @todo impliment cirteria */
 		$wk_array_kwd = $this->_kwd2array($keyword);
-		$this->_keyword = $wk_array_kwd;
 		foreach ($wk_array_kwd as $wk_kwd) {
 			$wk_tag_id = $this->getTagId($wk_kwd);
-			if ($wk_tag_id > 0) {
+			$wk_kwd_item = array();
+			$wk_kwd_item["tag_id"] = $wk_tag_id;
+			$wk_kwd_item["text"] = $wk_kwd;
+			$this->_keyword[] = $wk_kwd_item;
+/*			if ($wk_tag_id > 0) {
 				$this->_set_condition_tag($wk_tag_id);
-			}
+			}*/
 		}
 		$this->_flg_chenge_condition_memo = true;
+	//	$this->_keyword = $wk_array_kwd;
 	}
 
 	/**
@@ -376,7 +380,12 @@ class TagmemoTagmemoHandler extends XoopsObjectHandler {
 	* @access public
 	*/
 	function getQueryCondition() {
-		return implode($this->_keyword, " ");
+	//	return implode($this->_keyword, " ");
+	$ret = "";
+		foreach($this->_keyword as $wk_kwd_item){
+			$ret .= " " . $wk_kwd_item["text"];
+		}
+		return $ret;
 	}
 	/**
 	* ¥¿¥°¤ÎÃê½Ð¾ò·ï
@@ -522,13 +531,32 @@ class TagmemoTagmemoHandler extends XoopsObjectHandler {
 			// @todo impliment cirteria
 			$wk_having = "";
 			$wk_criteria = new CriteriaCompo;
-			if (count($this->_condition_tag) > 0) {
+			if (count($this->_keyword) > 0) {
+				$wk_kwd_criterias =  new CriteriaCompo;
+				foreach ($this->_keyword as $wk_kwd) {
+					//echo "wk_tag_id= $wk_tag_id<br>";
+					$wk_kwd_criteria = new CriteriaCompo;
+					if(intval($wk_kwd["tag_id"])>0){
+						$wk_kwd_tag_criteria = new Criteria('tag_id', $wk_kwd["tag_id"], '=', 'rel');
+						$wk_kwd_criteria->add($wk_kwd_tag_criteria, 'AND');
+						unset($wk_kwd_tag_criteria);
+					}
+					$wk_kwd_text_criteria = new Criteria('content', '%'.$wk_kwd["text"].'%', 'like');
+					$wk_kwd_criteria->add($wk_kwd_text_criteria, 'OR');
+					unset($wk_kwd_text_criteria);
+					$wk_kwd_criterias->add($wk_kwd_criteria, 'AND');
+					unset ($wk_kwd_criteria);
+					//echo "<br>" . $wk_criteria->render() . "<br>";
+				}
+				$wk_criteria->add($wk_kwd_criterias, 'AND');
+			} elseif (count($this->_condition_tag) > 0) {
+				$wk_tag_criteria =  new CriteriaCompo;
 				$criteria_count = 0;
 				foreach ($this->_condition_tag as $wk_tag_id) {
 					if ($wk_tag_id > 0) {
 						//echo "wk_tag_id= $wk_tag_id<br>";
 						$wk_tagid_criteria = new Criteria('tag_id', $wk_tag_id, '=', 'rel');
-						$wk_criteria->add($wk_tagid_criteria, 'OR');
+						$wk_tag_criteria->add($wk_tagid_criteria, 'OR');
 						unset ($wk_tagid_criteria);
 						//echo "<br>" . $wk_criteria->render() . "<br>";
 						$criteria_count += 1;
@@ -537,15 +565,7 @@ class TagmemoTagmemoHandler extends XoopsObjectHandler {
 				if ($criteria_count > 1) {
 					$wk_having = "count(tag_id) = ".$criteria_count;
 				}
-			}
-			if (count($this->_keyword) > 0) {
-				foreach ($this->_keyword as $wk_kwd) {
-					//echo "wk_tag_id= $wk_tag_id<br>";
-					$wk_kwd_criteria = new Criteria('content', '%'.$wk_kwd.'%', 'like');
-					$wk_criteria->add($wk_kwd_criteria, 'AND');
-					unset ($wk_kwd_criteria);
-					//echo "<br>" . $wk_criteria->render() . "<br>";
-				}
+				$wk_criteria->add($wk_tag_criteria, 'AND');
 			}
 
 			$wk_criteria->setSort('timestamp');
