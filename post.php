@@ -45,11 +45,11 @@ if(is_object($xoopsUser)){
 } else {
 	$uid = 0;
 }
+
+if($memo_id != 0){
 	if ( ! $xoopsGTicket->check() ) {
 		redirect_header(XOOPS_URL.'/',3,$xoopsGTicket->getErrors());
 	}
-
-if($memo_id != 0){
 	$memo_obj =& $tagmemo_handler->getMemoObj($memo_id);
  	if(($memo_obj->getVar('uid') != $uid) & !($xoopsUser->isAdmin($module_id))){
 		redirect_header(XOOPS_URL."/modules/tagmemo/index.php", 3, _NOPERM);

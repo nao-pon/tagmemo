@@ -84,7 +84,7 @@ class TagmemoMemoHandler extends XoopsTableObjectHandler
 	function &getMemo($criteria=null,$having=""){
 		$fieldlist=" main.tagmemo_id, uid, title, content, public, timestamp";
 		if($criteria == null){
-			$criteria = new Criteria('1','1');
+			$criteria = new CriteriaCompo;
 		}
 		$criteria->setGroupby($fieldlist);
 		$joindef = new XoopsJoinCriteria($this->db->prefix('tagmemo_rel'), 'tagmemo_id','tagmemo_id', 'LEFT','main','rel');

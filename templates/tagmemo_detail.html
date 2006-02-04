@@ -15,6 +15,7 @@
 </div>
 
 <div id="tagmemo_container">
+<div>Memo ID <{$memo.tagmemo_id}></div>
 	<div class="ditail_date" >
 		<{$memo.timestamp|date_format:"%Y/%m/%d/%H:%M"}>
 	</div>
@@ -23,7 +24,7 @@
 		<{$memo.content}>
 	</div>
 
-	
+	<div><{$memo_owner}></div>
 	<div class="ditail_tag">
 		<{foreach item=tag key="tag_id" from=$memo.tags}>
 			<a href="index.php?tag_id=<{$tag_id}>">
@@ -32,7 +33,7 @@
 	</div>
 
 	<div id="tagmemo_buttons">
-		<{if $memo.owner == 1 or isAdmin}>
+		<{if $memo.owner == 1 or $xoops_isadmin == 1}>
 		<form method="get" action="edit.php" name="editform">
 			<input type="hidden" name="tagmemo_id" value="<{$memo.tagmemo_id}>">
 			<input type="button" id="" name="edit" class="button" value="<{$smarty.const._MD_TAGMEMO_EDIT}>" onclick="submit()">

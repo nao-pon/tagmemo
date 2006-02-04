@@ -587,7 +587,7 @@ class TagmemoTagmemoHandler extends XoopsObjectHandler {
 	function _getTag2Cache() {
 		if (!($this->_flg_get_tags) or ($this->_flg_chenge_condition_tag)) {
 			if (count($this->_condition_memo) > 0) {
-				$this->_tags = $this->_tag_handler->getTags($this->_condition_memo);
+				$this->_tags = $this->_tag_handler->getTags($this->_condition_memo, "tag asc");
 			}
 			$this->_flg_get_tags = true;
 			$this->_flg_chenge_condition_tag = false;

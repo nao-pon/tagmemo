@@ -32,8 +32,17 @@ $tagmemo_handler->setUid($uid);
 if($memo_id != ""){
 	$memo_id =intval($memo_id );
 	$memo =& $tagmemo_handler->getMemo4Edit($memo_id);
-	if(($memo["uid"] != $uid) & !($xoopsUser->isAdmin($module_id))){
+	if($memo["uid"] != $uid){
 		redirect_header(XOOPS_URL."/modules/tagmemo/index.php", 3, _NOPERM);
+	}else{
+		if($uid == 0){
+			redirect_header(XOOPS_URL."/modules/tagmemo/index.php", 3, _NOPERM);
+		}else{
+			if(!($xoopsUser->isAdmin($module_id))){
+				redirect_header(XOOPS_URL."/modules/tagmemo/index.php", 3, _NOPERM);
+			}
+		}
+	
 	}
 }
 // ヘッダを書くおまじない。
@@ -43,7 +52,9 @@ if($memo_id != ""){
 include (XOOPS_ROOT_PATH.'/header.php');
 	$xoopsTpl->assign("memo", $memo);
 //　画面の下の方のフッタを書くおまじない。
+if($memo_id != ""){
 $xoopsTpl->assign("xoopsGTicket_html", $xoopsGTicket->getTicketHtml( __LINE__ ));
+}
 /**
 * XOOPSのテンプレートのフッター
 */
