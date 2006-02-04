@@ -1,4 +1,3 @@
-/*test*/
 #content{
 /*	background-color: #ffffff;*/
 	margin: 0;
@@ -11,6 +10,7 @@
 #tagmemo_content{
 	font-family: Verdana, Arial, sans-serif;
 	background-color: #ffffff;
+	color: #333333;
 	font-size:small;
 	margin-left: auto;
 	margin-right: auto;
@@ -20,6 +20,7 @@
 #tagmemo_content a{
 	text-decoration: none;
 	border-bottom: 1px dotted #dcdcdc;
+	color: #0000ff;
 	font-weight: 100;
 	}
 	
@@ -276,6 +277,20 @@
 
 }
 
+#tagmemo_tag_block a:link{
+		background-color: #ffffff;
+		color: #0000ff;
+		text-decoration:none;
+		border: none;
+}
+
+#tagmemo_tag_block a:visited{
+		background-color: #ffffff;
+		color: #0000ff;
+		text-decoration:none;
+		border: none;
+}
+
 #tagmemo_tag_block .search_box{
 	font-size: 90%;
 	margin-left: auto;
@@ -283,39 +298,50 @@
 	
 }
 
-/*------cloud------*/
-#tagmemo_container .alltagex{
-	line-height:2em;
-}
-span.normal{
-	font-weight:inherit;
-}
-span.populer{
-	font-size:150%;
+/*------tagcloud------*/
+#tagmemo_container .tagcloud {
+		line-height: 200%;
 }
 
-span.latest{
-	font-size:120%;
-	font-weight:bold;
-}
-
-/* style by yosha_01 (for testing purpose) */
-
-span.freshtags{
+#tagmemo_container .tagcloud a:link{
+		background-color: #ffffff;
 		color: #0000ff;
+		text-decoration:none;
+		border: none;
 }
 
-span.mostpopulartags{
+#tagmemo_container .tagcloud a:visited{
+		background-color: #ffffff;
+		color: #551a8b;
+		text-decoration:none;
+		border: none;
+}
+
+#tagmemo_container .tagcloud a:hover{
+		background-color: #ffffff;
+		text-decoration: underline;
+		border: none;
+}
+span.mostpopulartags {
+		color: #CC0033;
 		font-size:250%;
 		font-weight:bold;		
 }
 
-span.verypopulartags{
+
+span.verypopulartags {
 		font-size:170%;
 		font-weight:bold;		
 }
 
-span.populartags{
+span.populartags {
 		font-size:130%;	
 }
-	
+
+#tagmemo_container .tagcloud span.oldtags {
+
+}
+
+#tagmemo_container span.freshtags{
+
+}
