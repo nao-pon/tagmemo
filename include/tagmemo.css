@@ -17,6 +17,7 @@
 	}
 	
 #tagmemo_content a{
+	color: #5D5DFF; /**/
 	text-decoration: none;
 	border-bottom: 1px dotted #dcdcdc;
 	font-weight: 100;
@@ -83,7 +84,6 @@
  }
 
 #tagmemo_list_box a{
-/*	color: #666666;*/
 	font-weight: 100;
  	border: 0;
 
