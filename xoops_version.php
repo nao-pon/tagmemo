@@ -55,9 +55,9 @@ $modversion['blocks'][3]['name'] = "Related Tags";
 $modversion['blocks'][3]['show_func'] = "b_tagmemo_relatedtag"; 
 $modversion['blocks'][3]['template'] = "related_tag.html";
 
-$modversion['blocks'][3]['file'] = "tag_block.php";
-$modversion['blocks'][3]['name'] = "Memo ID Search";
-$modversion['blocks'][3]['show_func'] = "b_tagmemo_id_serch"; 
-$modversion['blocks'][3]['template'] = "id_search.html";
+$modversion['blocks'][4]['file'] = "tag_block.php";
+$modversion['blocks'][4]['name'] = "Memo ID Search";
+$modversion['blocks'][4]['show_func'] = "b_tagmemo_id_serch"; 
+$modversion['blocks'][4]['template'] = "id_search.html";
 
 ?>
