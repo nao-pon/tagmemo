@@ -34,14 +34,13 @@ if(is_object($xoopsUser)){
 }
 	$tagmemo_handler->setUid($uid);
 $memo_array =& $tagmemo_handler->getMemosArray($tag_id,$count,$start);
-	$tagmemo_related_tags = $tagmemo_handler->getRelatedTags();
-global $tagmemo_related_tags;
 if(strlen($condition)>0){
 	$tagmemo_query=true;
 	$query_condition = $tagmemo_handler->getQueryCondition();
 	$query_condition = stripslashes($query_condition );
 	$query_condition = htmlspecialchars($query_condition );
 	$tag_condition = $tagmemo_handler->getTagCondition();
+	$tagmemo_related_tags = $tagmemo_handler->getRelatedTags();
 }else{
 	$tagmemo_query=false;
 	$tagmemo_block_recent_hide = true;
