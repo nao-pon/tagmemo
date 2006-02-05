@@ -14,13 +14,11 @@
 	font-size:small;
 	margin-left: auto;
 	margin-right: auto;
-
 	}
 	
 #tagmemo_content a{
 	text-decoration: none;
 	border-bottom: 1px dotted #dcdcdc;
-	color: #0000ff;
 	font-weight: 100;
 	}
 	
@@ -278,15 +276,11 @@
 }
 
 #tagmemo_tag_block a:link{
-		background-color: #ffffff;
-		color: #0000ff;
 		text-decoration:none;
 		border: none;
 }
 
 #tagmemo_tag_block a:visited{
-		background-color: #ffffff;
-		color: #0000ff;
 		text-decoration:none;
 		border: none;
 }
@@ -304,44 +298,44 @@
 }
 
 #tagmemo_container .tagcloud a:link{
-		background-color: #ffffff;
-		color: #0000ff;
-		text-decoration:none;
+			color: #0000ff;
+			text-decoration:none;
 		border: none;
 }
 
 #tagmemo_container .tagcloud a:visited{
-		background-color: #ffffff;
-		color: #551a8b;
-		text-decoration:none;
+			text-decoration:none;
 		border: none;
 }
 
 #tagmemo_container .tagcloud a:hover{
-		background-color: #ffffff;
 		text-decoration: underline;
 		border: none;
 }
-span.mostpopulartags {
-		color: #CC0033;
-		font-size:250%;
+
+span.mostpopulartags{
+		font-size:300%;
 		font-weight:bold;		
 }
 
 
-span.verypopulartags {
-		font-size:170%;
+span.verypopulartags{
+		font-size:200%;
 		font-weight:bold;		
 }
 
 span.populartags {
-		font-size:130%;	
+		font-size:150%;	
 }
 
-#tagmemo_container .tagcloud span.oldtags {
-
+span.normaltags{
+			font-size: 100%;	
 }
 
-#tagmemo_container span.freshtags{
+span.freshtags{
+			color: #0000ff;
+}
 
+span.oldtags {
+			color: #8B8BFF;
 }
