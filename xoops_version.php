@@ -1,6 +1,6 @@
 <?php
 $modversion['name'] = _MI_TAGMEMO_NAME;
-$modversion['version'] = 1.00;
+$modversion['version'] = 0.1;
 $modversion['description'] = _MI_TAGMEMO_DESC;
 $modversion['credits'] = '';
 $modversion['author'] = 'argon, comodita, fugafuga, twodash, yosha_01';
@@ -54,5 +54,10 @@ $modversion['blocks'][3]['file'] = "tag_block.php";
 $modversion['blocks'][3]['name'] = "Related Tags";
 $modversion['blocks'][3]['show_func'] = "b_tagmemo_relatedtag"; 
 $modversion['blocks'][3]['template'] = "related_tag.html";
+
+$modversion['blocks'][3]['file'] = "tag_block.php";
+$modversion['blocks'][3]['name'] = "Memo ID Search";
+$modversion['blocks'][3]['show_func'] = "b_tagmemo_id_serch"; 
+$modversion['blocks'][3]['template'] = "id_search.html";
 
 ?>

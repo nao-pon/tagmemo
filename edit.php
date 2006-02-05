@@ -32,7 +32,7 @@ $tagmemo_handler->setUid($uid);
 if($memo_id != ""){
 	$memo_id =intval($memo_id );
 	$memo =& $tagmemo_handler->getMemo4Edit($memo_id);
-	if($memo["uid"] != $uid){
+	if($memo["uid"] != $uid and $memo["uid"] != 0){
 		redirect_header(XOOPS_URL."/modules/tagmemo/index.php", 3, _NOPERM);
 	}else{
 		if($uid == 0){
@@ -41,8 +41,7 @@ if($memo_id != ""){
 			if(!($xoopsUser->isAdmin($module_id))){
 				redirect_header(XOOPS_URL."/modules/tagmemo/index.php", 3, _NOPERM);
 			}
-		}
-	
+		}	
 	}
 }
 // ヘッダを書くおまじない。

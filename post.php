@@ -51,8 +51,17 @@ if($memo_id != 0){
 		redirect_header(XOOPS_URL.'/',3,$xoopsGTicket->getErrors());
 	}
 	$memo_obj =& $tagmemo_handler->getMemoObj($memo_id);
- 	if(($memo_obj->getVar('uid') != $uid) & !($xoopsUser->isAdmin($module_id))){
+ 	if(($memo_obj->getVar('uid') != $uid) and $memo["uid"] != 0){
 		redirect_header(XOOPS_URL."/modules/tagmemo/index.php", 3, _NOPERM);
+	}else{
+		if($uid == 0){
+			redirect_header(XOOPS_URL."/modules/tagmemo/index.php", 3, _NOPERM);
+		}else{
+			if(!($xoopsUser->isAdmin($module_id))){
+				redirect_header(XOOPS_URL."/modules/tagmemo/index.php", 3, _NOPERM);
+			}
+		}	
+	
 	}
 }else{
 	$memo_obj =& $tagmemo_handler->createMemo();

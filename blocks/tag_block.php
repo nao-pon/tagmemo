@@ -43,5 +43,7 @@ function b_tagmemo_relatedtag(){
 	$ret["query_condition_url"]=urlencode($query_condition);
 	return $ret;
 }
-
+function b_tagmemo_id_serch(){
+return true;
+}
 ?>
