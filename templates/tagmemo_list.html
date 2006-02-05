@@ -30,8 +30,9 @@
 <div class="tagmemo_list">
 
 		<{foreach item=memo from=$memos}>
-		<div id="tagmemo_list_box">Memo ID <{$memo.tagmemo_id}>
 
+		<div id="tagmemo_list_box">
+ 
 			<span class="tagmemo_list_title">
 				<a href="detail.php?tagmemo_id=<{$memo.tagmemo_id}>">
 				<{$memo.title}></a>
@@ -41,11 +42,13 @@
 				</span>
 				<{/if}>
 			</span>
-		
+	
 			<div class="list_date">
 				<{$memo.timestamp|date_format:"%Y/%m/%d/%H:%M"}>
+			
 			</div>
 			<div class="list_tag">
+					[ID:<{$memo.tagmemo_id}>] 
 				<{foreach item=tag key="tag_id" from=$memo.tags}>
 					[<a href="index.php?tag_id=<{$tag_id}>"><{$tag}></a>]  
 				<{/foreach}>
