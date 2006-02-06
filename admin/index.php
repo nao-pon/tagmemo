@@ -28,7 +28,7 @@
 */
 
 /**
-* ŠÇ—‰æ–Ê—p‚Ìƒwƒbƒ_ƒtƒ@ƒCƒ‹“Ç‚İ‚İ
+* ´ÉÍı²èÌÌÍÑ¤Î¥Ø¥Ã¥À¥Õ¥¡¥¤¥ëÆÉ¤ß¹ş¤ß
 */
 
 require_once('../../../include/cp_header.php');
@@ -37,7 +37,7 @@ require_once('../../../include/cp_header.php');
 
 xoops_cp_header();
 
-echo "<h4>Admin menu of discuss color Change module.</h4>";
+echo "<h4>Admin menu of tagmemo module.</h4>";
 
 xoops_cp_footer();
 ?>
