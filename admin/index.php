@@ -29,6 +29,7 @@
 
 /**
 * 管理画面用のヘッダファイル読み込み
+* s
 */
 
 require_once('../../../include/cp_header.php');
