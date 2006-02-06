@@ -83,6 +83,7 @@ class TagmemoRelationHandler extends XoopsObjectHandler{
 /** 
 * メモとタグの関連をDBから読み込む
 * @param mixed CriteriaObject 検索条件
+* @return void
 */
 	function readRelation($criteria=null){
 		$sql = sprintf("select tag_id, tagmemo_id from %s ",$this->tablename);
@@ -93,7 +94,7 @@ class TagmemoRelationHandler extends XoopsObjectHandler{
 		}
 		$result =& $this->db->query($sql);
 		if (!$result) {
-			return $ret;
+			return;
 		}
 		while ($myrow = $this->db->fetchArray($result)){
 			$wk_tag_id = intval($myrow['tag_id']);
