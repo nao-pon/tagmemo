@@ -11,15 +11,12 @@
 
 require_once '../../mainfile.php';
 //GIJOE さんのワンタイムチケット
-include_once "./include/gtickets.php" ;
+//include_once "./include/gtickets.php" ;
 
 //@todo check for CSRF;
 $token = $_POST['tagmemo_quickform_token'];
-
-$memo_id = isset($_POST["tagmemo_id"]) ? $_POST["tagmemo_id"] :0;
 $content = $_POST["tagmemo_quickform_memo"];
-$public = isset($_POST["public"]) ? $_POST["public"] : 0;
-$public = intval($public);
+$public = isset($_POST["public"]) ? intval($_POST["public"]) : 0;
 $tags =  $_POST["tagmemo_quickform_tags"];
 
 $title="";
@@ -34,15 +31,7 @@ if(is_object($xoopsUser)){
 	$uid = 0;
 }
 
-if($memo_id != 0){
-	$memo_obj =& $tagmemo_handler->getMemoObj($memo_id);
- 	if(($memo_obj->getVar('uid') != $uid) & !($xoopsUser->isAdmin($uid))){
-		redirect_header(XOOPS_URL."/modules/tagmemo/index.php", 3, _NOPERM);
-	}
-}else{
-	$memo_obj =& $tagmemo_handler->createMemo();
-}
-
+$memo_obj =& $tagmemo_handler->createMemo();
 $memo_obj->setVar('uid', $uid);
 $memo_obj->setVar('title', $title);
 $memo_obj->setVar('content', $content);

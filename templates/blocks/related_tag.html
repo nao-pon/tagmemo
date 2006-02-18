@@ -1,21 +1,43 @@
+<script type="text/javascript">
+<!--
+function tagmemo_search(){
+	tagmemo_switch_search();
+	document.forms["tagmemo_srcform"].submit();
+}
+function tagmemo_switch_search(){
+    if(document.forms["tagmemo_srcform"].elements["src_type"][0].checked) {
+		document.forms["tagmemo_srcform"].action='<{$xoops_url}>/modules/tagmemo/index.php';
+    } else {
+		document.forms["tagmemo_srcform"].action='<{$xoops_url}>/modules/tagmemo/detail.php';
+		document.getElementById("tagmemo_src_query").name='tagmemo_id';
+    }
+return true;
+}
+//-->
+</script>
 <div id="tagmemo_tag_block">
 <div class="search_box">
-<form  action="<{$xoops_url}>/modules/tagmemo/index.php" method="get">
-<input type="text" name="query" size="14" value="<{$block.query_condition}>"/>
-		<input type="submit" value="<{$smarty.const._MD_TAGMEMO_SEARCH}>"/><br />
-<{if $block.query}>		
-<{*		<input type="radio" name="from" value="all">全体
-		<input type="radio" name="from" value="sub" checked>この中から<br />*}>
-		<input type="hidden" name="tag_id" value="<{$block.tag_condition.simple}>"/>
-<{/if}>
-</form>
+ <form name="tagmemo_srcform" action="#" onsubmit="tagmemo_switch_search()">
+  <input type="text" name="query" id="tagmemo_src_query" size="14" value="<{$block.query_condition}>"/>
+  <input type="button" onclick="tagmemo_search();" value="<{$smarty.const._MI_TAGMEMO_SEARCH}>" /><br />
+  <input type="radio" name="src_type" value="0" <{if $block.src_type == 0}>checked <{/if}>/>Keyword
+  <input type="radio" name="src_type" value="1" <{if $block.src_type == 1}>checked <{/if}>/>MemoID
+	
+<{*
+  <{if $block.query}>
+   <input type="radio" name="from" value="all"><{$smarty.const._MI_TAGMEMO_SEARCH_ALL}>
+   <input type="radio" name="from" value="sub" checked><{$smarty.const._MI_TAGMEMO_SEARCH_SUB}>
+  <{/if}>
+*}>
+ </form>
 </div></div>
 <div id="tagmemo_tag_block">
 <{if $block.query}>
-<{$block.query_condition}><br />
+<{$block.query_condition}>
 <{foreach item=tag_detail from=$block.tag_condition.detail}>
-<a href="<{$xoops_url}>/modules/tagmemo/index.php?tag_id=<{$tag_detail.url}>&query=<{$query_condition_url}>"><img src="<{$xoops_url}>/modules/tagmemo/images/sub.gif"></a>
-<a href="<{$xoops_url}>/modules/tagmemo/index.php?tag_id=<{$tag_detail.id}>" style="font-size:150%;"><{$tag_detail.string}></a>
+
+<a href="<{$xoops_url}>/modules/tagmemo/index.php?tag_id=<{$tag_detail.url}>"><img src="<{$xoops_url}>/modules/tagmemo/images/sub.gif" alt="sub"></a>
+<a href="<{$xoops_url}>/modules/tagmemo/index.php?tag_id=<{$tag_detail.id}>" style="font-size:150%;vertical-align: middle;"><{$tag_detail.string}></a>
 <br />
 <{/foreach}>
 <{/if}>
@@ -23,7 +45,7 @@
 <{foreach item=reltag from=$block.reltags}>
 <div id="tagmemo_tag_block">
 <{if $block.query}>
-<a href="<{$xoops_url}>/modules/tagmemo/index.php?tag_id=<{$block.tag_condition.url}><{$reltag.tag_id}>&query=<{$block.query_condition_url}>"><img src="<{$xoops_url}>/modules/tagmemo/images/add.gif"></a>
+<a href="<{$xoops_url}>/modules/tagmemo/index.php?tag_id=<{$block.tag_condition.url}><{$reltag.tag_id}>"><img src="<{$xoops_url}>/modules/tagmemo/images/add.gif" alt="add"></a>
 <{/if}>
 <a href="<{$xoops_url}>/modules/tagmemo/index.php?tag_id=<{$reltag.tag_id}>"><{$reltag.tag}></a>
 <br />

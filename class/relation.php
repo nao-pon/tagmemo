@@ -6,12 +6,13 @@
 /**
 * Xoops Objectの定義読み込み
 */
-include_once XOOPS_ROOT_PATH."/class/xoopsobject.php";
+//include_once XOOPS_ROOT_PATH."/class/xoopsobject.php";
+include_once dirname(__FILE__).'/xoopstableobject.php';
 /**
 * タグとメモの関連を扱うクラス
 * @package Persistence
 */
-class TagmemoRelationHandler extends XoopsObjectHandler{
+class TagmemoRelationHandler extends XoopsTableObjectHandler{
 /**
 * タグをキーとした関連したメモのリスト
 * @var array
@@ -24,24 +25,19 @@ class TagmemoRelationHandler extends XoopsObjectHandler{
 * @access public
 */
 	var $memo2tag = array();
-/**
-* テーブル名
-* @var string
-* @access public
-*/
-	var $tablename = "";
+
 //タグとメモを関連付ける
 /**
 * コンストラクタ
 * @param mixed XoopsDBHandler
 */
 	function TagmemoRelationHandler($db){
-		$this->tablename = $db->prefix("tagmemo_rel");
-		$this->db =$db;
+        $this->XoopsTableObjectHandler($db);
+		$this->tableName = $db->prefix("tagmemo_rel");
 	}
 	function &getPopularTag($count=10){
 		$ret = array();
-		$sql = sprintf("select tag_id, count(tagmemo_id) as f_count from %s group by tag_id order by f_count DESC ,tag_id ASC limit %u",$this->tablename,$count);
+		$sql = sprintf("select tag_id, count(tagmemo_id) as f_count from %s group by tag_id order by f_count DESC ,tag_id ASC limit %u",$this->tableName,$count);
 		$result =& $this->db->query($sql);
 		if (!$result) {
 			return $ret;
@@ -65,9 +61,9 @@ class TagmemoRelationHandler extends XoopsObjectHandler{
 */
 	function setRelation($tagmemo_id, $tag_id){
 		// @todo SQL サニタライズ
-		$sql = sprintf("INSERT IGNORE INTO %s (tagmemo_id, tag_id)VALUES(%u,%u)",$this->tablename,intval($tagmemo_id),intval($tag_id));
+		$sql = sprintf("INSERT IGNORE INTO %s (tagmemo_id, tag_id)VALUES(%u,%u)",$this->tableName,intval($tagmemo_id),intval($tag_id));
 //		echo "RelationHandler.setRelation:SQL".$sql."<br>\n";
-		$this->db->queryF($sql);
+		return $this->query($sql, $this->_force);
 	}
 	
 /**
@@ -76,9 +72,9 @@ class TagmemoRelationHandler extends XoopsObjectHandler{
 * @param integer メモのID >0
 */
 	function removeRelation($tagmemo_id){
-		$sql = sprintf("DELETE FROM %s WHERE tagmemo_id=%u ",$this->tablename,intval($tagmemo_id));
+		$sql = sprintf("DELETE FROM %s WHERE tagmemo_id=%u ",$this->tableName,intval($tagmemo_id));
 //		echo "RelationHandler.setRelation:SQL".$sql."<br>\n";
-		$this->db->query($sql);
+		return $this->query($sql, $this->_force);
 	}
 /** 
 * メモとタグの関連をDBから読み込む
@@ -87,7 +83,7 @@ class TagmemoRelationHandler extends XoopsObjectHandler{
 * 
 */
 	function readRelation($criteria=null){
-		$sql = sprintf("select tag_id, tagmemo_id from %s ",$this->tablename);
+		$sql = sprintf("select tag_id, tagmemo_id from %s ",$this->tableName);
 		// @todo impliment cirteria
 		if ($criteria){
 			$where = $criteria->renderWhere();
@@ -127,5 +123,19 @@ class TagmemoRelationHandler extends XoopsObjectHandler{
 			}
 		}
 	}
+	
+	/**
+	* Set database update mode
+	* @param bool
+	*/
+	function setUpdateMode($force){
+		$this->_force = $force;
+	}
+
+	/**
+	* @access private
+	* @var $_force
+	*/
+	var $_force = false;
 }
 ?>

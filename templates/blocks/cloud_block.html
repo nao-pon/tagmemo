@@ -1,0 +1,13 @@
+<link rel="stylesheet" type="text/css" media="screen" href="<{$xoops_url}>/modules/tagmemo/include/tagmemo.css" />
+<div id="tagmemo_container">
+<div class="tagcloud">
+	<{foreach item=tag from=$block}>
+		<a href="<{$xoops_url}>/modules/tagmemo/index.php?tag_id=<{$tag.tag_id}>">
+			<span class="<{$tag.popular}>">
+			<span class="<{$tag.fresh}>">
+			<{$tag.tag}>
+			</span></span>
+		</a>
+	<{/foreach}>
+</div>
+</div>

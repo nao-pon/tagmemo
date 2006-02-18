@@ -11,7 +11,7 @@ require_once '../../mainfile.php';
 //$tagmemo_handler =& xoops_getmodulehandler('tagmemo');
 // $tagmemo_handler =& xoops_getmodulehandler('memo');
 $tagmemo_handler =& xoops_getmodulehandler('tagmemo');
-$tagmemo_objs =& $tagmemo_handler->getMemos();
+//$tagmemo_objs =& $tagmemo_handler->getMemos();
 
 $xoopsOption['template_main'] = 'tagmemo_tagcloud.html';
 
@@ -21,7 +21,8 @@ $xoopsOption['template_main'] = 'tagmemo_tagcloud.html';
 */
 include XOOPS_ROOT_PATH.'/header.php';
 
- 	$cloud =$tagmemo_handler->_tag_handler->getTagArrayForCloud();
+ 	//$cloud =$tagmemo_handler->_tag_handler->getTagArrayForCloud();
+ 	$cloud =$tagmemo_handler->getAllTagsEx();
 	$xoopsTpl->assign('cloud', $cloud);
 /**
 * XOOPSのテンプレートのフッター

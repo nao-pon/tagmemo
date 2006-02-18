@@ -5,33 +5,35 @@
 
 	<div class="mainlink_box">
 		<a href="./index.php" class="mainlink">
-			<img src="./images/page_text.gif"></a>
+			<img src="./images/page_text.gif" alt="<{$smarty.const._MD_TAGMEMO_IMG_LIST}>" title="<{$smarty.const._MD_TAGMEMO_IMG_LIST}>"></a>
 		<a href="./edit.php" class="mainlink">
-			<img src="./images/page_edit.gif"></a>
+			<img src="./images/page_edit.gif" alt="<{$smarty.const._MD_TAGMEMO_IMG_EDIT}>" title="<{$smarty.const._MD_TAGMEMO_IMG_EDIT}>"></a>
 		<a href="./tagcloud.php"  class="mainlink">
-			<img src="./images/tagscloud.gif"></a>
+			<img src="./images/tagscloud.gif" alt="<{$smarty.const._MD_TAGMEMO_IMG_CLOUD}>" title="<{$smarty.const._MD_TAGMEMO_IMG_CLOUD}>"></a>
 	</div>
 
 </div>
 
 <div id="tagmemo_container">
 	<div class="ditail_date" >
-		<{$memo.timestamp|date_format:"%Y/%m/%d/%H:%M"}>
+		[<{$memo.tagmemo_id}>] <{$memo.timestamp|date_format:"%Y/%m/%d/%H:%M"}>
 	</div>
-	
+	<hr />
 	<div class="memo_content">
 		<{$memo.content}>
+		
+				<p class="owner"><img src="./images/snipped.gif" alt="snipped by"><span class="snipped"><{$memo_owner}></span></p>
 	</div>
-
-	<div><{$memo_owner}></div>
-	<div class="ditail_tag">
-	[ID:<{$memo.tagmemo_id}>] 	
+	<hr />
+		
+			<div class="ditail_tag">
 		<{foreach item=tag key="tag_id" from=$memo.tags}>
 			<a href="index.php?tag_id=<{$tag_id}>">
 				[<{$tag}>]</a>  
 		<{/foreach}>
-	</div>
 
+	</div>
+	
 	<div id="tagmemo_buttons">
 		<{if $memo.owner == 1 or $xoops_isadmin == 1}>
 		<form method="get" action="edit.php" name="editform">

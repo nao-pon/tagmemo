@@ -12,47 +12,54 @@ require_once '../../mainfile.php';
 include_once "./include/gtickets.php" ;
 
 //値を受けてみるよ。
-$memo_id = isset($_POST["tagmemo_id"]) ? $_POST["tagmemo_id"] :0;
+$memo_id = isset($_POST["tagmemo_id"]) ? intval($_POST["tagmemo_id"]) :0;
 //ハンドラをつくってみるよ。
 $tagmemo_handler =& xoops_getmodulehandler("tagmemo");
-//空のオブジェクトを作ってみるよ
-// echo "checkpoint 3.5 <br>\n";
 
 $module_id = $xoopsModule->mid();
 
 //ユーザーIDをもらおう
 if(is_object($xoopsUser)){
 	$uid = $xoopsUser->getVar("uid");
+	$isAdmin = $xoopsUser->isAdmin($module_id);
 } else {
 	$uid = 0;
+	$isAdmin = false;
 }
 if($memo_id != 0){
 	$memo_obj =& $tagmemo_handler->getMemoObj($memo_id);
+	if (!is_object($memo_obj)) {
+		redirect_header(XOOPS_URL."/modules/tagmemo/index.php", 3, 'Such memo does not exist.');
+	}
 	$memo_owner = $memo_obj->getVar('uid');
 
- 	if(($uid == 0) or (($memo_owner!= $uid) and !($xoopsUser->isAdmin($module_id)))){
-		redirect_header(XOOPS_URL."/modules/tagmemo/index.php", 3, _NOPERM);
+	if (!$isAdmin) {
+		if ($memo_owner == 0) {
+			//@future password check
+			//$password = isset($_POST["password"]) ? $_POST["password"] : "";
+			//$ts =& MyTextSanitizer::getInstance();
+			//if ($ts->stripSlashesGPC($password) != $memo_obj->getVar('password', 'n')) {
+				redirect_header(XOOPS_URL."/modules/tagmemo/index.php", 3, _NOPERM);
+			//}
+		} elseif ($memo_owner != $uid) {
+			redirect_header(XOOPS_URL."/modules/tagmemo/index.php", 3, _NOPERM);
+		}
 	}
-}else{
-		redirect_header(XOOPS_URL."/modules/tagmemo/index.php", 3, _NOPERM);
-
+} else {
+	redirect_header(XOOPS_URL."/modules/tagmemo/index.php", 3, 'memo is not selected.');
 }
-	if ( ! $xoopsGTicket->check() ) {
-		redirect_header(XOOPS_URL.'/',3,$xoopsGTicket->getErrors());
-	}
+if ( ! $xoopsGTicket->check() ) {
+	redirect_header(XOOPS_URL.'/',3,$xoopsGTicket->getErrors());
+}
 
-
-//オブジェクトに値を設定してみるよ。
-
-//放り込め！
-$tagmemo_handler->deleteMemo($memo_obj);
-// echo "checkpoint 7 <br>\n";
-
-// echo "OK";
-
-// ヘッダを書くおまじない。
-//  include XOOPS_ROOT_PATH.'/header.php';
-//  include(XOOPS_ROOT_PATH.'/footer.php');
-
-redirect_header(XOOPS_URL.'/modules/tagmemo/', 1, _MD_TAGMEMO_MESSAGE_DELETE);
+//do deletion!
+if ($tagmemo_handler->deleteMemo($memo_obj)) {
+	redirect_header(XOOPS_URL.'/modules/tagmemo/', 1, _MD_TAGMEMO_MESSAGE_DELETE);
+} else {
+	//get error message.
+	$message = $tagmemo_handler->getErrors(false);
+	$message = ($message == '') ? 'This memo is not deleted.' : $message; 
+	//redirect to memo which is not deleted.
+	redirect_header(XOOPS_URL.'/modules/tagmemo/detail.php?tagmemo_id='.$memo_id, 3, $message);
+}
 ?>

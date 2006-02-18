@@ -2,6 +2,7 @@
 include_once XOOPS_ROOT_PATH."/class/xoopsobject.php";
 
 if (!defined('XOBJ_DTYPE_FLOAT')) define('XOBJ_DTYPE_FLOAT', 101);
+if (!defined('XOBJ_DTYPE_CUSTOM')) define('XOBJ_DTYPE_CUSTOM', 102);
 if (!defined('XOBJ_VCLASS_TFIELD')) define('XOBJ_VCLASS_TFIELD', 1);
 if (!defined('XOBJ_VCLASS_ATTRIB')) define('XOBJ_VCLASS_ATTRIB', 2);
 if (!defined('XOBJ_VCLASS_EXTRA')) define('XOBJ_VCLASS_EXTRA', 3);
@@ -109,31 +110,42 @@ if( ! class_exists( 'XoopsTableObject' ) ) {
 			eval($callstr);
 		}
 		
-		function renderEditForm($caption,$name,$action)
+		function assignEditFormOptionArray($name,$options) {
+			if (method_exists($this->_formElements[$name], 'addOptionArray')) {
+				$this->_formElements[$name]->addOptionArray($options);
+			}
+		}
+		
+		function renderEditForm($caption,$name,$action,$token=0)
 		{
 			include_once XOOPS_ROOT_PATH.'/class/xoopsform/form.php';
 			include_once XOOPS_ROOT_PATH.'/class/xoopsform/themeform.php';
 			include_once XOOPS_ROOT_PATH.'/class/xoopsform/formhidden.php';
 			include_once XOOPS_ROOT_PATH.'/class/xoopsform/formbutton.php';
+			if (file_exists(XOOPS_ROOT_PATH.'/class/xoopsform/formtoken.php')) {
+				include_once XOOPS_ROOT_PATH.'/class/xoopsform/formtoken.php';
+			} else {
+				$token=0;
+			}
 			
 			$formEdit =& new XoopsThemeForm($caption,$name,$action);
 			foreach ($this->_formElements as $key=>$formElement) {
-				if (!$this->isNew()) {
-					if ($this->vars[$key]['changed']) {
-					        $formElement->setValue($this->getVar($key, 'e'));
-					} else {
-					        $formElement->setValue($this->getVar($key, 'e'));
-					}
+//				if (!$this->isNew()) {
 					$formElement->setValue($this->getVar($key,'e'));
-				}
+//				}
 				$formEdit->addElement($formElement,$this->vars[$key]['required']);
-//		echo "$key - " .get_class($formElement) ."<br/>";
+//				echo "$key - " .get_class($formElement) ."<br/>";
 				unset($formElement);
 			}
-			
 			if ($this->isNew()) {
+				if ($token) {
+					$formEdit->addElement(new XoopsFormToken(XoopsMultiTokenHandler::quickCreate($name.'_insert')));
+				}
 				$formEdit->addElement(new XoopsFormHidden('op','insert'));
 			} else {
+				if ($token) {
+					$formEdit->addElement(new XoopsFormToken(XoopsMultiTokenHandler::quickCreate($name.'_save')));
+				}
 				$formEdit->addElement(new XoopsFormHidden('op','save'));
 			}
 			$formEdit->addElement(new XoopsFormButton('', 'submit', 'OK', 'submit'));
@@ -195,7 +207,19 @@ if( ! class_exists( 'XoopsTableObject' ) ) {
 	    */
 	    function &getVar($key, $format = 's')
 	    {
-			$ret =& parent::getVar($key, $format);
+			if (($this->vars[$key]['data_type'] == XOBJ_DTYPE_CUSTOM)) {
+				//個別の変数Getがあれば実行;
+				$getMethod = 'getVar_'.$key;
+				if(method_exists($this, $getMethod)) {
+					$this->$getMethod($this->vars[$key]['value'],$format);
+				} else {
+					$this->vars[$key]['data_type'] == XOBJ_DTYPE_TXTBOX;
+					$ret =& parent::getVar($key, $format);
+					$this->vars[$key]['data_type'] == XOBJ_DTYPE_CUSTOM;
+				}
+			} else {
+				$ret =& parent::getVar($key, $format);
+			}
 			if ($this->vars[$key]['data_type'] == XOBJ_DTYPE_TXTAREA && ($format=='e' || $format=='edit')) {
 				$ret = preg_replace("/&amp;(#[0-9]+;)/i", '&$1', $ret);
 			}
@@ -212,6 +236,7 @@ if( ! class_exists( 'XoopsTableObject' ) ) {
 					switch ($v['data_type']) {
 					case XOBJ_DTYPE_FLOAT:
 						$cleanv = (float)($cleanv);
+						$this->cleanVars[$k] =& $cleanv;
 						break;
 					default:
 						break;
@@ -222,7 +247,6 @@ if( ! class_exists( 'XoopsTableObject' ) ) {
 						$this->$checkMethod($cleanv);
 					}
 				}
-				$this->cleanVars[$k] =& $cleanv;
 				unset($cleanv);
 			}
 			if (count($this->_errors) > 0) {
@@ -252,7 +276,7 @@ if( ! class_exists( 'XoopsTableObject' ) ) {
 		}
 		function importWpObject(&$wp_object) {
 	        foreach ($this->vars as $k => $v) {
-	        	$this->setVar($k, $wp_object->$k);
+	        	$this->setVar($k, $wp_object->$k, true);
 			}
 		}
 	}
@@ -272,9 +296,6 @@ if( ! class_exists( 'XoopsTableObject' ) ) {
 			$this->_entityClassName = preg_replace("/handler$/i","", get_class($this));
 			$this->XoopsObjectHandler($db);
 			$this->_errors = array();
-			$this->useFullCache = true;
-			$this->cacheLimit = 0;
-			$this->_fullCached = false;
 		}
 		
 		function getErrors($html=true, $clear=true)
@@ -331,6 +352,454 @@ if( ! class_exists( 'XoopsTableObject' ) ) {
 			}
 			$whereStr = "";
 			$whereAnd = "";
+			foreach ($record->getKeyFields() as $k => $v) {
+				if (array_key_exists($v, $keys)) {
+					$whereStr .= $whereAnd . "`$v` = ";
+					if (($recordVars[$v]['data_type'] == XOBJ_DTYPE_INT) || ($recordVars[$v]['data_type'] == XOBJ_DTYPE_FLOAT)) {
+						$whereStr .= $keys[$v];
+					} else {
+						$whereStr .= $this->db->quoteString($keys[$v]);
+					}
+					$whereAnd = " AND ";
+					$cacheKey[$v] = $keys[$v];
+				} else {
+					return false;
+				}
+			}
+			$sql = sprintf("SELECT * FROM %s WHERE %s",$this->tableName, $whereStr);
+
+			if ( !$result =& $this->query($sql) ) {
+				return false;
+			}
+			$numrows = $this->db->getRowsNum($result);
+//		echo $numrows."<br/>";
+			if ( $numrows == 1 ) {
+				$row = $this->db->fetchArray($result);
+				$record->assignVars($row);
+				$this->db->freeRecordSet($result);
+				return $record;
+			}
+			unset($record);
+			return false;
+		}
+	    /**
+	     * レコードの保存
+	     * 
+	     * @param	object	&$record	{@link XoopsTableObject} object
+	     * @param	bool	$force		POSTメソッド以外で強制更新する場合はture
+	     * 
+	     * @return	bool    成功の時は TRUE
+	     */
+		function insert(&$record,$force=false,$updateOnlyChanged=false)
+		{
+			if ( get_class($record) != $this->_entityClassName ) {
+				return false;
+			}
+			if ( !$record->isDirty() ) {
+				return true;
+			}
+			if (!$record->cleanVars()) {
+				$this->_errors += $record->getErrors();
+				return false;
+			}
+			$vars = $record->getVars();
+			if ($record->isNew()) {
+				$fieldList = "(";
+				$valueList = "(";
+				$delim = "";
+				foreach ($record->cleanVars as $k => $v) {
+					if ($vars[$k]['var_class'] != XOBJ_VCLASS_TFIELD) {
+						continue;
+					}
+					$fieldList .= $delim ."`$k`";
+					if ($record->isAutoIncrement($k)) {
+						$v = $this->getAutoIncrementValue();
+					}
+					if (preg_match("/^__MySqlFunc__/", $v)) {  // for value using MySQL function.
+						$value = preg_replace('/^__MySqlFunc__/', '', $v);
+					} elseif ($vars[$k]['data_type'] == XOBJ_DTYPE_INT) {
+						if (!is_null($v)) {
+							$v = intval($v);
+							$v = ($v) ? $v : 0;
+							$valueList .= $delim . $v;
+						} else {
+							$valueList .= $delim . 'null';
+						}
+					} elseif ($vars[$k]['data_type'] == XOBJ_DTYPE_FLOAT) {
+						if (!is_null($v)) {
+							$v = (float)($v);
+							$v = ($v) ? $v : 0;
+							$valueList .= $delim . $v;
+						} else {
+							$valueList .= $delim . 'null';
+						}
+					} else {
+						if (!is_null($v)) {
+							$valueList .= $delim . $this->db->quoteString($v);
+						} else {
+							$valueList .= $delim . $this->db->quoteString('');;
+						}
+					}
+					$delim = ", ";
+				}
+				$fieldList .= ")";
+				$valueList .= ")";
+				$sql = sprintf("INSERT INTO %s %s VALUES %s", $this->tableName,$fieldList,$valueList);
+			} else {
+				$setList = "";
+				$setDelim = "";
+				$whereList = "";
+				$whereDelim = "";
+				foreach ($record->cleanVars as $k => $v) {
+					if ($vars[$k]['var_class'] != XOBJ_VCLASS_TFIELD) {
+						continue;
+					}
+					if (preg_match("/^__MySqlFunc__/", $v)) {  // for value using MySQL function.
+						$value = preg_replace('/^__MySqlFunc__/', '', $v);
+					} elseif ($vars[$k]['data_type'] == XOBJ_DTYPE_INT) {
+						$v = intval($v);
+						$value = ($v) ? $v : 0;
+					} elseif ($vars[$k]['data_type'] == XOBJ_DTYPE_FLOAT) {
+						$v = (float)($v);
+						$value = ($v) ? $v : 0;
+					} else {
+						$value = $this->db->quoteString($v);
+					}
+
+					if ($record->isKey($k)) {
+						$whereList .= $whereDelim . "`$k` = ". $value;
+						$whereDelim = " AND ";
+					} else {
+						if ($updateOnlyChanged && !$vars[$k]['changed']) {
+							continue;
+						}
+						$setList .= $setDelim . "`$k` = ". $value . " ";
+						$setDelim = ", ";
+					}
+				}
+				if (!$setList) {
+					$record->resetChenged();
+					return true;
+				}
+				$sql = sprintf("UPDATE %s SET %s WHERE %s", $this->tableName, $setList, $whereList);
+			}
+			if (!$result =& $this->query($sql, $force)) {
+				return false;
+			}
+			if ($record->isNew()) {
+				$idField=$record->getAutoIncrementField();
+				$idValue=$this->db->getInsertId();
+				$record->assignVar($idField,$idValue);
+			}
+			$record->resetChenged();
+			return true;
+		}
+
+	    function updateByField(&$record, $fieldName, $fieldValue, $not_gpc=false)
+	    {
+	        $record->setVar($fieldName, $fieldValue, $not_gpc);
+	        return $this->insert($record, true, true);
+	    }
+
+		/**
+		 * レコードの削除
+		 * 
+	     * @param	object  &$record  {@link XoopsTableObject} object
+	     * @param	bool	$force		POSTメソッド以外で強制更新する場合はture
+	     * 
+	     * @return	bool    成功の時は TRUE
+		 */
+		function delete(&$record,$force=false)
+		{
+			if ( get_class($record) != $this->_entityClassName ) {
+				return false;
+			}
+			if (!$record->cleanVars()) {
+				$this->_errors[] = $this->db->error();
+				return false;
+			}
+			$vars = $record->getVars();
+			$whereList = "";
+			$whereDelim = "";
+			foreach ($record->cleanVars as $k => $v) {
+				if ($record->isKey($k)) {
+					if (($vars[$k]['data_type'] == XOBJ_DTYPE_INT)||($vars[$k]['data_type'] == XOBJ_DTYPE_FLOAT)) {
+						$value = $v;
+					} else {
+						$value = $this->db->quoteString($v);
+					}
+					$whereList .= $whereDelim . "`$k` = ". $value;
+					$whereDelim = " AND ";
+				}
+			}
+			$sql = sprintf("DELETE FROM %s WHERE %s", $this->tableName, $whereList);
+			if (!$result =& $this->query($sql, $force)) {
+				return false;
+			}
+			return true;
+		}
+
+		/**
+		 * テーブルの条件検索による複数レコード取得
+		 * 
+		 * @param	object	$criteria 	{@link XoopsTableObject} 検索条件
+		 * @param	bool $id_as_key		プライマリーキーを、戻り配列のキーにする場合はtrue
+		 * 
+		 * @return	mixed Array			検索結果レコードの配列
+		 */
+		function &getObjects($criteria = null, $id_as_key = false, $fieldlist="", $distinct = false, $joindef = false, $having="")
+		{
+			$records = array();
+
+			if ($result =& $this->open($criteria, $fieldlist, $distinct, $joindef, $having)) {
+				while ($myrow = $this->db->fetchArray($result)) {
+					$record =& $this->create(false);
+					$record->assignVars($myrow);
+					if (!$id_as_key) {
+						$records[] =& $record;
+					} else {
+						$ids = $record->getKeyFields();
+						$r =& $records;
+						$count_ids = count($ids);
+						for ($i=0; $i<$count_ids; $i++) {
+							if ($i == $count_ids-1) {
+								$r[$myrow[$ids[$i]]] =& $record;
+							} else {
+								if (!isset($r[$myrow[$ids[$i]]])) {
+									$r[$myrow[$ids[$i]]] = array();
+								}
+								$r =& $r[$myrow[$ids[$i]]];
+							}
+						}
+					}
+					unset($record);
+				}
+				$this->db->freeRecordSet($result);
+			}
+			return $records;
+		}
+
+		/**
+		 * テーブルの条件検索による複数レコード取得用のOpen （一度には取得しない）
+		 * 
+		 * @param	object	$criteria 	{@link XoopsTableObject} 検索条件
+		 * 
+		 * @return	mixed Array			検索結果レコードの配列
+		 */
+		function &open($criteria = null, $fieldlist="", $distinct = false, $joindef = false, $having="")
+		{
+			$limit = $start = 0;
+			$whereStr = '';
+			$orderStr = '';
+			if ($distinct) {
+				$distinct = "DISTINCT ";
+			} else {
+				$distinct = "";
+			}
+			if ($fieldlist) {
+			//2006/01/13 towdash set default alias as main
+				$sql = 'SELECT '.$distinct.$fieldlist.' FROM '.$this->tableName . " AS main";
+			} else {
+			//2006/01/13 towdash set default alias as main
+				$sql = 'SELECT '.$distinct.'* FROM '.$this->tableName ." AS main";;
+			}
+			if ($joindef) {
+				$sql .= $joindef->render($this->tableName);
+			}
+			if (isset($criteria) && is_subclass_of($criteria, 'criteriaelement')) {
+				$whereStr = $criteria->renderWhere();
+				$sql .= ' '.$whereStr;
+			}
+			if (isset($criteria) && (is_subclass_of($criteria, 'criteriaelement')||get_class($criteria)=='criteriaelement')) {
+				if ($criteria->getGroupby() != ' GROUP BY ') {
+					$sql .= ' '.$criteria->getGroupby();
+					if(strlen($having) > 0){
+					$sql .= ' HAVING '.$having;
+					}
+				}
+				if ((is_array($criteria->getSort()) && count($criteria->getSort()) > 0)) {
+					$orderStr = 'ORDER BY ';
+					$orderDelim = "";
+					foreach ($criteria->getSort() as $sortVar) {
+						$orderStr .= $orderDelim . $sortVar.' '.$criteria->getOrder();
+						$orderDelim = ",";
+					}
+					$sql .= ' '.$orderStr;
+				} elseif ($criteria->getSort() != '') {
+					$orderStr = 'ORDER BY '.$criteria->getSort().' '.$criteria->getOrder();
+					$sql .= ' '.$orderStr;
+				}
+				$limit = $criteria->getLimit();
+				$start = $criteria->getStart();
+			}
+			$resultSet =& $this->query($sql, false ,$limit, $start);
+			return $resultSet;
+		}
+
+		function &getNext(&$resultSet)
+		{
+			if ($myrow = $this->db->fetchArray($resultSet)) {
+				$record =& $this->create(false);
+				$record->assignVars($myrow);
+				return $record;
+			} else {
+				$result = false;
+				return $result;
+			}
+		}
+
+		/**
+		 * テーブルの条件検索による対象レコード件数
+		 * 
+		 * @param	object	$criteria 		{@link XoopsTableObject} 検索条件
+		 * 
+		 * @return	integer					検索結果レコードの件数
+		 */
+	    function getCount($criteria = null)
+	    {
+	        $sql = 'SELECT COUNT(*) FROM '.$this->tableName;
+	        if (isset($criteria) && is_subclass_of($criteria, 'criteriaelement')) {
+	            $sql .= ' '.$criteria->renderWhere();
+	        }
+	        $result =& $this->query($sql);
+	        if (!$result) {
+	            return 0;
+	        }
+	        list($count) = $this->db->fetchRow($result);
+	        return $count;
+	    }
+	    
+
+		/**
+		 * テーブルの条件検索による複数レコード一括更新(対象フィールドは一つのみ)
+		 * 
+		 * @param	string	$fieldname 	更新フィールド名
+		 * @param	mixed	$fieldvalue	更新値
+		 * @param	object	$criteria 	{@link XoopsTableObject} 検索条件
+	     * @param	bool	$force		POSTメソッド以外で強制更新する場合はture
+		 * 
+		 * @return	mixed Array			検索結果レコードの配列
+		 */
+	    function updateAll($fieldname, $fieldvalue, $criteria = null, $force=false)
+	    {
+	    	$record = $this->create();
+	    	if ($record->vars[$fieldname]['data_type'] == XOBJ_DTYPE_INT) {
+				$fieldvalue = intval($fieldvalue);
+				$fieldvalue = ($fieldvalue) ? $fieldvalue : 0;
+			} elseif ($record->vars[$fieldname]['data_type'] == XOBJ_DTYPE_FLOAT) {
+				$fieldvalue = (float)($fieldvalue);
+				$fieldvalue = ($fieldvalue) ? $fieldvalue : 0;
+			} else {
+				$fieldvalue = $this->db->quoteString($fieldvalue);
+			}
+	        $set_clause = $fieldname.' = '.$fieldvalue;
+	        $sql = 'UPDATE '.$this->tableName.' SET '.$set_clause;
+	        if (isset($criteria) && is_subclass_of($criteria, 'criteriaelement')) {
+	            $sql .= ' '.$criteria->renderWhere();
+	        }
+			if (!$result =& $this->query($sql, $force)) {
+				return false;
+			}
+	        return true;
+	    }
+
+		/**
+		 * テーブルの条件検索による複数レコード削除
+		 * 
+		 * @param	object	$criteria 	{@link XoopsTableObject} 検索条件
+	     * @param	bool	$force		POSTメソッド以外で強制更新する場合はture
+	     * 
+	     * @return	bool    成功の時は TRUE
+		 */
+	    function deleteAll($criteria = null, $force=false)
+	    {
+	        $sql = 'DELETE FROM '.$this->tableName;
+	        if (isset($criteria) && is_subclass_of($criteria, 'criteriaelement')) {
+	            $sql .= ' '.$criteria->renderWhere();
+	        }
+			if (!$result =& $this->query($sql, $force)) {
+				return false;
+			}
+	        return true;
+	    }
+
+		function getAutoIncrementValue()
+		{
+			return $this->db->genId(get_class($this).'_id_seq');
+		}
+
+		function &query($sql, $force=false, $limit=0, $start=0) {
+			if (empty($GLOBALS['_xoopsTableQueryCount'])) {
+				$GLOBALS['_xoopsTableQueryCount'] = 1;
+			} else {
+				$GLOBALS['_xoopsTableQueryCount']++;
+			}
+			if (!empty($GLOBALS['wpdb'])) {
+				$GLOBALS['wpdb']->querycount++;
+			}
+			if ($force) {
+				$result =& $this->db->queryF($sql, $limit, $start);
+			} else {
+				$result =& $this->db->query($sql, $limit, $start);
+			}
+			$this->_sql = $sql;
+			$this->_start = $start;
+			$this->_limit = $limit;
+
+			if (!$result) {
+				$this->_errors[] = $this->db->error();
+				return false;
+			}
+			return $result;
+		}
+		
+		function getLastSQL()
+		{
+			return $this->_sql;
+		}
+	}
+	
+	class XoopsCachedTableObjectHandler  extends XoopsTableObjectHandler
+	{
+		var $tableName;
+		var $useFullCache;
+		var $cacheLimit;
+		var $_entityClassName;
+		var $_errors;
+		var $_fullCached;
+		var $_sql;
+		
+		function XoopsTableObjectHandler($db)
+		{
+			$this->_entityClassName = preg_replace("/handler$/i","", get_class($this));
+			$this->XoopsObjectHandler($db);
+			$this->_errors = array();
+			$this->useFullCache = true;
+			$this->cacheLimit = 0;
+			$this->_fullCached = false;
+		}
+
+		/**
+		 * レコードの取得(プライマリーキーによる一意検索）
+		 * 
+		 * @param	mixed $key 検索キー
+		 * 
+		 * @return	object  {@link XoopsTableObject}, FALSE on fail
+		 */
+		function &get($keys)
+		{
+			$record =& $this->create(false);
+			$recordKeys = $record->getKeyFields();
+			$recordVars = $record->getVars();
+			if (gettype($keys) != 'array') {
+				if (count($recordKeys) == 1) {
+					$keys = array($recordKeys[0] => $keys);
+				} else {
+					return false;
+				}
+			}
+			$whereStr = "";
+			$whereAnd = "";
 			$cacheKey = array();
 			foreach ($record->getKeyFields() as $k => $v) {
 				if (array_key_exists($v, $keys)) {
@@ -362,6 +831,7 @@ if( ! class_exists( 'XoopsTableObject' ) ) {
 				$row = $this->db->fetchArray($result);
 				$record->assignVars($row);
 				$GLOBALS['_xoopsTableCache']->set($this->tableName, $cacheKey, $row, $this->cacheLimit);
+				$this->db->freeRecordSet($result);
 				return $record;
 			}
 			unset($record);
@@ -420,7 +890,11 @@ if( ! class_exists( 'XoopsTableObject' ) ) {
 							$valueList .= $delim . 'null';
 						}
 					} else {
-						$valueList .= $delim . $this->db->quoteString($v);
+						if (!is_null($v)) {
+							$valueList .= $delim . $this->db->quoteString($v);
+						} else {
+							$valueList .= $delim . $this->db->quoteString('');;
+						}
 					}
 					$cacheRow[$k] = $v;
 					$delim = ", ";
@@ -486,12 +960,6 @@ if( ! class_exists( 'XoopsTableObject' ) ) {
 			return true;
 		}
 
-	    function updateByField(&$record, $fieldName, $fieldValue)
-	    {
-	        $record->setVar($fieldName, $fieldValue);
-	        return $this->insert($record, true, true);
-	    }
-
 		/**
 		 * レコードの削除
 		 * 
@@ -502,33 +970,8 @@ if( ! class_exists( 'XoopsTableObject' ) ) {
 		 */
 		function delete(&$record,$force=false)
 		{
-			if ( get_class($record) != $this->_entityClassName ) {
-				return false;
-			}
-			if (!$record->cleanVars()) {
-				$this->_errors[] = $this->db->error();
-				return false;
-			}
-			$vars = $record->getVars();
-			$whereList = "";
-			$whereDelim = "";
-			foreach ($record->cleanVars as $k => $v) {
-				if ($record->isKey($k)) {
-					if (($vars[$k]['data_type'] == XOBJ_DTYPE_INT)||($vars[$k]['data_type'] == XOBJ_DTYPE_FLOAT)) {
-						$value = $v;
-					} else {
-						$value = $this->db->quoteString($v);
-					}
-					$whereList .= $whereDelim . "`$k` = ". $value;
-					$whereDelim = " AND ";
-				}
-			}
-			$sql = sprintf("DELETE FROM %s WHERE %s", $this->tableName, $whereList);
-			if (!$result =& $this->query($sql, $force)) {
-				return false;
-			}
 			$GLOBALS['_xoopsTableCache']->reset($this->tableName, $record->cacheKey());
-			return true;
+			return parent::delete($record,$force);
 		}
 
 		/**
@@ -539,58 +982,12 @@ if( ! class_exists( 'XoopsTableObject' ) ) {
 		 * 
 		 * @return	mixed Array			検索結果レコードの配列
 		 */
-		 // add argument $having by twodash at 2006/01/15
-		function &getObjects($criteria = null, $id_as_key = false, $fieldlist="", $distinct = false, $joindef = false, $having="")
+		function &getObjects($criteria = null, $id_as_key = false, $fieldlist="", $distinct = false, $joindef = false)
 		{
-			$ret = array();
-			$limit = $start = 0;
-			$whereStr = '';
-			$orderStr = '';
-			if ($distinct) {
-				$distinct = "DISTINCT ";
-			} else {
-				$distinct = "";
-			}
-			if ($fieldlist) {
-			//2006/01/13 towdash set default alias as main
-				$sql = 'SELECT '.$distinct.$fieldlist.' FROM '.$this->tableName . " AS main";
-			} else {
-			//2006/01/13 towdash set default alias as main
-				$sql = 'SELECT '.$distinct.'* FROM '.$this->tableName ." AS main";;
-			}
-			if ($joindef) {
-				$sql .= $joindef->render($this->tableName);
-			}
-			if (isset($criteria) && is_subclass_of($criteria, 'criteriaelement')) {
-				$whereStr = $criteria->renderWhere();
-				$sql .= ' '.$whereStr;
-			}
-			if (isset($criteria) && (is_subclass_of($criteria, 'criteriaelement')||get_class($criteria)=='criteriaelement')) {
-				if ($criteria->getGroupby() != ' GROUP BY ') {
-					$sql .= ' '.$criteria->getGroupby();
-					if($having != ""){
-					$sql .= ' HAVING '.$having;
-					}
-				}
-				if ((is_array($criteria->getSort()) && count($criteria->getSort()) > 0)) {
-					$orderStr = 'ORDER BY ';
-					$orderDelim = "";
-					foreach ($criteria->getSort() as $sortVar) {
-						$orderStr .= $orderDelim . $sortVar.' '.$criteria->getOrder();
-						$orderDelim = ",";
-					}
-					$sql .= ' '.$orderStr;
-				} elseif ($criteria->getSort() != '') {
-					$orderStr = 'ORDER BY '.$criteria->getSort().' '.$criteria->getOrder();
-					$sql .= ' '.$orderStr;
-				}
-				$limit = $criteria->getLimit();
-				$start = $criteria->getStart();
-			}
+			$records = array();
 			//今のところは、非常に限定された条件でしかキャッシュを使えない
-			if (($this->useFullCache) && ($this->_fullCached) && (!$whereStr) && (!$orderStr) && ($limit==0) && ($start==0) && (!$fieldlist)) {
-				$records = array();
-				/* foreach ($GLOBALS['_xoopsTableCache']->getFull($this->tableName) as $myrow) {
+			if (($this->useFullCache) && ($this->_fullCached) && (empty($criteria))&& (!$fieldlist) && (!$distinct) && (!$joindef)) {
+				foreach ($GLOBALS['_xoopsTableCache']->getFull($this->tableName) as $myrow) {
 					$record =& $this->create(false);
 					$record->assignVars($myrow);
 					if (!$id_as_key) {
@@ -609,17 +1006,14 @@ if( ! class_exists( 'XoopsTableObject' ) ) {
 						}
 					}
 					unset($record);
-				} */
-				
-			} else {
-				$result =& $this->query($sql, false ,$limit, $start);
-				if (!$result) {
-					return $ret;
 				}
-				if ((!$whereStr) && ($limit==0) && ($start ==0) && ($this->useFullCache) && ($this->cacheLimit==0)) {
+				return $records;
+			}
+
+			if ($result =& $this->open($criteria, $fieldlist, $distinct, $joindef)) {
+				if (($this->useFullCache) && (empty($criteria)) && (!$fieldlist) && (!$distinct) && (!$joindef)) {
 					$this->_fullCached = true;
 				}
-				$records = array();
 				while ($myrow = $this->db->fetchArray($result)) {
 					$record =& $this->create(false);
 					$record->assignVars($myrow);
@@ -645,31 +1039,24 @@ if( ! class_exists( 'XoopsTableObject' ) ) {
 					}
 					unset($record);
 				}
+				$this->db->freeRecordSet($result);
 			}
 			return $records;
 		}
 
-		/**
-		 * テーブルの条件検索による対象レコード件数
-		 * 
-		 * @param	object	$criteria 		{@link XoopsTableObject} 検索条件
-		 * 
-		 * @return	integer					検索結果レコードの件数
-		 */
-	    function getCount($criteria = null)
-	    {
-	        $sql = 'SELECT COUNT(*) FROM '.$this->tableName;
-	        if (isset($criteria) && is_subclass_of($criteria, 'criteriaelement')) {
-	            $sql .= ' '.$criteria->renderWhere();
-	        }
-	        $result =& $this->query($sql);
-	        if (!$result) {
-	            return 0;
-	        }
-	        list($count) = $this->db->fetchRow($result);
-	        return $count;
-	    }
-	    
+		function &getNext(&$resultSet, $setCache=true)
+		{
+			if ($myrow = $this->db->fetchArray($resultSet)) {
+				$record =& $this->create(false);
+				$record->assignVars($myrow);
+				if ($setCache) {
+					$GLOBALS['_xoopsTableCache']->set($this->tableName, $record->cacheKey(), $myrow, $this->cacheLimit);				}
+				return $record;
+			} else {
+				$result = false;
+				return $result;
+			}
+		}
 
 		/**
 		 * テーブルの条件検索による複数レコード一括更新(対象フィールドは一つのみ)
@@ -683,28 +1070,9 @@ if( ! class_exists( 'XoopsTableObject' ) ) {
 		 */
 	    function updateAll($fieldname, $fieldvalue, $criteria = null, $force=false)
 	    {
-	    	$record = $this->create();
-	    	if ($record->vars[$fieldname]['data_type'] == XOBJ_DTYPE_INT) {
-				$fieldvalue = intval($fieldvalue);
-				$fieldvalue = ($fieldvalue) ? $fieldvalue : 0;
-			} elseif ($record->vars[$fieldname]['data_type'] == XOBJ_DTYPE_FLOAT) {
-				$fieldvalue = (float)($fieldvalue);
-				$fieldvalue = ($fieldvalue) ? $fieldvalue : 0;
-			} else {
-				$fieldvalue = $this->db->quoteString($fieldvalue);
-			}
-	        $set_clause = $fieldname.' = '.$fieldvalue;
-	        $sql = 'UPDATE '.$this->tableName.' SET '.$set_clause;
-	        if (isset($criteria) && is_subclass_of($criteria, 'criteriaelement')) {
-	            $sql .= ' '.$criteria->renderWhere();
-	        }
-			if (!$result =& $this->query($sql, $force)) {
-				return false;
-			}
-	        //キャッシュのクリア(更新されたレコード再取得の方がコストが高そうなので)
 	        $GLOBALS['_xoopsTableCache']->clear($this->tableName);
 			$this->_fullCached = false;
-	        return true;
+			return parent::updateAll($fieldname, $fieldvalue, $criteria, $force);
 	    }
 
 		/**
@@ -717,55 +1085,45 @@ if( ! class_exists( 'XoopsTableObject' ) ) {
 		 */
 	    function deleteAll($criteria = null, $force=false)
 	    {
-	        $sql = 'DELETE FROM '.$this->tableName;
-	        if (isset($criteria) && is_subclass_of($criteria, 'criteriaelement')) {
-	            $sql .= ' '.$criteria->renderWhere();
-	        }
-			if (!$result =& $this->query($sql, $force)) {
-				return false;
-			}
-	        //キャッシュのクリア(削除されたレコード再取得の方がコストが高そうなので)
 	        $GLOBALS['_xoopsTableCache']->clear($this->tableName);
 			$this->_fullCached = false;
-	        return true;
+			return parent::deleteAll($record, $force);
 	    }
 
 		function getAutoIncrementValue()
 		{
 			return $this->db->genId(get_class($this).'_id_seq');
 		}
+	}
 
-		function &query($sql, $force=false, $limit=0, $start=0) {
-			if (empty($GLOBALS['_xoopsTableQueryCount'])) {
-				$GLOBALS['_xoopsTableQueryCount'] = 1;
-			} else {
-				$GLOBALS['_xoopsTableQueryCount']++;
-			}
-			if (!empty($GLOBALS['wpdb'])) {
-				$GLOBALS['wpdb']->querycount++;
-			}
-			if ($force) {
-				$result =& $this->db->queryF($sql, $limit, $start);
-			} else {
-				$result =& $this->db->query($sql, $limit, $start);
-			}
-			$this->_sql = $sql;
-			$this->_start = $start;
-			$this->_limit = $limit;
-
-			if (!$result) {
-				$this->_errors[] = $this->db->error();
-				return false;
-			}
-			return $result;
-		}
+	class XoopsTableCache
+	{
+		var $cache;
 		
-		function getLastSQL()
-		{
-			return $this->_sql;
+		function set($table, $key, $row, $limit=0) {
+			$this->cache[$table][$key] = $row;
+			$cache_size = count($this->cache[$table]);
+			if (($limit != 0) && $cache_size >$limit) {
+				array_splice($this->cache[$table],1, $cache_size-$limit);
+			}
+		}
+		function reset($table, $key) {
+			unset($this->cache[$table][$key]);
+		}
+		function exists($table, $key) {
+			return (!empty($this->cache[$table][$key]));
+		}
+		function &get($table,$key) {
+			return $this->cache[$table][$key];
+		}
+		function &getFull($table) {
+			return $this->cache[$table];
+		}
+		function clear($table) {
+			$this->cache[$table] = array();
 		}
 	}
-	
+
 	class XoopsJoinCriteria
 	{
 		var $_table_name;
@@ -776,7 +1134,6 @@ if( ! class_exists( 'XoopsTableObject' ) ) {
 		//add: 2006/01/15 towdash
 		var $_main_prefix;
 		var $_sub_prefix;
-		 
 		//add argument $main_prefix=""  and $sub_prifix="": 2006/01/15 towdash
 		function XoopsJoinCriteria($table_name, $main_field, $sub_field, $join_type='LEFT', $main_prefix="" , $sub_prefix="")
 		{
@@ -808,40 +1165,13 @@ if( ! class_exists( 'XoopsTableObject' ) ) {
 			}
 		// set prefix alias as : 2006/01/13 towdash
 			$join_str = " ".$this->_join_type." JOIN ".$this->_table_name . $sub_as . $sub_prefix." ON ".$main_prefix.".".$this->_main_field."=".$sub_prefix.".".$this->_sub_field." ";
- 			if ($this->_next_join) {
+			if ($this->_next_join) {
 				$join_str .= $this->_next_join->render($this->_table_name);
 			}
 			return $join_str;
 		}
 	}
-	
-	class XoopsTableCache
-	{
-		var $cache;
-		
-		function set($table, $key, $row, $limit=0) {
-			$this->cache[$table][$key] = $row;
-			$cache_size = count($this->cache[$table]);
-			if (($limit != 0) && $cache_size >$limit) {
-				array_splice($this->cache[$table],1, $cache_size-$limit);
-			}
-		}
-		function reset($table, $key) {
-			unset($this->cache[$table][$key]);
-		}
-		function exists($table, $key) {
-			return (!empty($this->cache[$table][$key]));
-		}
-		function &get($table,$key) {
-			return $this->cache[$table][$key];
-		}
-		function &getFull($table) {
-			return $this->cache[$table];
-		}
-		function clear($table) {
-			$this->cache[$table] = array();
-		}
-	}
+
 	$GLOBALS['_xoopsTableCache'] = new XoopsTableCache;
 }
 ?>

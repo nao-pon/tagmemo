@@ -4,11 +4,11 @@
 
 	<div class="mainlink_box">
 		<a href="./index.php" class="mainlink">
-			<img src="./images/page_text.gif"></a>
+			<img src="./images/page_text.gif" alt="<{$smarty.const._MD_TAGMEMO_IMG_LIST}>" title="<{$smarty.const._MD_TAGMEMO_IMG_LIST}>"></a>
 		<a href="./edit.php" class="mainlink">
-			<img src="./images/page_edit.gif"></a>
+			<img src="./images/page_edit.gif" alt="<{$smarty.const._MD_TAGMEMO_IMG_EDIT}>" title="<{$smarty.const._MD_TAGMEMO_IMG_EDIT}>"></a>
 		<a href="./tagcloud.php"  class="mainlink">
-			<img src="./images/tagscloud.gif"></a>
+			<img src="./images/tagscloud.gif" alt="<{$smarty.const._MD_TAGMEMO_IMG_CLOUD}>" title="<{$smarty.const._MD_TAGMEMO_IMG_CLOUD}>"></a>
 	</div>
 
 
@@ -19,7 +19,7 @@
 <p class="navi_box_first">
 <{foreach item=tag_detail from=$tag_condition.detail}>
 <a href="index.php?tag_id=<{$tag_detail.id}>"><{$tag_detail.string}></a>
-<a href="index.php?tag_id=<{$tag_detail.url}>&query=<{$query_condition_url}>"><img src="./images/sub.gif"></a>
+<a href="index.php?tag_id=<{$tag_detail.url}>&query=<{$query_condition_url}>"><img src="./images/sub.gif" alt="sub"></a>
 <{/foreach}>
 </p>
 <{else}>
@@ -30,25 +30,22 @@
 <div class="tagmemo_list">
 
 		<{foreach item=memo from=$memos}>
-
 		<div id="tagmemo_list_box">
- 
+
 			<span class="tagmemo_list_title">
 				<a href="detail.php?tagmemo_id=<{$memo.tagmemo_id}>">
 				<{$memo.title}></a>
-				<{if $memo.owner == 1}>
-				<span class="edit">
-				<a href="edit.php?tagmemo_id=<{$memo.tagmemo_id}>"><img src="./images/pencil.gif"></a>
-				</span>
+				<{if $memo.owner == 1 or $xoops_isadmin == 1}>
+					<span class="edit">
+					<a href="edit.php?tagmemo_id=<{$memo.tagmemo_id}>"><img src="./images/pencil.gif"></a>
+					</span>
 				<{/if}>
 			</span>
-	
+		
 			<div class="list_date">
-				<{$memo.timestamp|date_format:"%Y/%m/%d/%H:%M"}>
-			
+				[<{$memo.tagmemo_id}>] <{$memo.timestamp|date_format:"%Y/%m/%d"}>
 			</div>
 			<div class="list_tag">
-					[ID:<{$memo.tagmemo_id}>] 
 				<{foreach item=tag key="tag_id" from=$memo.tags}>
 					[<a href="index.php?tag_id=<{$tag_id}>"><{$tag}></a>]  
 				<{/foreach}>
@@ -56,12 +53,15 @@
 		</div>
 
 	<{/foreach}>	
-	</div>
-	<div align="center">
+	</div><hr />
+	<div class="pagenav">
 <{$pagenav}>
-</div>
+</div><br />
 	<div id="bookmarklet">
-		Bookmarklet!<br/>
-		<a href="<{$bookmarklet}>"><{$xoops_sitename}> たぐめも</a>
+<{if $ff_plugin}>
+		<script src="<{$xoops_url}>/modules/tagmemo/include/addsearch.js" type="text/javascript"></script>
+		<a href="javascript:addEngine('tagmemo','png','Search','<{$xoops_url}>')"><img src="./images/plugin.gif" alt="<{$smarty.const._MD_TAGMEMO_PLUGIN_FFSEARCH}>" title="<{$smarty.const._MD_TAGMEMO_PLUGIN_FFSEARCH}>"></a>
+<{/if}>
+		<a href="<{$bookmarklet}>"><img src="./images/b_marklet.gif"　alt="<{$smarty.const._MD_TAGMEMO_BOOKMARKLET}>" title="<{$smarty.const._MD_TAGMEMO_BOOKMARKLET}>"></a>
 	</div>
 </div>

@@ -5,11 +5,11 @@
 <div class="navi_box">
 	<div class="mainlink_box">
 		<a href="./index.php" class="mainlink">
-			<img src="./images/page_text.gif"></a>
+			<img src="./images/page_text.gif" alt="<{$smarty.const._MD_TAGMEMO_IMG_LIST}>" title="<{$smarty.const._MD_TAGMEMO_IMG_LIST}>"></a>
 		<a href="./edit.php" class="mainlink">
-			<img src="./images/page_edit.gif"></a>
+			<img src="./images/page_edit.gif" alt="<{$smarty.const._MD_TAGMEMO_IMG_EDIT}>" title="<{$smarty.const._MD_TAGMEMO_IMG_EDIT}>"></a>
 		<a href="./tagcloud.php"  class="mainlink">
-			<img src="./images/tagscloud.gif"></a>
+			<img src="./images/tagscloud.gif" alt="<{$smarty.const._MD_TAGMEMO_IMG_CLOUD}>" title="<{$smarty.const._MD_TAGMEMO_IMG_CLOUD}>"></a>
 	</div>
 </div>
 
@@ -18,10 +18,9 @@
 	<{foreach item=tag from=$cloud}>
 		<a href="index.php?tag_id=<{$tag.tag_id}>">
 			<span class="<{$tag.popular}>">
-				<span class="<{$tag.fresh}>">
-					<{$tag.tag}>
-				</span>
-			</span>
+			<span class="<{$tag.fresh}>">
+			<{$tag.tag}>
+			</span></span>
 		</a>
 	<{/foreach}>
 </div>

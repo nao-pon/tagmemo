@@ -14,18 +14,15 @@ include_once "./include/gtickets.php" ;
 // echo "checkpoint 1 <br>\n";
 
 //値を受けてみるよ。
-/*
-echo '<pre>';
-var_dump($_REQUEST);
-echo '</pre>';
-*/
+
+$left_tags = empty($_POST["tagmemo_tag_input"]) ? '': $_POST["tagmemo_tag_input"] ;
 $memo_id = empty($_POST["tagmemo_id"]) ? 0 : $_POST["tagmemo_id"] ;
 $content = $_POST["tagmemo_memo"];
-$public = isset($_POST["public"]) ? $_POST["public"] : 0;
-$public = intval($public);
-$tags =  $_POST["tagmemo_tag_hidden"];
+$public = isset($_POST["public"]) ? intval($_POST["public"]) : 0;
+$tags =  $_POST["tagmemo_tag_hidden"].' '.$left_tags;
+
 if(is_array($tags)){
-$tags = implode(' ', $tags);
+	$tags = implode(' ', $tags);
 }
 // echo "checkpoint 2 <br>\n";
 $title="";
@@ -42,26 +39,37 @@ $module_id = $xoopsModule->mid();
 //ユーザーIDをもらおう
 if(is_object($xoopsUser)){
 	$uid = $xoopsUser->getVar("uid");
+	$isAdmin = $xoopsUser->isAdmin($module_id);
 } else {
 	$uid = 0;
+	$isAdmin = false;
 }
 
+$changed = true;
 if($memo_id != 0){
 	if ( ! $xoopsGTicket->check() ) {
 		redirect_header(XOOPS_URL.'/',3,$xoopsGTicket->getErrors());
 	}
 	$memo_obj =& $tagmemo_handler->getMemoObj($memo_id);
- 	if(($memo_obj->getVar('uid') != $uid) and $memo["uid"] != 0){
-		redirect_header(XOOPS_URL."/modules/tagmemo/index.php", 3, _NOPERM);
-	}else{
-		if($uid == 0){
-			redirect_header(XOOPS_URL."/modules/tagmemo/index.php", 3, _NOPERM);
-		}else{
-			if(!($xoopsUser->isAdmin($module_id))){
+	if (!is_object($memo_obj)) {
+		redirect_header(XOOPS_URL."/modules/tagmemo/index.php", 3, 'Such memo does not exist');
+	}
+	$memo_owner = $memo_obj->getVar('uid');
+	$ts =& MyTextSanitizer::getInstance();
+	if ($memo_obj->getVar('public') == 0 && !$isAdmin) {
+		if ($memo_owner == 0) {
+			//@future password check
+			//$password = isset($_POST["password"]) ? $_POST["password"] : "";
+			//if ($ts->stripSlashesGPC($password) != $memo_obj->getVar('password', 'n')) {
 				redirect_header(XOOPS_URL."/modules/tagmemo/index.php", 3, _NOPERM);
-			}
-		}	
-	
+			//}
+			$memo_id = 0;
+		} elseif ($memo_owner != $uid) {
+			redirect_header(XOOPS_URL."/modules/tagmemo/index.php", 3, _NOPERM);
+		}
+	}
+	if($memo_obj->getVar('content','e') == $ts->stripSlashesGPC($content)){
+		$changed = false;
 	}
 }else{
 	$memo_obj =& $tagmemo_handler->createMemo();
@@ -73,23 +81,31 @@ if($memo_id != 0){
 //オブジェクトに値を設定してみるよ。
 //$memo_obj->setVar('tagmemo_id', $tagmemo_id);
 if($memo_id == 0){
-$memo_obj->setVar('uid', $uid);
+	$memo_obj->setVar('uid', $uid);
+	$memo_owner = $uid;
 }
-$memo_obj->setVar('title', $title);
-$memo_obj->setVar('content', $content);
-$memo_obj->setVar('timestamp', time());
-$memo_obj->setVar('public', $public);
+if($changed){
+	$memo_obj->setVar('title', $title);
+	$memo_obj->setVar('timestamp', time());
+	$memo_obj->setVar('content', $content);
+}
+// change public memo to private only by memo owner or admin.
+if($memo_owner == $uid || $isAdmin) {
+	$memo_obj->setVar('public', $public);
+}
 // echo "checkpoint 6 <br>\n";
 
 //放り込め！
-$tagmemo_handler->insert($memo_obj, $tags);
-// echo "checkpoint 7 <br>\n";
-
-// echo "OK";
-
-// ヘッダを書くおまじない。
-//  include XOOPS_ROOT_PATH.'/header.php';
-//  include(XOOPS_ROOT_PATH.'/footer.php');
-
-redirect_header(XOOPS_URL.'/modules/tagmemo/', 1, _MD_TAGMEMO_MESSAGE_SAVE);
+if ($tagmemo_handler->insert($memo_obj, $tags)) {
+	//memo_id is set in memo_obj by xoopstableobject->insert method.
+	$memo_id = $memo_obj->getVar("tagmemo_id");
+	//redirect to created/updated memo ditail.
+	redirect_header(XOOPS_URL.'/modules/tagmemo/detail.php?tagmemo_id='.$memo_id, 1, _MD_TAGMEMO_MESSAGE_SAVE);
+} else {
+	//get error message.
+	$message = $tagmemo_handler->getErrors(false);
+	$message = ($message == '') ? 'Your memo is not saved.' : $message; 
+	//show error messsage if insert fail.
+	redirect_header(XOOPS_URL.'/modules/tagmemo/', 3, $message);
+}
 ?>

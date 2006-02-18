@@ -8,27 +8,13 @@ Tagmemo.prototype = {
 		this._tag = new TagmemoTags(this._baseurl);
 		this.memo.focus();
 	},
-/*	
+
 	autosave: function(){
-	    if(this.memo.value != ""){
-	    
-	        var memo = encodeURIComponent(this.memo.value);
-	        
-//	        var tags = this._tag.getTagsAsString();
-	        var url = this._baseurl + '/modules/tagmemo/ajax/autosave.php';
-	        
-	        if(tags != 'false'){
-	        	var pars = 'tagmemo_memo=' + memo + tags;
-	        } else {
-	        	var pars = 'tagmemo_memo=' + memo;
-	        }
-	        
-	    	var autosaveAjax = new Ajax.Request(url, {method: 'post', parameters: pars, onComplete: this.autosaveResponseHandler.bind(this)});     
-	    }
+		//@todo do something in future!
 	},
-*/
+	
 	autosaveResponseHandler: function(){
-		//alert('ajax response received!');
+		//@todo do something in future!
 	}
 }
 
@@ -67,7 +53,7 @@ TagmemoTags.prototype = {
 	
 	remove: function(e){
 		var element = Event.element(e);
-		var tag = $(element.id).firstChild.data.replace(/[\t\n\r ]+/g, "");
+		var tag = element.firstChild.data.replace(/[\t\n\r ]+/g, "");
 		for(var i = 0; i < this.tags.length; i++){
 			if(this.tags[i] == tag){
 				this.tags.splice(i, 1);
@@ -88,7 +74,7 @@ TagmemoTags.prototype = {
 			}
 			return query.replace(/ $/, '');;
 		}
-		return false;
+		return '';
 	},
 	
 	getTagArrayFromHtml: function(){
@@ -127,11 +113,12 @@ TagmemoTags.prototype = {
 			tagSpan.className = exist;
 			
 			var tagText = document.createTextNode(tag + ' ');
+			
 			//@todo is #text better to be replaced?
-			tagSpan.insertBefore(tagText, null);
+			tagSpan.insertBefore(tagText, null);			
 			this.list.insertBefore(tagSpan, null);
 			
-			$(tagSpan.id).onclick = this.remove.bindAsEventListener(this);	
+			tagSpan.onclick = this.remove.bindAsEventListener(this);	
 		}
 	}
 	

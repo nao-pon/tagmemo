@@ -39,11 +39,19 @@ function b_tagmemo_relatedtag(){
 	global $tagmemo_query;
 	$ret["query"]=$tagmemo_query;
 	global $query_condition;
-	$ret["query_condition"]=$query_condition;
+	$ret["query_condition"]=trim($query_condition);
 	$ret["query_condition_url"]=urlencode($query_condition);
+	$src_type = empty($_GET['src_type']) ? 0 : 1;
+	$ret["src_type"] = $src_type;
 	return $ret;
 }
 function b_tagmemo_id_serch(){
-return true;
+	return true;
+}
+
+function b_tagmemo_cloud(){
+	$tagmemo_handler =& xoops_getmodulehandler("tagmemo", 'tagmemo');
+	$ret = $tagmemo_handler->getAllTagsEx();
+	return $ret;
 }
 ?>

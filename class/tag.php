@@ -145,9 +145,10 @@ class TagmemoTagHandler extends XoopsTableObjectHandler
 	*/
 	function getTagId(&$tag_var){
 		$ret = 0;
-		$sql = sprintf("SELECT tag_id FROM %s WHERE tag = '%s'", $this->db->prefix('tagmemo_tag'),$tag_var);
-		$result =& $this->query($sql);
-		list($ret) = $this->db->fetchRow($result);
+		$sql = sprintf("SELECT tag_id FROM %s WHERE tag = %s", $this->db->prefix('tagmemo_tag'), $this->db->quoteString($tag_var));
+		if ($result =& $this->query($sql)) {
+			list($ret) = $this->db->fetchRow($result);
+		}
         return $ret;		
 	}
     /**
@@ -219,11 +220,12 @@ class TagmemoTagHandler extends XoopsTableObjectHandler
 				if (!$result) {
 					return $ret;
 				}
+				$ts =& MyTextSanitizer::getInstance();
 				while ($myrow = $this->db->fetchArray($result)) {
 					$record = array();
 					$wk_id = $myrow['tag_id'];
 					$record['tag_id'] = $wk_id;
-					$record['tag'] = $myrow['tag'];
+					$record['tag'] = $ts->htmlSpecialChars($myrow['tag']);
 					$record['timestamp'] = $myrow['timestamp'];
 //					$record['timestamp'] = formatTimestamp($myrow['timestamp'], "mysql");
 					$record['count'] = $myrow['f_count'];
@@ -238,23 +240,21 @@ class TagmemoTagHandler extends XoopsTableObjectHandler
     * get count of all tags
     *@return int count of all tags
     */
-	
+/*
 	function getCount(){
 		$sql = "select count(*) from ".$this->db->prefix('tagmemo_rel');		
 		$result =& $this->query($sql);
 		list($count) = $this->db->fetchRow($result);
 		return $count;		
 	}
-		
+*/
     /**
     * get array for tag cloud.
     *@return array array for tag cloud, containing tags with css 'class' selector.
     */
 		
-	function getTagArrayForCloud(){
+	function getTagArrayForCloud($count){
 		$wk_tags = $this->getTags(0,'f_count DESC');
-
-		$count = $this->getCount();
 
 		$most_popular_count = ceil($count/5);
 		$very_popular_count = $most_popular_count + ceil($count/4);

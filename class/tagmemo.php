@@ -12,26 +12,28 @@
 /**
 * Xoops Objectの定義読み込み
 */
-include_once XOOPS_ROOT_PATH."/class/xoopsobject.php";
+//include_once XOOPS_ROOT_PATH."/class/xoopsobject.php";
 /**
 * タグメモのオブジェクトハンドラ
 * @package Persistence
 * @author twodash <twodash@twodash.net>
 */
-class TagmemoTagmemoHandler extends XoopsObjectHandler {
+class TagmemoTagmemoHandler {// extends XoopsObjectHandler {
 	//public vars
 	//Nothing
 	//public function	
 	//Constructor
 	/**
 	* コンストラクタ
+	* @param object $db (dummy param which is needed when using xoops_getmodulehandler method. )
+	* @access public
 	*/
-	function TagmemoTagmemoHandler($db) {
-		$this->XoopsObjectHandler($db);
-		$this->db = & $db;
-		$this->_tag_handler = & xoops_getmodulehandler('tag');
-		$this->_memo_handler = & xoops_getmodulehandler('memo');
-		$this->_rel_handler = & xoops_getmodulehandler('relation');
+	function TagmemoTagmemoHandler($db=null) {
+//		$this->XoopsObjectHandler($db);
+//		$this->db = & $db;
+		$this->_tag_handler = & xoops_getmodulehandler('tag', 'tagmemo');
+		$this->_memo_handler = & xoops_getmodulehandler('memo', 'tagmemo');
+		$this->_rel_handler = & xoops_getmodulehandler('relation', 'tagmemo');
 	}
 	//Constructor
 	/**
@@ -90,30 +92,43 @@ class TagmemoTagmemoHandler extends XoopsObjectHandler {
 			$this->setRelation($wk_memo_id, $wk_tag_id);
 		}
 		return $wk_memo_id;*/
-		$wk_memo_id = $this->insertMemo($arg_memo, $force);
-		$this->insertTags($wk_memo_id,$arg_tags);
-		return $wk_memo_id;
-		
+		$ret = false;
+		if ($this->insertMemo($arg_memo, $force)) {
+			$wk_memo_id = $arg_memo->getVar("tagmemo_id");
+			if ($this->insertTags($wk_memo_id, $arg_tags, $force)) {
+				$ret = true;
+			} else{
+				$this->setError('Some Error occured but memo is saved.');
+			}
+		}
+		return $ret;
 	}
 	/**
 	 * メモオブジェクトを登録
 	 */
 	function insertMemo(&$arg_memo, $force = false) {
-		$this->_memo_handler->insert($arg_memo, $force);
-		//		$arg_memo->isnew();
-		$wk_memo_id = $arg_memo->getVar("tagmemo_id");
-		return $wk_memo_id;
+		if (!$this->_memo_handler->insert($arg_memo, $force)) {
+			$this->setError($this->_memo_handler->getErrors(false));
+			return false;
+		}
+		return true;
 	}
 	/**
 	 * タグを登録
 	 */
-	function insertTags($arg_memo_id,$arg_tags) {
+	function insertTags($arg_memo_id, $arg_tags, $force = false) {
+		$ret = true;
 		$arr_tags = & $this->_tag2array($arg_tags);
+		$this->_rel_handler->setUpdateMode($force);
 		$this->_rel_handler->removeRelation($arg_memo_id);
 		foreach ($arr_tags as $wk_tag) {
-			$wk_tag_id = $this->getTagId($wk_tag, true);
-			$this->setRelation($arg_memo_id, $wk_tag_id);
+			$wk_tag_id = $this->getTagId($wk_tag, true, $force);
+			if (!$this->setRelation($arg_memo_id, $wk_tag_id)) {
+				$this->setError('tag: '.htmlspecialchars($wk_tag).' is not related.');
+				$ret = false;
+			}
 		}
+		return $ret;
 	}
 	/**
 	* メモを削除
@@ -123,7 +138,11 @@ class TagmemoTagmemoHandler extends XoopsObjectHandler {
 	function deleteMemo($memoObj) {
 		$wk_memo_id = $memoObj->getVar("tagmemo_id");
 		$this->_rel_handler->removeRelation($wk_memo_id);
-		$this->_memo_handler->delete($memoObj);
+		if (!$this->_memo_handler->delete($memoObj)) {
+			$this->setError($this->_memo_handler->getErrors(false));
+			return false;
+		}
+		return true;
 	}
 	/**
 	* $tag_varの存在確認
@@ -148,12 +167,12 @@ class TagmemoTagmemoHandler extends XoopsObjectHandler {
 	* @param bool
 	* @return integer tagmemo_id
 	*/
-	function getTagId(&$tag_var, $force = false) {
+	function getTagId(&$tag_var, $force = false, $forceupdate = false) {
 		$ret = $this->_tag_handler->getTagId($tag_var);
 		if ($ret < 1 and $force) {
 			$wk_obj_tag = & $this->_tag_handler->create(true);
 			$wk_obj_tag->setVar("tag", $tag_var);
-			$this->_tag_handler->insert($wk_obj_tag, $force);
+			$this->_tag_handler->insert($wk_obj_tag, $forceupdate);
 			$ret = $wk_obj_tag->getVar("tag_id");
 		}
 		return $ret;
@@ -166,9 +185,11 @@ class TagmemoTagmemoHandler extends XoopsObjectHandler {
 	* @access public
 	*/
 	function setRelation($tagmemo_id, $tag_id) {
+		$ret = false;
 		if ($tagmemo_id != 0 & $tag_id != 0) {
-			$this->_rel_handler->setRelation($tagmemo_id, $tag_id);
+			$ret = $this->_rel_handler->setRelation($tagmemo_id, $tag_id);
 		}
+		return $ret;
 	}
 
 	/**
@@ -194,6 +215,9 @@ class TagmemoTagmemoHandler extends XoopsObjectHandler {
 		$memo_id = intval($memo_id);
 		//		$this->_ready();
 		$wk_objmemo = & $this->getMemoObj($memo_id);
+		if (!is_object($wk_objmemo)) {
+			return false;
+		}
 		$this->_set_condition_memo($memo_id);
 		$this->_getTag2Cache();
 		$rel_criteria = new Criteria('tagmemo_id', $memo_id);
@@ -283,7 +307,8 @@ class TagmemoTagmemoHandler extends XoopsObjectHandler {
 	*/
 	function & getAllTagsEx() {
 		$ret = array ();
-		$ret = $this->_tag_handler->getTagArrayForCloud();
+		$count = $this->_rel_handler->getCount();
+		$ret = $this->_tag_handler->getTagArrayForCloud($count);
 		//		$ret = $this->_tag_handler->getAllTagsEx();
 		return $ret;
 	}
@@ -414,8 +439,30 @@ class TagmemoTagmemoHandler extends XoopsObjectHandler {
 	function getMemoCount() {
 		return $this->_memo_handler->getCount();
 	}
-
+	
+	function setError($error_str)
+	{
+		$this->_errors[] = $error_str;
+	}
+	function getErrors($html=true, $clear=true)
+	{
+		$error_str = "";
+		$delim = $html ? "<br />\n" : "\n";
+		if (count($this->_errors)) {
+			$error_str = implode($delim, $this->_errors);
+		}
+		if ($clear) {
+			$this->_errors = array();
+		}
+		return $error_str;
+	}
+	
 	//private vars
+	/**
+	* @access private
+	* @var $_errors
+	*/
+		var $_errors;
 	/**
 	* @access private
 	* @var $_tag_handler

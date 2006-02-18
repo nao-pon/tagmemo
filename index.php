@@ -3,9 +3,9 @@
 * @package Page
 */
 
-// 必要なファイ?を?気に取??むおまじない。
+// 必要なファイルを一気に取り込むおまじない。
 /**
-* XOOPS用ファイ?の取??roriりこみ
+* XOOPS用ファイルの取り込み
 */
 require_once '../../mainfile.php';
 $myts =& MyTextSanitizer::getInstance();
@@ -15,7 +15,8 @@ $tag_id = explode(",",$tag_id);
 $keyword = empty($_GET["query"]) ? "" :$_GET["query"];
 //$keyword = $myts->addSlashes($keyword);
 $condition .= $keyword;
-$count = (strlen($condition)>0) ? 0 : 10;/* @todo set from configure */
+$count = isset($xoopsModuleConfig['per_page']) ? $xoopsModuleConfig['per_page'] : 10;
+$count = (strlen($condition)>0) ? 0 : $count;
 //$search_from = empty($_GET["from"]) ? "sub" :$_GET["from"];
 $start = empty($_GET["start"]) ? 0 : intval($_GET["start"]);
 $tagmemo_handler =& xoops_getmodulehandler('tagmemo');
@@ -43,13 +44,13 @@ if(strlen($condition)>0){
 	$tagmemo_related_tags = $tagmemo_handler->getRelatedTags();
 }else{
 	$tagmemo_query=false;
-	$tagmemo_block_recent_hide = true;
+//	$tagmemo_block_recent_hide = true;
 }
 $xoopsOption['template_main'] = 'tagmemo_list.html';
 // echo 'my uid =' . $xoopsUser->getVar("uid");
 // ヘッダを書くおまじない。
 /**
-* XOOPSのテンプ?ートのヘッダー
+* XOOPSのテンプレートのヘッダー
 */
 include XOOPS_ROOT_PATH.'/header.php';
 $xoopsTpl->assign("memos", $memo_array);
@@ -67,11 +68,13 @@ if(strlen($condition)>0){
 	$nav = new XoopsPageNav($maxcount, $count, $start);
 	$xoopsTpl->assign('pagenav', $nav->renderNav());
 }
-		
+
 $xoopsTpl->assign('bookmarklet','javascript: tagmemo_quickform_script = document.createElement(\'script\'); tagmemo_quickform_script.src = \''.XOOPS_URL.'/modules/tagmemo/quickform.php\'; tagmemo_quickform_script.type = \'text/javascript\'; void(document.body.appendChild(tagmemo_quickform_script));');
+$ff_plugin = isset($xoopsModuleConfig['ff_plugin']) ? $xoopsModuleConfig['ff_plugin'] : 0;
+$xoopsTpl->assign('ff_plugin', $ff_plugin);
 
 /**
-* XOOPSのテンプ?ートのフッター
+* XOOPSのテンプレートのフッター
 */
 include(XOOPS_ROOT_PATH.'/footer.php');
 ?>

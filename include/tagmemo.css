@@ -1,5 +1,5 @@
 #content{
-/*	background-color: #ffffff;*/
+	background-color: #ffffff;
 	margin: 0;
 	padding: 0;
 	font-size: small;
@@ -10,16 +10,13 @@
 #tagmemo_content{
 	font-family: Verdana, Arial, sans-serif;
 	background-color: #ffffff;
-	color: #333333;
 	font-size:small;
 	margin-left: auto;
 	margin-right: auto;
 	}
 	
 #tagmemo_content a{
-	color: #5D5DFF; /**/
 	text-decoration: none;
-	border-bottom: 1px dotted #dcdcdc;
 	font-weight: 100;
 	}
 	
@@ -28,26 +25,30 @@
 	font-weight: 100;
 	}
 
-#tagmemo_content h1{
-	color: #dddddd;
-	margin-top: 10px;
-	margin-bottom: 10px;
-	}
 
 /*------tagmemo_navi_box--------*/
 
 #tagmemo_content .navi_box{
 	margin:0px;
-	margin-bottom: 20px;
 	padding: 0px;
 	float:none;
 	}
 
 #tagmemo_content .navi_box_title{
-	color: #bbbbbb;
+	/*color: #bbbbbb;*/
 	font-size:110%;
 }
 #tagmemo_content .navi_box_first{
+	font-size:125%;
+	font-weight: bold;
+}
+
+#tagmemo_content .navi_box_first a:link{
+	font-size:125%;
+	font-weight: bold;
+}
+
+#tagmemo_content .navi_box_first a:visited{
 	font-size:125%;
 	font-weight: bold;
 }
@@ -80,6 +81,7 @@
 	width:auto;
 	line-height:100%;
  	border-left: 10px solid #f8f8f8;
+  	border-left: 10px solid #e9e9e9;	
  	margin-bottom: 30px;
  }
 
@@ -150,24 +152,8 @@
 	float: left;
 }
 
-#tagmemo_list_box .edit a{
-	font-size: 80%;
-	padding:0px 2px;
-	margin-left: 10px;
-	border:0px;
-}
-
-#tagmemo_list_box .edit a:visited{
-}
-
-#tagmemo_list_box .edit a:hover{
-
-}
-
-
 #tagmemo_container .list_tag a{
 	font-size:83%;
-
  }
  
 #tagmemo_container .list_tag a:hover{
@@ -175,10 +161,13 @@
 }
 
 #tagmemo_container .list_tag a:visited{
-
 	font-size:83%;
 }
 
+#tagmemo_content .pagenav{
+	margin: 15px;
+	text-align: center;	
+	}
 /*------tagmemo_container--------*/
 #tagmemo_container{
 	width:90%;
@@ -191,15 +180,16 @@
 /*------tagmemo_ditail--------*/
 
 #tagmemo_container .memo_content{
-	width:100%;
+//	width:90%;
+	line-height: 1.5em;
 	background-color: #ffffff;
 	padding: 10px;
 }
 
 #tagmemo_content .ditail_date{
-	color: #666666;
+/*	color: #666666;*/
 	font-size:85%;
-	text-align: right;
+	text-align: left;
 	margin: 0px;
 	padding:3px;
 	display:block;
@@ -207,7 +197,6 @@
 
 #tagmemo_container  .ditail_tag {
     background-color: #fafafa;
-	color: #666666;
 	padding: 2px 10px;
 	margin: 10px 0px 10px 10px;
 	display: block;
@@ -225,20 +214,45 @@
 
 }
 
+#tagmemo_container .owner{
+	margin-top: 15px;
+	margin-bottom: 0px;
+	text-align: right;
+	vertical-align: middle;
+	font-size:11px;
+	padding:0px;
+}
+
+#tagmemo_container .snipped{
+
+	border:1px solid #CCCCCC;
+	margin:0px;
+	padding: 1px 3px 1px 2px;
+	vertical-align: middle;
+}
+
+#tagmemo_container .owner img{
+	margin-right: 0px;
+	vertical-align: middle;
+}
+
+
+
 /*------tagmemo_edit--------*/
 #tagmemo_container .edit_text{
-	width:100%;
+	font-family: Verdana, Arial, sans-serif;
+	font-size:small;
+	width:95%;
 	height: 300px; 
 	background-color: #fcfcfc;
-	color: #333333;
 	line-height: 1.5em;
 	padding: 10px;
-	border: 1px solid #efefef;
+	border: 1px solid #cccccc;
 	}
 
 #tagmemo_container .form_text{
-	background-color: #ffffff;
 	padding: 1px 5px;
+	background-color: #fcfcfc;	
 	border: 1px solid #CCCCCC;
 }
 
@@ -264,7 +278,7 @@
 
 #tagmemo_buttons{
 	text-align: right;
-	margin-right: -20px;
+	margin-right: -10px;
 }
 
 
@@ -272,21 +286,31 @@
 
 #tagmemo_tag_block{
 	padding:2px 10px;
+	margin: 0;
+
+}
+
+#tagmemo_tag_block img{
+	vertical-align: middle;
 
 }
 
 #tagmemo_tag_block a:link{
 		text-decoration:none;
+		font-weight: 100;
 		border: none;
 }
 
 #tagmemo_tag_block a:visited{
 		text-decoration:none;
+		font-weight: 100;
 		border: none;
 }
 
 #tagmemo_tag_block .search_box{
 	font-size: 90%;
+	padding: 0;	
+	margin: 0;
 	margin-left: auto;
 	margin-right: auto;
 	
@@ -298,18 +322,18 @@
 }
 
 #tagmemo_container .tagcloud a:link{
-			color: #0000ff;
-			text-decoration:none;
+		color: #0000ff;
+		text-decoration:none;
 		border: none;
 }
 
 #tagmemo_container .tagcloud a:visited{
-			text-decoration:none;
+		text-decoration:none;
 		border: none;
 }
 
 #tagmemo_container .tagcloud a:hover{
-		text-decoration: underline;
+		text-decoration:none;
 		border: none;
 }
 
@@ -337,5 +361,5 @@ span.freshtags{
 }
 
 span.oldtags {
-			color: #8B8BFF;
+			color: #b0b0b0;
 }
