@@ -85,7 +85,7 @@ function createTagmemoQuickForm(){
 	tagmemo_quickform_charset.type  = 'hidden';
 	tagmemo_quickform.appendChild(tagmemo_quickform_charset);
 
-    alert(tagmemo_quickform_charset.value);
+    //alert(tagmemo_quickform_charset.value);
 
 	/* GoBack Url */
 
