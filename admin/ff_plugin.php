@@ -15,7 +15,7 @@ if ($op != 'main') {
 		exit('Irregular post found');
 	}
 }
-$filename = XOOPS_ROOT_PATH."/modules/tagmemo/include/tagmemo.src";
+$filename = XOOPS_ROOT_PATH."/modules/tagmemo/include/src/tagmemo.src";
 $dist = $filename.".dist";
 
 $error = '';

@@ -4,15 +4,16 @@ function tagmemoClearForm() {
 }
 
 function createTagmemoQuickForm(){
-	
+    
 	/* CSS */
 
     style = document.createElement('link');
-    style.href = baseurl + '/include/tagmemo_quickform.css';
+    style.href = baseurl + '/include/css/tagmemo_quickform.css';
     style.rel  = 'stylesheet';
     style.type = 'text/css';
     document.getElementsByTagName('head')[0].appendChild(style);
-	
+
+/*	
 	tagmemo_quickform_prototype = document.createElement('script');
 	tagmemo_quickform_prototype.src = 'prototype.js';
 	tagmemo_quickform_prototype.type = 'text/javascript';
@@ -22,6 +23,7 @@ function createTagmemoQuickForm(){
 	tagmemo_quickform_scriptaculous.src = 'scriptaculous.js';
 	tagmemo_quickform_scriptaculous.type = 'text/javascript';
 	document.body.appendChild(tagmemo_quickform_scriptaculous);	
+*/
 		
 	/* Container */
 
@@ -36,12 +38,17 @@ function createTagmemoQuickForm(){
 	tagmemo_quickform.action = baseurl + '/quickpost.php';
 
 	/* memo */
-
+	
 	tagmemo_quickform_memo      = document.createElement('textarea');
 	tagmemo_quickform_memo.id   = 'tagmemo_quickform_memo';
 	tagmemo_quickform_memo.name = 'tagmemo_quickform_memo';
 	tagmemo_quickform_memo.cols = '40';
 	tagmemo_quickform_memo.rows = '15';
+
+	url = location.href;
+	title = document.title;
+    tagmemo_quickform_memo.value = title + '\n' + url + '\n\n';
+
 	tagmemo_quickform.appendChild(tagmemo_quickform_memo);
 
 	tagmemo_quickform.appendChild(document.createElement('br'));
@@ -66,6 +73,19 @@ function createTagmemoQuickForm(){
 	tagmemo_quickform_token.value = token;
 	tagmemo_quickform_token.type  = 'hidden';
 	tagmemo_quickform.appendChild(tagmemo_quickform_token);
+
+    /* CharacterSet */
+    
+    charset = document.characterSet; // for Firefox
+    if(charset == undefined){charset = document.charset;} // for IE
+    
+	tagmemo_quickform_charset       = document.createElement('input');
+	tagmemo_quickform_charset.name  = 'tagmemo_quickform_charset';
+	tagmemo_quickform_charset.value = charset.toLowerCase();
+	tagmemo_quickform_charset.type  = 'hidden';
+	tagmemo_quickform.appendChild(tagmemo_quickform_charset);
+
+    alert(tagmemo_quickform_charset.value);
 
 	/* GoBack Url */
 
