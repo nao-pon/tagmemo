@@ -8,7 +8,6 @@
 * XOOPS用ファイルの取り込み
 */
 
-
 require_once '../../mainfile.php';
 //GIJOE さんのワンタイムチケット
 //include_once "./include/gtickets.php" ;
@@ -18,15 +17,6 @@ $token = $_POST['tagmemo_quickform_token'];
 $content = $_POST["tagmemo_quickform_memo"];
 $public = isset($_POST["public"]) ? intval($_POST["public"]) : 0;
 $tags =  $_POST["tagmemo_quickform_tags"];
-$charset =  $_POST["tagmemo_quickform_charset"];
-
-// quick fix. sorry euc-jp only.
-// what if japanese message is post from 'iso-8859-1' webpage?
-
-if(function_exists('mb_convert_encoding')) {
-	$content = mb_convert_encoding($content, 'EUC-JP', $charset);
-	$tags = mb_convert_encoding($tags, 'EUC-JP', $charset);
-}
 
 $title="";
 if(preg_match("/^([^\n]{0,120})/i", $content, $matches)){
@@ -55,4 +45,5 @@ $tagmemo_handler->insert($memo_obj, $tags, true);
 $gobackurl = $_POST['tagmemo_quickform_gobackurl'];
 header("Location: ".strtr($gobackurl, array("\r"=>'',"\n"=>'')));
 exit();
+
 ?>

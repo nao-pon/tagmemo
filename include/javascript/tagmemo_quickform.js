@@ -1,6 +1,14 @@
+// xoops_charset should be passed from outside of this script.
+// alert(xoops_charset);
+
 function tagmemoClearForm() {
 	x = document.getElementById('tagmemo_quickform_container');
 	x.parentNode.removeChild(x);
+}
+
+function IESubmit(){
+    document.charset = xoops_charset;
+    tagmemo_quickform.submit();
 }
 
 function createTagmemoQuickForm(){
@@ -12,18 +20,6 @@ function createTagmemoQuickForm(){
     style.rel  = 'stylesheet';
     style.type = 'text/css';
     document.getElementsByTagName('head')[0].appendChild(style);
-
-/*	
-	tagmemo_quickform_prototype = document.createElement('script');
-	tagmemo_quickform_prototype.src = 'prototype.js';
-	tagmemo_quickform_prototype.type = 'text/javascript';
-	document.body.appendChild(tagmemo_quickform_script);
-	
-	tagmemo_quickform_scriptaculous = document.createElement('script');
-	tagmemo_quickform_scriptaculous.src = 'scriptaculous.js';
-	tagmemo_quickform_scriptaculous.type = 'text/javascript';
-	document.body.appendChild(tagmemo_quickform_scriptaculous);	
-*/
 		
 	/* Container */
 
@@ -32,10 +28,11 @@ function createTagmemoQuickForm(){
 
 	/* Form */
 
-	tagmemo_quickform        = document.createElement('form');
-	tagmemo_quickform.id     = 'tagmemo_quickform';
-	tagmemo_quickform.method = 'post';
-	tagmemo_quickform.action = baseurl + '/quickpost.php';
+	tagmemo_quickform               = document.createElement('form');
+	tagmemo_quickform.id            = 'tagmemo_quickform';
+	tagmemo_quickform.method        = 'post';
+	tagmemo_quickform.action        = baseurl + '/quickpost.php';
+	tagmemo_quickform.acceptCharset = xoops_charset;
 
 	/* memo */
 	
@@ -74,19 +71,6 @@ function createTagmemoQuickForm(){
 	tagmemo_quickform_token.type  = 'hidden';
 	tagmemo_quickform.appendChild(tagmemo_quickform_token);
 
-    /* CharacterSet */
-    
-    charset = document.characterSet; // for Firefox
-    if(charset == undefined){charset = document.charset;} // for IE
-    
-	tagmemo_quickform_charset       = document.createElement('input');
-	tagmemo_quickform_charset.name  = 'tagmemo_quickform_charset';
-	tagmemo_quickform_charset.value = charset.toLowerCase();
-	tagmemo_quickform_charset.type  = 'hidden';
-	tagmemo_quickform.appendChild(tagmemo_quickform_charset);
-
-    //alert(tagmemo_quickform_charset.value);
-
 	/* GoBack Url */
 
 	tagmemo_quickform_gobackurl = document.createElement('input');
@@ -98,11 +82,13 @@ function createTagmemoQuickForm(){
 	/* Submit Button */
 
 	tagmemo_quickform_submit       = document.createElement('input');
-	tagmemo_quickform_submit.type  = 'submit';
+	tagmemo_quickform_submit.type  = 'button';
 	tagmemo_quickform_submit.name  = 'tagmemo_quickform_submit';
 	tagmemo_quickform_submit.id    = 'tagmemo_quickform_submit';
 	tagmemo_quickform_submit.value = 'Submit';
 	tagmemo_quickform.appendChild(tagmemo_quickform_submit);
+	
+	tagmemo_quickform_submit.onclick = IESubmit;
 
 	/* Cancel Button */
 
