@@ -649,7 +649,9 @@ class TagmemoTagmemoHandler {// extends XoopsObjectHandler {
 	*/
 	function & _tag2array($tags) {
 		$wk_tagstr = strval($tags);
-		$wk_tagstr = mb_convert_kana($wk_tagstr, "asKHV");
+		if (function_exists('mb_convert_kana')){		
+			$wk_tagstr = mb_convert_kana($wk_tagstr, "asKHV");
+		}
 		$pattern[] = "/,/";
 		$replacement[] = " ";
 		$pattern[] = "/\s+/";
