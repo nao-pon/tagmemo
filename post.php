@@ -99,6 +99,8 @@ if($memo_owner == $uid || $isAdmin) {
 if ($tagmemo_handler->insert($memo_obj, $tags)) {
 	//memo_id is set in memo_obj by xoopstableobject->insert method.
 	$memo_id = $memo_obj->getVar("tagmemo_id");
+	// make autolink data
+	$tagmemo_handler->makeAutolinkData();
 	//redirect to created/updated memo ditail.
 	redirect_header(XOOPS_URL.'/modules/tagmemo/detail.php?tagmemo_id='.$memo_id, 1, _MD_TAGMEMO_MESSAGE_SAVE);
 } else {

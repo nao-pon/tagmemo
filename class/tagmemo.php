@@ -20,6 +20,7 @@
 */
 class TagmemoTagmemoHandler {// extends XoopsObjectHandler {
 	//public vars
+	var $forceignorepages = '';
 	//Nothing
 	//public function	
 	//Constructor
@@ -440,6 +441,24 @@ class TagmemoTagmemoHandler {// extends XoopsObjectHandler {
 		return $this->_memo_handler->getCount();
 	}
 	
+	function makeAutolinkData() {
+		$tags = $this->getAllTags();
+		list($pattern, $pattern_a, $forceignorelist) = $this->_get_autolink_pattern(& $tags);
+		$file = XOOPS_ROOT_PATH."/cache/tagmemo_autolink.dat";
+		$fp = fopen($file, 'wb') or
+			die_message('Cannot write autolink file ' .
+			$file .
+			'<br />Maybe permission is not writable');
+		set_file_buffer($fp, 0);
+		flock($fp, LOCK_EX);
+		rewind($fp);
+		fputs($fp, $pattern   . "\n");
+		fputs($fp, $pattern_a . "\n");
+		fputs($fp, join("\t", $forceignorelist) . "\n");
+		flock($fp, LOCK_UN);
+		fclose($fp);		
+	}
+	
 	function setError($error_str)
 	{
 		$this->_errors[] = $error_str;
@@ -725,6 +744,7 @@ class TagmemoTagmemoHandler {// extends XoopsObjectHandler {
 		}
 		$ret["title"] = $objMemo->getVar("title", $format);
 		$ret["content"] = $objMemo->getVar("content", $format);
+		$this->_tag_auto_link($ret["content"]);
 		$ret["timestamp"] = formatTimestamp($objMemo->getVar("timestamp", $format), "mysql");
 		$ret["public"] = $objMemo->getVar("public", $format);
 		$ret["tags"] = $this->_parseRelatedTags($memo_id);
@@ -762,6 +782,149 @@ class TagmemoTagmemoHandler {// extends XoopsObjectHandler {
 	function _set_condition_memo($memo_ids) {
 		$this->_condition_memo = $memo_ids;
 		$this->_flg_chenge_condition_tag = true;
+	}
+	
+	function _tag_auto_link(&$str)
+	{
+		static $auto;
+		static $forceignorepages;
+		
+		if (!$auto)
+		{
+			$autofile = XOOPS_ROOT_PATH."/cache/tagmemo_autolink.dat";
+			@list($auto,$dum,$forceignorepages) = @file($autofile);
+			if (!$auto) $auto = "(?!)";
+			$auto = explode("\t",trim($auto));
+			$forceignorepages = explode("\t",trim($forceignorepages));
+		}
+		
+		$this->forceignorepages = $forceignorepages;
+		
+		// ページ数が多い場合は、セパレータ \t で複数パターンに分割されている
+		foreach($auto as $pat)
+		{
+			$pattern = "/(<(?:a|A).*?<\/(?:a|A)>|<[^>]*>|&(?:#[0-9]+|#x[0-9a-f]+|[0-9a-zA-Z]+);)|($pat)/s";
+			$str = preg_replace_callback($pattern,array(&$this,'_tag_auto_link_replace'),$str);
+		}
+		
+		return ;
+	}
+	
+	function _tag_auto_link_replace($match)
+	{
+		static $tags = null;
+		
+		if (is_null($tags))
+		{
+			$tags = $this->getAllTags();
+			$tags = array_flip($tags);
+		}
+		
+		if (!empty($match[1])) return $match[1];
+		$name = $match[2];
+		
+		// 無視リストに含まれているページを捨てる
+		if (in_array($name,$this->forceignorepages)) {return $match[0];}
+		
+		return "<a href=\"".XOOPS_URL."/modules/tagmemo/index.php?tag_id=".$tags[$name]."\" title=\"Tags\" style=\"taglink\">".$name."</a>";
+	}
+	
+	// AutoLinkのパターンを生成する
+	function _get_autolink_pattern(& $pages)
+	{
+		//foreach ($pages as $page)
+		//{
+		//	$auto_pages[] = $page;
+		//}
+		$auto_pages = array_values($pages);
+		
+		if (count($auto_pages) == 0)
+		{
+			$result = '(?!)';
+		}
+		else
+		{
+			$auto_pages = array_unique($auto_pages);
+			sort($auto_pages, SORT_STRING);
+	
+			$result = $this->_get_autolink_pattern_sub($auto_pages, 0, count($auto_pages), 0);
+		}
+		
+		return array($result, '(?!)', '');
+	}
+	
+	function _get_autolink_pattern_sub(& $pages, $start, $end, $pos)
+	{
+		static $lev = 0;
+		
+		if ($end == 0) return '(?!)';
+		
+		$lev ++;
+		
+		$result = '';
+		$count = 0;
+		
+		$x = (mb_strlen($pages[$start]) <= $pos);
+		
+		if ($x) { ++$start; }
+		
+		for ($i = $start; $i < $end; $i = $j) // What is the initial state of $j?
+		{
+			$char = mb_substr($pages[$i], $pos, 1);
+			for ($j = $i; $j < $end; $j++)
+			{
+				if (mb_substr($pages[$j], $pos, 1) != $char) { break; }
+			}
+			if ($i != $start)
+			{
+				if ($lev === 1)
+				{
+					$result .= "\t";
+				}
+				else
+				{
+					$result .= '|';
+				}
+				
+			}
+			if ($i >= ($j - 1))
+			{
+				$result .= str_replace(' ', '\\ ', preg_quote(mb_substr($pages[$i], $pos), '/'));
+			}
+			else
+			{
+				$result .= str_replace(' ', '\\ ', preg_quote($char, '/')) .
+					$this->_get_autolink_pattern_sub($pages, $i, $j, $pos + 1);
+			}
+			
+			++$count;
+		}
+		if ($lev === 1)
+		{
+			$limit = 1024 * 30; //マージンを持たせて 30kb で分割
+			$_result = "";
+			$size = 0;
+			foreach(explode("\t",$result) as $key)
+			{
+				if (strlen($_result.$key) - $size > $limit)
+				{
+					$_result .= ")\t(?:".$key;
+					$size = strlen($_result);
+				}
+				else
+				{
+					$_result .= ($_result ? "|" : "").$key;
+				}
+			}
+			$result = '(?:' . $_result . ')';
+		}
+		else
+		{
+			if ($x or $count > 1) { $result = '(?:' . $result . ')'; }
+			if ($x) { $result .= '?'; }
+		}
+		$lev --;
+		return $result;
 	}
 } //end of class define of TagmemoHandler
 ?>

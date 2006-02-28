@@ -54,6 +54,7 @@ if ( ! $xoopsGTicket->check() ) {
 
 //do deletion!
 if ($tagmemo_handler->deleteMemo($memo_obj)) {
+	$tagmemo_handler->makeAutolinkData();
 	redirect_header(XOOPS_URL.'/modules/tagmemo/', 1, _MD_TAGMEMO_MESSAGE_DELETE);
 } else {
 	//get error message.
