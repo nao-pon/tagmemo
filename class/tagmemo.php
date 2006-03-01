@@ -744,7 +744,7 @@ class TagmemoTagmemoHandler {// extends XoopsObjectHandler {
 		}
 		$ret["title"] = $objMemo->getVar("title", $format);
 		$ret["content"] = $objMemo->getVar("content", $format);
-		$this->_tag_auto_link($ret["content"]);
+		if ($format == 's') $this->_tag_auto_link($ret["content"]);
 		$ret["timestamp"] = formatTimestamp($objMemo->getVar("timestamp", $format), "mysql");
 		$ret["public"] = $objMemo->getVar("public", $format);
 		$ret["tags"] = $this->_parseRelatedTags($memo_id);
