@@ -290,12 +290,15 @@ class TagmemoTagmemoHandler {// extends XoopsObjectHandler {
 	* @access public
 	* @return array タグIDをキーとしてデータにタグを持つ配列
 	*/
-	function & getAllTags() {
+	function & getAllTags($min_length = 0) {
 		$wk_tags = & $this->_tag_handler->getObjects(null, true);
+		$ret = array();
 		foreach ($wk_tags as $wk_obj_tag) {
 			$wk_tag_id = $wk_obj_tag->getVar("tag_id");
 			$wk_tag = $wk_obj_tag->getVar("tag");
-			$ret[$wk_tag_id] = $wk_tag;
+			if (strlen($wk_tag) >= $min_length) {
+				$ret[$wk_tag_id] = $wk_tag;
+			}
 		}
 		asort($ret);
 		return $ret;
@@ -456,7 +459,7 @@ class TagmemoTagmemoHandler {// extends XoopsObjectHandler {
 	}
 	
 	function makeAutolinkData() {
-		$tags = $this->getAllTags();
+		$tags = $this->getAllTags(3);
 		list($pattern, $pattern_a, $forceignorelist) = $this->_get_autolink_pattern(& $tags);
 		$file = XOOPS_ROOT_PATH."/cache/tagmemo_autolink.dat";
 		$fp = fopen($file, 'wb') or
@@ -830,7 +833,7 @@ class TagmemoTagmemoHandler {// extends XoopsObjectHandler {
 		
 		if (is_null($tags))
 		{
-			$tags = $this->getAllTags();
+			$tags = $this->getAllTags(3);
 			$tags = array_flip($tags);
 		}
 		
