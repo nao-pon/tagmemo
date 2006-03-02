@@ -62,7 +62,7 @@ class TagmemoMemoHandler extends XoopsTableObjectHandler
 
         //ハンドラの対象テーブル名定義
         $this->tableName = $this->db->prefix('tagmemo');
-
+		$this->tableAlias = 'main';
         //関連クラス名称を小文字で定義
         // - 標準のネーミングに準拠している場合には設定不要
      $this->objectClassName = 'tagmemomemo';
@@ -87,7 +87,8 @@ class TagmemoMemoHandler extends XoopsTableObjectHandler
 			$criteria = new CriteriaCompo;
 		}
 		$criteria->setGroupby($fieldlist);
-		$joindef = new XoopsJoinCriteria($this->db->prefix('tagmemo_rel'), 'tagmemo_id','tagmemo_id', 'LEFT','main','rel');
+		//$joindef = new XoopsJoinCriteria($this->db->prefix('tagmemo_rel'), 'tagmemo_id','tagmemo_id', 'LEFT','main','rel');
+		$joindef = new XoopsJoinCriteria($this->db->prefix('tagmemo_rel'), 'tagmemo_id','tagmemo_id', 'LEFT','rel');
 		return parent::getObjects($criteria, true, $fieldlist, false, $joindef,$having);	
 	}
 }
