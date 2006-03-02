@@ -438,7 +438,6 @@ class TagmemoTagmemoHandler {// extends XoopsObjectHandler {
 	}
 
 	function getMemoCount($tag_id = null) {
-		$criteria = null;
 		if ($tag_id) {
 			$this->_set_condition_tag($tag_id);
 			$wk_criteria = new CriteriaCompo;
@@ -453,7 +452,7 @@ class TagmemoTagmemoHandler {// extends XoopsObjectHandler {
 			$wk_criteria->add($wk_tag_criteria, 'AND');
 			return $this->_rel_handler->getCount($wk_criteria);
 		}
-		return $this->_memo_handler->getCount($wk_criteria);
+		return $this->_memo_handler->getCount();
 	}
 	
 	function makeAutolinkData() {
