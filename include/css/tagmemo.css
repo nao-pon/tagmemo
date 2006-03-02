@@ -1,4 +1,4 @@
-#content{
+#content {
 	background-color: #ffffff;
 	margin: 0;
 	padding: 0;
@@ -6,63 +6,67 @@
 	}
 
 
-/*------tagmemo_content--------*/	
-#tagmemo_content{
+/*------tagmemo_content--------*/
+#tagmemo_content {
 	font-family: Verdana, Arial, sans-serif;
 	background-color: #ffffff;
 	font-size:small;
 	margin-left: auto;
 	margin-right: auto;
 	}
-	
-#tagmemo_content a{
-	text-decoration: none;
-	font-weight: 100;
-	}
-	
-#tagmemo_content a:hover{
+
+#tagmemo_content a {
 	text-decoration: none;
 	font-weight: 100;
 	}
 
+#tagmemo_content a:hover {
+	text-decoration: none;
+	font-weight: 100;
+	}
+#tagmemo_content a.tagmemo_taglink,
+#tagmemo_list_ajax a.tagmemo_taglink {
+	color: black;
+	border-bottom: 1px dotted silver;
+}
 
 /*------tagmemo_navi_box--------*/
 
-#tagmemo_content .navi_box{
+#tagmemo_content .navi_box {
 	margin:0px;
 	padding: 0px;
 	float:none;
 	}
 
-#tagmemo_content .navi_box_title{
+#tagmemo_content .navi_box_title {
 	/*color: #bbbbbb;*/
 	font-size:110%;
 }
-#tagmemo_content .navi_box_first{
+#tagmemo_content .navi_box_first {
 	font-size:125%;
 	font-weight: bold;
 }
 
-#tagmemo_content .navi_box_first a:link{
+#tagmemo_content .navi_box_first a:link {
 	font-size:125%;
 	font-weight: bold;
 }
 
-#tagmemo_content .navi_box_first a:visited{
+#tagmemo_content .navi_box_first a:visited {
 	font-size:125%;
 	font-weight: bold;
 }
 
-#tagmemo_content .mainlink_box{
+#tagmemo_content .mainlink_box {
 	margin-right:20px;
 	text-align: right;
 }
 
-#tagmemo_content .mainlink{
-	
+#tagmemo_content .mainlink {
+
     }
-    
-#tagmemo_content .mainlink a{
+
+#tagmemo_content .mainlink a {
 	font-weight: normal;
 	border: 0px;
 	border: none;
@@ -70,37 +74,37 @@
 
 /*------tagmemo_list--------*/
 
-.tagmemo_list{
+.tagmemo_list {
 	width:90%;
 	padding-top:10px;
 	margin-left: auto;
 	margin-right: auto;
  }
- 
-#tagmemo_list_box{
+
+#tagmemo_list_box {
 	width:auto;
-	line-height:100%;
+	line-height:1.2em;
  	border-left: 10px solid #f8f8f8;
-  	border-left: 10px solid #e9e9e9;	
+  	border-left: 10px solid #e9e9e9;
  	margin-bottom: 30px;
  }
 
-#tagmemo_list_box a{
+#tagmemo_list_box a {
 	font-weight: 100;
  	border: 0;
 
  }
- 
-#tagmemo_list_box a:hover{
+
+#tagmemo_list_box a:hover {
 	font-weight: 100;
 }
 
-#tagmemo_list_box a:visited{
+#tagmemo_list_box a:visited {
 	font-weight: 100;
 }
 
 
-#tagmemo_list_box .tagmemo_list_title{
+#tagmemo_list_box .tagmemo_list_title {
 	font-size:100%;
 	display:block;
 	margin: 0px;
@@ -109,41 +113,41 @@
 }
 
 
-#tagmemo_list_box .tagmemo_list_title a{
+#tagmemo_list_box .tagmemo_list_title a {
 
 }
 
-#tagmemo_list_box .tagmemo_list_title a:hover{
+#tagmemo_list_box .tagmemo_list_title a:hover {
 	text-decoration: underline;
 	border:none;
 }
 
-#tagmemo_list_box .tagmemo_list_title a:visited{
+#tagmemo_list_box .tagmemo_list_title a:visited {
 
 }
-
-#tagmemo_list_box .tagmemo_list_title:first-letter{
+/*
+#tagmemo_list_box .tagmemo_list_title:first-letter {
 
 	font-size:160%;
 
 }
 
-#tagmemo_list_box .tagmemo_list_title a:link:first-letter{
+#tagmemo_list_box .tagmemo_list_title a:link:first-letter {
 
 	font-size:160%;
 
 }
 
-#tagmemo_list_box .tagmemo_list_title a:hover:first-letter{
+#tagmemo_list_box .tagmemo_list_title a:hover:first-letter {
 	font-size:160%;
 }
 
-#tagmemo_list_box .tagmemo_list_title a:visited:first-letter{
+#tagmemo_list_box .tagmemo_list_title a:visited:first-letter {
 	font-size:160%;
 }
+*/
 
-
-#tagmemo_list_box .list_date{
+#tagmemo_list_box .list_date {
 	font-size:10px;
 	text-align: left;
 	margin: 0px;
@@ -152,24 +156,24 @@
 	float: left;
 }
 
-#tagmemo_container .list_tag a{
+#tagmemo_container .list_tag a {
 	font-size:83%;
  }
- 
-#tagmemo_container .list_tag a:hover{
+
+#tagmemo_container .list_tag a:hover {
 	font-size:83%;
 }
 
-#tagmemo_container .list_tag a:visited{
+#tagmemo_container .list_tag a:visited {
 	font-size:83%;
 }
 
-#tagmemo_content .pagenav{
+#tagmemo_content .pagenav {
 	margin: 15px;
-	text-align: center;	
+	text-align: center;
 	}
 /*------tagmemo_container--------*/
-#tagmemo_container{
+#tagmemo_container {
 	width:90%;
 	padding-top:10px;
 	padding-right:10px;
@@ -179,14 +183,14 @@
 
 /*------tagmemo_ditail--------*/
 
-#tagmemo_container .memo_content{
+#tagmemo_container .memo_content {
 //	width:90%;
 	line-height: 1.5em;
 	background-color: #ffffff;
 	padding: 10px;
 }
 
-#tagmemo_content .ditail_date{
+#tagmemo_content .ditail_date {
 /*	color: #666666;*/
 	font-size:85%;
 	text-align: left;
@@ -202,19 +206,19 @@
 	display: block;
 }
 
-#tagmemo_container  .ditail_tag a{
+#tagmemo_container  .ditail_tag a {
 	font-size: 90%;
 	border: 0px;
 }
-#tagmemo_container  .ditail_tag a:visited{
+#tagmemo_container  .ditail_tag a:visited {
 	font-size: 90%;
 	border: 0px;
 }
-#tagmemo_container  .ditail_tag a:hover{
+#tagmemo_container  .ditail_tag a:hover {
 
 }
 
-#tagmemo_container .owner{
+#tagmemo_container .owner {
 	margin-top: 15px;
 	margin-bottom: 0px;
 	text-align: right;
@@ -223,7 +227,7 @@
 	padding:0px;
 }
 
-#tagmemo_container .snipped{
+#tagmemo_container .snipped {
 
 	border:1px solid #CCCCCC;
 	margin:0px;
@@ -231,52 +235,98 @@
 	vertical-align: middle;
 }
 
-#tagmemo_container .owner img{
+#tagmemo_container .owner img {
 	margin-right: 0px;
 	vertical-align: middle;
 }
 
+div#tagmemo_tagslist {
+	position: absolute;
+	width: 400px;
+	background-color:white;
+	top:-1000px;
+	left:-1000px;
+	border: gray solid 1px;
+	filter:alpha(opacity=90);
+	-moz-opacity:0.9;
+	font-size:85%;
+}
+.tagmemo_list.ajax {
+	width:90%;
+	margin-left: auto;
+	margin-right: auto;
+	overflow: scroll;
+}
+.tagmemo_list_box_ajax {
+	margin: 3px;
+	padding-left: 3px;
+	border-left: 5px solid gray;
+}
+.tagmemo_list_body_ajax {
+	/*display: none;*/
+	margin-left: 1.5em;
+	background-color: #fafafa;
+}
+/*
+.tagmemo_list_box_ajax:first-letter,
+.tagmemo_list_box_ajax a:link:first-letter,
+.tagmemo_list_box_ajax a:hover:first-letter,
+.tagmemo_list_box_ajax a:visited:first-letter {
+	font-size:140%;
+}
+*/
 
+span.tagmemo_list_title_ajax {
+
+}
+
+.tagmemo_pagenav_ajax {
+	text-align: center;
+}
+
+.tagmemo_list_ajax_footer {
+	text-align: center;
+}
 
 /*------tagmemo_edit--------*/
-#tagmemo_container .edit_text{
+#tagmemo_container .edit_text {
 	font-family: Verdana, Arial, sans-serif;
 	font-size:small;
 	width:95%;
-	height: 300px; 
+	height: 300px;
 	background-color: #fcfcfc;
 	line-height: 1.5em;
 	padding: 10px;
 	border: 1px solid #cccccc;
 	}
 
-#tagmemo_container .form_text{
+#tagmemo_container .form_text {
 	padding: 1px 5px;
-	background-color: #fcfcfc;	
+	background-color: #fcfcfc;
 	border: 1px solid #CCCCCC;
 }
 
-#tagmemo_tag_list{
+#tagmemo_tag_list {
 	padding: 5px;
 }
 
 
-.tags_name{
+.tags_name {
 	color: #cccccc;
 	font-size:100%;
 	font-weight: bold;
 }
 
-#input{
+#input {
 	margin-top:10px;
 }
 
-.tagmemo_tag_out{
+.tagmemo_tag_out {
 	overflow: auto;
 
 }
 
-#tagmemo_buttons{
+#tagmemo_buttons {
 	text-align: right;
 	margin-right: -10px;
 }
@@ -284,36 +334,36 @@
 
 /*------tagmemo_block------*/
 
-#tagmemo_tag_block{
+#tagmemo_tag_block {
 	padding:2px 10px;
 	margin: 0;
 
 }
 
-#tagmemo_tag_block img{
+#tagmemo_tag_block img {
 	vertical-align: middle;
 
 }
 
-#tagmemo_tag_block a:link{
+#tagmemo_tag_block a:link {
 		text-decoration:none;
 		font-weight: 100;
 		border: none;
 }
 
-#tagmemo_tag_block a:visited{
+#tagmemo_tag_block a:visited {
 		text-decoration:none;
 		font-weight: 100;
 		border: none;
 }
 
-#tagmemo_tag_block .search_box{
+#tagmemo_tag_block .search_box {
 	font-size: 90%;
-	padding: 0;	
+	padding: 0;
 	margin: 0;
 	margin-left: auto;
 	margin-right: auto;
-	
+
 }
 
 /*------tagcloud------*/
@@ -321,42 +371,42 @@
 		line-height: 210%;
 }
 
-#tagmemo_container .tagcloud a:link{
+#tagmemo_container .tagcloud a:link {
 		color: #0000ff;
 		text-decoration:none;
 		border: none;
 }
 
-#tagmemo_container .tagcloud a:visited{
+#tagmemo_container .tagcloud a:visited {
 		text-decoration:none;
 		border: none;
 }
 
-#tagmemo_container .tagcloud a:hover{
+#tagmemo_container .tagcloud a:hover {
 		text-decoration:none;
 		border: none;
 }
 
-span.mostpopulartags{
+span.mostpopulartags {
 		font-size:300%;
-		font-weight:bold;		
+		font-weight:bold;
 }
 
 
-span.verypopulartags{
+span.verypopulartags {
 		font-size:200%;
-		font-weight:bold;		
+		font-weight:bold;
 }
 
 span.populartags {
-		font-size:150%;	
+		font-size:150%;
 }
 
-span.normaltags{
-			font-size: 100%;	
+span.normaltags {
+			font-size: 100%;
 }
 
-span.freshtags{
+span.freshtags {
 			color: #0000ff;
 }
 

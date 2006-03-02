@@ -437,8 +437,23 @@ class TagmemoTagmemoHandler {// extends XoopsObjectHandler {
 		//		return implode($this->_condition_tag, ",");
 	}
 
-	function getMemoCount() {
-		return $this->_memo_handler->getCount();
+	function getMemoCount($tag_id = null) {
+		$criteria = null;
+		if ($tag_id) {
+			$this->_set_condition_tag($tag_id);
+			$wk_criteria = new CriteriaCompo;
+			$wk_tag_criteria =  new CriteriaCompo;
+			foreach ($this->_condition_tag as $wk_tag_id) {
+				if ($wk_tag_id > 0) {
+					$wk_tagid_criteria = new Criteria('tag_id', $wk_tag_id);
+					$wk_tag_criteria->add($wk_tagid_criteria, 'OR');
+					unset ($wk_tagid_criteria);
+				}
+			}
+			$wk_criteria->add($wk_tag_criteria, 'AND');
+			return $this->_rel_handler->getCount($wk_criteria);
+		}
+		return $this->_memo_handler->getCount($wk_criteria);
 	}
 	
 	function makeAutolinkData() {
@@ -826,7 +841,7 @@ class TagmemoTagmemoHandler {// extends XoopsObjectHandler {
 		// 無視リストに含まれているページを捨てる
 		if (in_array($name,$this->forceignorepages)) {return $match[0];}
 		
-		return "<a href=\"".XOOPS_URL."/modules/tagmemo/index.php?tag_id=".$tags[$name]."\" title=\"Tags\" class=\"taglink\">".$name."</a>";
+		return "<a href=\"#\" onClick=\"tagmemo_getTagslist(".$tags[$name].",event);return false;\" title=\"Tags\" class=\"tagmemo_taglink\">".$name."</a>";
 	}
 	
 	// AutoLinkのパターンを生成する

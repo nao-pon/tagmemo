@@ -1,0 +1,22 @@
+<div id="tagmemo_list_ajax" class="tagmemo_list_ajax">
+<{foreach item=memo from=$memos}>
+	<div class="tagmemo_list_box_ajax">
+		<div class="tagmemo_list_title_ajax">
+			<a href="#" onClick="tagmemo_list_body_toggle(<{$memo.tagmemo_id}>);return false;"><{$memo.title}></a>
+		</div>
+		<div id="tagmemo_list_body_ajax_<{$memo.tagmemo_id}>" class="tagmemo_list_body_ajax">
+			<{$memo.content}>
+			<div class="tagmemo_list_body_footer_ajax">
+				<a href="detail.php?tagmemo_id=<{$memo.tagmemo_id}>">- Jump -</a>
+			</div>
+		</div>
+	</div>
+<{/foreach}>	
+</div>
+<{if $pagenav}>
+<hr />
+<div class="tagmemo_pagenav_ajax">
+<{$pagenav}>
+</div>
+<{/if}>
+<div class="tagmemo_list_ajax_footer">- <a href="#" onClick="tagmemo_hideTagslist();return false;">Close</a> -</div>
