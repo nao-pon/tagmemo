@@ -13,6 +13,32 @@ include_once "./include/gtickets.php" ;
 
 // echo "checkpoint 1 <br>\n";
 
+// mbstring のチェック
+if (!extension_loaded('mbstring'))
+{
+	include_once('./include/mbstring.php');
+}
+
+// 前処理
+//mb_string ini_set
+@ini_set("mbstring.substitute_character"," ");
+@ini_set("mbstring.http_input","pass");
+@ini_set("mbstring.http_output","pass");
+@ini_set("mbstring.internal_encoding",_CHARSET);
+
+// NULL バイト除去
+$_POST = tagmemo_input_filter($_POST);
+
+// 文字コード判定 & 変換
+if (!empty($_POST['encode_hint']))
+{
+	$encode = mb_detect_encoding($_POST['encode_hint']);
+	if (_CHARSET != strtoupper($encode))
+	{
+		mb_convert_variables(_CHARSET, $encode, $_POST);
+	}
+}
+
 //値を受けてみるよ。
 
 $left_tags = empty($_POST["tagmemo_tag_input"]) ? '': $_POST["tagmemo_tag_input"] ;
@@ -109,5 +135,20 @@ if ($tagmemo_handler->insert($memo_obj, $tags)) {
 	$message = ($message == '') ? 'Your memo is not saved.' : $message; 
 	//show error messsage if insert fail.
 	redirect_header(XOOPS_URL.'/modules/tagmemo/', 3, $message);
+}
+
+function tagmemo_input_filter($param)
+{
+	static $magic_quotes_gpc = NULL;
+	if ($magic_quotes_gpc === NULL)
+	    $magic_quotes_gpc = get_magic_quotes_gpc();
+
+	if (is_array($param)) {
+		return array_map('tagmemo_input_filter', $param);
+	} else {
+		$result = str_replace("\0", '', $param);
+		if ($magic_quotes_gpc) $result = stripslashes($result);
+		return $result;
+	}
 }
 ?>

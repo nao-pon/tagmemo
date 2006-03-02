@@ -71,6 +71,14 @@ function createTagmemoQuickForm(){
 	tagmemo_quickform_token.type  = 'hidden';
 	tagmemo_quickform.appendChild(tagmemo_quickform_token);
 
+	/* Encode hint */
+	
+	tagmemo_quickform_token       = document.createElement('input');
+	tagmemo_quickform_token.name  = 'encode_hint';
+	tagmemo_quickform_token.value = 'คื';
+	tagmemo_quickform_token.type  = 'hidden';
+	tagmemo_quickform.appendChild(tagmemo_quickform_token);
+	
 	/* GoBack Url */
 
 	tagmemo_quickform_gobackurl = document.createElement('input');

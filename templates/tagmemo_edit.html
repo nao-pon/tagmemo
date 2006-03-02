@@ -40,6 +40,7 @@ window.onload = function(){
 <div id="tagmemo_container">
 		<form name="tagmemo_form" id="tagmemo_form" method='post' action="post.php">
 			<input type="hidden" name="tagmemo_id" value="<{$memo.tagmemo_id}>" />
+			<input type="hidden" name="encode_hint" value="คื" />
 			<textarea cols="43" name="tagmemo_memo" id="tagmemo_memo" class="edit_text" ><{$memo.content}></textarea>
 			<div id='tagmemo_tags'>
 				<div id="tagmemo_tag_list">tags : 
