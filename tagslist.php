@@ -51,7 +51,7 @@ $xoopsTpl->assign("tag_condition", $tag_condition);
 
 include_once './class/pagenavi.php';
 $nav = new TagmemoPageNav($maxcount, $count, $start);
-$nav->asjs = 'onClick="tagmemo_getTagslist(\''.$condition.'\',event,_NAV_);return false;"';
+$nav->asjs = 'onClick="tagmemoList.getTagslist(\''.$condition.'\',event,_NAV_);return false;"';
 $xoopsTpl->assign('pagenav', $nav->renderNav());
 
 $xoopsCachedTemplate = 'db:'.$xoopsOption['template_main'];
