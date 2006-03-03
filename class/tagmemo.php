@@ -845,7 +845,7 @@ class TagmemoTagmemoHandler {// extends XoopsObjectHandler {
 		// 無視リストに含まれているページを捨てる
 		if (in_array($name,$this->forceignorepages)) {return $match[0];}
 		
-		return "<a href=\"#\" onClick=\"tagmemo_getTagslist(".$tags[$name].",event);return false;\" title=\"Tags\" class=\"tagmemo_taglink\">".$name."</a>";
+		return "<a href=\"#\" onClick=\"tagmemoList.getTagslist(".$tags[$name].",event);return false;\" title=\"Tags\" class=\"tagmemo_taglink\">".$name."</a>";
 	}
 	
 	// AutoLinkのパターンを生成する
