@@ -309,6 +309,18 @@ class TagmemoTagHandler extends XoopsTableObjectHandler
 		return $ret;
 		
 	}
+	
+	/**
+    * get array for tag cloud.
+    *@return array array for tag cloud, containing tags with css 'class' selector.
+    */
+    function getTagObjects($id_as_key = false) {
+    	$fieldlist = $this->tableName.".tag_id, tag";
+		$criteria = new CriteriaCompo();
+		$criteria->setGroupby($fieldlist);
+		$joindef = new XoopsJoinCriteria($this->db->prefix('tagmemo_rel'), 'tag_id', 'tag_id', 'INNER');
+		return $this->getObjects($criteria, $id_as_key, $fieldlist, false, $joindef);
+    }
 }
 
 function cmp($a, $b){

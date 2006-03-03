@@ -3,7 +3,7 @@ $modversion['name'] = _MI_TAGMEMO_NAME;
 $modversion['version'] = 0.1;
 $modversion['description'] = _MI_TAGMEMO_DESC;
 $modversion['credits'] = '';
-$modversion['author'] = 'yosha_01, twodash, fugafuga, comodita, argon (Alphabetical descending)';
+$modversion['author'] = 'yosha_01, twodash, nao-pon, fugafuga, comodita, argon (Alphabetical descending)';
 $modversion['help'] = 'help.html';
 $modversion['license'] = 'GPL see LICENSE';
 $modversion['official'] = 0;
@@ -75,7 +75,7 @@ $modversion['blocks'][5]['description'] = "Tagmemo Tag Cloud";
 $modversion['hasConfig'] = 1;
 $modversion['config'][] = array(
 	'name' => 'ff_plugin',
-	'title' => '_MI_TAGMEMO_USE FF_PLUGIN',
+	'title' => '_MI_TAGMEMO_USE_FF_PLUGIN',
 	'description' => '',
 	'formtype' => 'yesno',
 	'valuetype' => 'int',
@@ -88,5 +88,13 @@ $modversion['config'][] = array(
 	'formtype' => 'textbox',
 	'valuetype' => 'int',
 	'default' => '10',
+	);
+$modversion['config'][] = array(
+	'name' => 'use_autolink',
+	'title' => '_MI_TAGMEMO_USE_AUTOLINK',
+	'description' => '',
+	'formtype' => 'yesno',
+	'valuetype' => 'int',
+	'default' => '0',
 	);
 ?>

@@ -212,18 +212,18 @@ class TagmemoTagmemoHandler {// extends XoopsObjectHandler {
 	* @param integer メモのID
 	* @return array
 	*/
-	function &get($memo_id) {
+	function &get($memo_id, $use_autolink = false) {
 		$memo_id = intval($memo_id);
 		//		$this->_ready();
 		$wk_objmemo = & $this->getMemoObj($memo_id);
 		if (!is_object($wk_objmemo)) {
-			return false;
+			return array('content'=>'No such memo does not exist','uid'=>0);
 		}
 		$this->_set_condition_memo($memo_id);
 		$this->_getTag2Cache();
 		$rel_criteria = new Criteria('tagmemo_id', $memo_id);
 		$this->_rel_handler->readRelation($rel_criteria);
-		$ret = $this->_memoObj2Array($wk_objmemo);
+		$ret = $this->_memoObj2Array($wk_objmemo, 's', $use_autolink);
 		return $ret;
 	}
 
@@ -290,8 +290,8 @@ class TagmemoTagmemoHandler {// extends XoopsObjectHandler {
 	* @access public
 	* @return array タグIDをキーとしてデータにタグを持つ配列
 	*/
-	function & getAllTags($min_length = 0) {
-		$wk_tags = & $this->_tag_handler->getObjects(null, true);
+	function & getAllTags($min_length = 1) {
+		$wk_tags = & $this->_tag_handler->getTagObjects(true);
 		$ret = array();
 		foreach ($wk_tags as $wk_obj_tag) {
 			$wk_tag_id = $wk_obj_tag->getVar("tag_id");
@@ -748,7 +748,7 @@ class TagmemoTagmemoHandler {// extends XoopsObjectHandler {
 	* @param string 出力フォーマット
 	* @access protected
 	*/
-	function & _memoObj2Array(& $objMemo, $format = 's') {
+	function & _memoObj2Array(& $objMemo, $format = 's', $use_autolink = false) {
 		$ret = array ();
 		$memo_id = $objMemo->getVar("tagmemo_id");
 		$ret["tagmemo_id"] = $memo_id;
@@ -761,7 +761,9 @@ class TagmemoTagmemoHandler {// extends XoopsObjectHandler {
 		}
 		$ret["title"] = $objMemo->getVar("title", $format);
 		$ret["content"] = $objMemo->getVar("content", $format);
-		if ($format == 's') $this->_tag_auto_link($ret["content"]);
+		if ($format == 's' && $use_autolink) {
+			$this->_tag_auto_link($ret["content"]);
+		}
 		$ret["timestamp"] = formatTimestamp($objMemo->getVar("timestamp", $format), "mysql");
 		$ret["public"] = $objMemo->getVar("public", $format);
 		$ret["tags"] = $this->_parseRelatedTags($memo_id);

@@ -20,7 +20,7 @@ if(is_object($xoopsUser)){
 }
 $tagmemo_handler->setUid($uid);
 if($memo_id != ""){
-	$memo =& $tagmemo_handler->get($memo_id);
+	$memo =& $tagmemo_handler->get($memo_id, $xoopsModuleConfig['use_autolink']);
 	$tagmemo_related_tags = $tagmemo_handler->getRelatedTags();
 global $tagmemo_related_tags;
 }else{
