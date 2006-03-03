@@ -55,5 +55,7 @@ $nav->asjs = 'onClick="tagmemo_getTagslist(\''.$condition.'\',event,_NAV_);retur
 $xoopsTpl->assign('pagenav', $nav->renderNav());
 
 $xoopsCachedTemplate = 'db:'.$xoopsOption['template_main'];
+
+header ("Content-Type: text/plain; charset=EUC-JP");
 $xoopsTpl->display($xoopsCachedTemplate);
 ?>
