@@ -1,3 +1,19 @@
+<div class="navi_box">
+
+<p class="navi_box_first"><{$query_condition}></p>
+
+<p class="navi_box_first">
+<{foreach item=tag_detail from=$tag_condition.detail}>
+<a href="#" onClick="tagmemo_getTagslist('<{$tag_detail.id}>',event,0);return false;"><{$tag_detail.string}></a><a href="#"  onClick="tagmemo_getTagslist('<{$tag_detail.url}>',event,0);return false;"><img src="./images/sub.gif" alt="sub"></a>|
+<{/foreach}>
+
+<{foreach item=reltag from=$rel_tags}>
+<a href="#" onClick="tagmemo_getTagslist('<{$reltag.tag_id}>',event,0);return false;"><{$reltag.tag}></a><a href="#"  onClick="tagmemo_getTagslist('<{$tag_condition.url}><{$reltag.tag_id}>',event,0);return false;"><img src="./images/add.gif" alt="add"></a>|
+<{/foreach}>
+</p>
+
+</div>
+
 <div id="tagmemo_list_ajax" class="tagmemo_list_ajax">
 <{foreach item=memo from=$memos}>
 	<div class="tagmemo_list_box_ajax">
