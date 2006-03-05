@@ -241,6 +241,7 @@
 }
 
 div#tagmemo_tagslist {
+	cursor:move;
 	position: absolute;
 	width: 400px;
 	background-color:white;
