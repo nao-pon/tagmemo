@@ -97,4 +97,9 @@ $modversion['config'][] = array(
 	'valuetype' => 'int',
 	'default' => '0',
 	);
+
+// hold setting value when module update.
+if( ! empty( $_POST['fct'] ) && ! empty( $_POST['op'] ) && $_POST['fct'] == 'modulesadmin' && $_POST['op'] == 'update_ok' && $_POST['dirname'] == $modversion['dirname'] ) {
+	include dirname( __FILE__ ) . "/include/onupdate.inc.php" ;
+}
 ?>

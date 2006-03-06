@@ -21,6 +21,12 @@ class XoopsGTicket {
 		return new XoopsFormHidden( 'XOOPS_G_TICKET' , $this->issue( $salt , $timeout , $area ) ) ;
 	}
 
+	// add a ticket as Hidden Element into XoopsForm
+	function addTicketXoopsFormElement( &$form , $salt = '' , $timeout = 1800 , $area = '' )
+	{
+		$form->addElement( new XoopsFormHidden( 'XOOPS_G_TICKET' , $this->issue( $salt , $timeout , $area ) ) ) ;
+	}
+
 	// returns an array for xoops_confirm() ;
 	function getTicketArray( $salt = '' , $timeout = 1800 , $area = '' )
 	{
