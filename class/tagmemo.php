@@ -881,7 +881,7 @@ class TagmemoTagmemoHandler {// extends XoopsObjectHandler {
 		$lev ++;
 		
 		$result = '';
-		$count = 0;
+		$count = $i = $j = 0;
 		
 		$x = (mb_strlen($pages[$start]) <= $pos);
 		
