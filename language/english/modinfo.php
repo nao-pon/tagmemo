@@ -15,4 +15,10 @@ define('_MI_TAGMEMO_SEARCH_SUB', "In this list");
 define('_MI_TAGMEMO_USE_FF_PLUGIN', "Use firefox search plugin");
 define('_MI_TAGMEMO_PER_PAGE', "memos per page");
 define('_MI_TAGMEMO_USE_AUTOLINK', "Autolink tags to related memos");
+
+define('_MI_SYSTEM_ADMENU1','Index');
+define('_MI_SYSTEM_ADMENU2','Blocks and Groups');
+define('_MI_TAGMEMO_UPDATE','Update');
+define('_MI_TAGMEMO_GOMODULES','Go to Modules');
+
 ?>

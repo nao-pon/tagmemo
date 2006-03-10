@@ -1,4 +1,11 @@
 <?php
+// add Hiro
+$adminmenu[] = array(
+	'title' => _MI_SYSTEM_ADMENU1 ,
+	'link' => "admin/index.php"
+	);
+// add end
+
 $adminmenu[] = array(
 	'title' => 'firefox search plugin',
 	'link' => "admin/ff_plugin.php"

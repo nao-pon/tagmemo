@@ -37,7 +37,8 @@ require_once('../../../include/cp_header.php');
 //(DB update section)
 
 xoops_cp_header();
-
+// add Hiro
+include('./mymenu.php');
 echo "<h4>Admin menu of tagmemo module.</h4>";
 
 xoops_cp_footer();

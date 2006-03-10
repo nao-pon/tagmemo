@@ -59,7 +59,7 @@ if ($error == '') {
 }
 
 xoops_cp_header();
-
+include('./mymenu.php');  // add Hiro
 if ($error == '') {
 	echo "<h4>Set this site's url to forefox search plugin file.</h4>\n";
 	echo "<div>Are you sure?</div>\n";
