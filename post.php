@@ -52,11 +52,16 @@ if(is_array($tags)){
 	$tags = implode(' ', $tags);
 }
 // echo "checkpoint 2 <br>\n";
-$myts =& MyTextSanitizer::getInstance();
+
+$title = trim($content);
 if(preg_match("/^([^\n]{0,120})/i", $title, $matches)){
 	$title = $matches[0];
 }
+
+// タイトル用に装飾タグ(BBコードなど)を除去
+$myts =& MyTextSanitizer::getInstance();
 $title = strip_tags($myts->displayTarea($title));
+
 $title = (strlen($title) > 0) ? $title : "NO TITLE";
 //ハンドラをつくってみるよ。
 // echo "checkpoint 3 <br>\n";
