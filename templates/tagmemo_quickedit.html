@@ -1,0 +1,73 @@
+<html>
+<head>
+<script src="./include/javascript/prototype/prototype.js" type="text/javascript"></script>
+<script src="./include/javascript/log.js" type="text/javascript"></script>
+<script src="./include/javascript/tagmemo.js" type="text/javascript"></script>
+<link rel="stylesheet" type="text/css" media="screen" href="./include/css/tagmemo_quickframe.css" />
+<script type="text/javascript">
+<!--
+/* twodash*/
+function delete_memo(){
+    if(confirm('<{$smarty.const._MD_TAGMEMO_MESSAGE_DELETE_CONFIRM}>')){
+        document.forms["tagmemo_form"].action = "delete.php";
+        document.forms["tagmemo_form"].submit();
+    }
+}
+function delete_tag(arg){
+    var wk_item ;
+    wk_item = arg.parentNode;
+    wk_item.removeChild(arg);
+}
+/* twodash*/
+
+var tagmemo = null;
+window.onload = function(){
+	tagmemo = new Tagmemo('<{$xoops_url}>');
+//	setTimeout('tagmemo.autosave()',5000); 	
+}
+
+//-->
+</script>
+</head>
+<body>
+<{$helper.map}>
+<div id="tagmemo_container">
+		<form name="tagmemo_form" id="tagmemo_form" method='post' action="post.php">
+			<input type="hidden" name="tagmemo_id" value="<{$memo.tagmemo_id}>" />
+			<input type="hidden" name="encode_hint" value="คื" />
+			<input type="hidden" name="quick_edit" value="1" />
+			<{if ($helper.js)}>
+			<{$helper.js}>
+			<{else}>
+			<br />
+			<{/if}>
+			<div id='tagmemo_tags'>
+				Tags:<input type="text" size="25" id="tagmemo_tag_input" name="tagmemo_tag_input" autocomplete='off' class="quickedit_text">
+				<img src="./images/arrow_turn.gif">
+				<div id="tagmemo_tag_list">
+				<{foreach item=tag key="tag_id" from=$memo.tags}>
+					<span id='s_tag_id_<{$tag_id}>' title="<{$smarty.const._MD_TAGMEMO_TAGCLICK_DELETE}>"><{$tag}></span>
+				<{/foreach}>
+				<input type="hidden" name="tagmemo_tag_hidden" id="tagmemo_tag_hidden" value="">
+				</div>
+				<div id='tagmemo_suggest_list' class="auto_complete"></div>
+				<{$xoopsGTicket_html}>
+			</div>
+			<textarea cols="43" name="tagmemo_memo" id="tagmemo_memo" class="quickedit_text"<{$helper.form}> ><{$memo.content}></textarea>
+			<div id="tagmemo_buttons">
+				<{if $uname}>
+				<input type="hidden" name="uname" value="<{$uname}>" />
+				<{$uname}>'s pass:<input type="password" name="pass" size="10" />&nbsp;&nbsp;
+				<{/if}>
+				<input type="submit" name="tagmemo_done" class="button" value="<{$smarty.const._MD_TAGMEMO_DONE}>" />
+				<!--
+				<input type="button" name="tagmemo_cancel" class="button" value="Cancel" onClick="parent.tagmemoClearForm();return false;" />
+				<input type="button" name="tagmemo_delete"  onclick="delete_memo()" class="button" value="<{$smarty.const._MD_TAGMEMO_DELETE}>">
+				<input type="button" name="tagmemo_save"  class="button" value="<{$smarty.const._MD_TAGMEMO_SAVE}>" >
+				-->				
+			</div>  			
+		</form>		
+</div>	
+<{$helper.init}>
+</body>
+</html>

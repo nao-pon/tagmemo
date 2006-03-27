@@ -21,6 +21,7 @@ CREATE TABLE `tagmemo_tag` (
 `tag_id` smallint(5) unsigned NOT NULL auto_increment,
 #`tagmemo_id` smallint(5) unsigned NOT NULL,
 `tag` varchar(20) NOT NULL,
+`suggest` varchar(60) NOT NULL,
 PRIMARY KEY (`tag_id`)
 ) TYPE=MyISAM;
 

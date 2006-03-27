@@ -25,6 +25,7 @@ class TagmemoTag extends XoopsTableObject
 		$this->XoopsObject();
 		$this->initVar('tag_id', XOBJ_DTYPE_INT, null, true);
 		$this->initVar('tag', XOBJ_DTYPE_TXTBOX, null, true, 120);
+		$this->initVar('suggest', XOBJ_DTYPE_TXTBOX, null, true, 60);
 
 		//プライマリーキーの定義
 		$this->setKeyFields(array('tag_id'));

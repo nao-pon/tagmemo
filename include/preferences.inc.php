@@ -1,5 +1,5 @@
 <?php
-// $Id: preferences.inc.php,v 1.1 2006/03/10 14:27:58 twodash Exp $
+// $Id: preferences.inc.php,v 1.2 2006/03/27 15:23:09 nao-pon Exp $
 //  ------------------------------------------------------------------------ //
 //                XOOPS - PHP Content Management System                      //
 //                    Copyright (c) 2000 XOOPS.org                           //

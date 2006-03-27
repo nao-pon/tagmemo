@@ -7,7 +7,7 @@ function tagmemoClearForm() {
 }
 
 function IESubmit(){
-    document.charset = xoops_charset;
+    //document.charset = xoops_charset;
     tagmemo_quickform.submit();
 }
 
@@ -71,13 +71,35 @@ function createTagmemoQuickForm(){
 	tagmemo_quickform_token.type  = 'hidden';
 	tagmemo_quickform.appendChild(tagmemo_quickform_token);
 
-	/* Encode hint */
+	/* Encode */
 	
-	tagmemo_quickform_token       = document.createElement('input');
-	tagmemo_quickform_token.name  = 'encode_hint';
-	tagmemo_quickform_token.value = 'คื';
-	tagmemo_quickform_token.type  = 'hidden';
-	tagmemo_quickform.appendChild(tagmemo_quickform_token);
+	tagmemo_quickform_item       = document.createElement('input');
+	tagmemo_quickform_item.name  = 'encode';
+	tagmemo_quickform_item.value = (!document.charset)? '': document.charset;
+	tagmemo_quickform_item.type  = 'hidden';
+	tagmemo_quickform.appendChild(tagmemo_quickform_item);
+	
+	/* User name */
+	
+	tagmemo_quickform_item       = document.createElement('input');
+	tagmemo_quickform_item.name  = 'uname';
+	tagmemo_quickform_item.value = uname;
+	tagmemo_quickform_item.type  = 'hidden';
+	tagmemo_quickform.appendChild(tagmemo_quickform_item);
+
+	if (uname)
+	{
+		tagmemo_quickform_item       = document.createElement('span');
+		tagmemo_quickform_item.innerHTML = "LoginPass: ";
+		tagmemo_quickform.appendChild(tagmemo_quickform_item);
+		/* Password */
+		tagmemo_quickform_item       = document.createElement('input');
+		tagmemo_quickform_item.name  = 'pass';
+		tagmemo_quickform_item.value = '';
+		tagmemo_quickform_item.type  = 'password';
+		tagmemo_quickform_item.size = '10';
+		tagmemo_quickform.appendChild(tagmemo_quickform_item);
+	}
 	
 	/* GoBack Url */
 

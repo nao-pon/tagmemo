@@ -30,8 +30,10 @@ if(strlen($keyword)>0){
 
 if(is_object($xoopsUser)){
 	$uid = $xoopsUser->getVar("uid");
+	$uname = $xoopsUser->getVar("uname");
 } else {
 	$uid = 0;
+	$uname = "";
 }
 	$tagmemo_handler->setUid($uid);
 $memo_array =& $tagmemo_handler->getMemosArray($tag_id,$count,$start);
@@ -54,6 +56,16 @@ $xoopsOption['template_main'] = 'tagmemo_list.html';
 */
 include XOOPS_ROOT_PATH.'/header.php';
 $xoopsTpl->assign("memos", $memo_array);
+
+// <head>タイトル設定
+$_tmp = array();
+foreach($tag_condition['detail'] as $_val)
+{
+	$_tmp[] = $_val['string'];
+}
+$_tmp = join("+",$_tmp);
+$xoopsTpl->assign("xoops_pagetitle",$_tmp."-".$xoopsModule->name());
+
 if(strlen($condition)>0){
 	$xoopsTpl->assign("query",true);
 	$xoopsTpl->assign("rel_tags", $tagmemo_related_tags);
@@ -69,7 +81,7 @@ if(strlen($condition)>0){
 	$xoopsTpl->assign('pagenav', $nav->renderNav());
 }
 
-$xoopsTpl->assign('bookmarklet','javascript: tagmemo_quickform_script = document.createElement(\'script\'); tagmemo_quickform_script.src = \''.XOOPS_URL.'/modules/tagmemo/quickform.php\'; tagmemo_quickform_script.type = \'text/javascript\'; void(document.body.appendChild(tagmemo_quickform_script));');
+$xoopsTpl->assign('bookmarklet','javascript: tagmemo_quickform_script = document.createElement(\'script\'); tagmemo_quickform_script.src = \''.XOOPS_URL.'/modules/tagmemo/quickform.php?uname='.rawurlencode($uname).'\'; tagmemo_quickform_script.type = \'text/javascript\'; void(document.body.appendChild(tagmemo_quickform_script));');
 $ff_plugin = isset($xoopsModuleConfig['ff_plugin']) ? $xoopsModuleConfig['ff_plugin'] : 0;
 $xoopsTpl->assign('ff_plugin', $ff_plugin);
 

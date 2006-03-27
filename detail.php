@@ -40,7 +40,8 @@ include XOOPS_ROOT_PATH.'/header.php';
 if($memo_id != ""){
 	$xoopsTpl->assign("memo", $memo);
 	$xoopsTpl->assign("memo_owner", $memo_owner_name);
-
+	// <head>タイトル設定
+	$xoopsTpl->assign("xoops_pagetitle",$memo["title"]."-".$xoopsModule->name());
 }
 /**
 * XOOPSのテンプレートのフッター

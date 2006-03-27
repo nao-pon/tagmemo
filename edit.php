@@ -13,6 +13,8 @@ require_once '../../mainfile.php';
 include_once "./include/gtickets.php" ;
 $myts =& MyTextSanitizer::getInstance();
 
+include_once ("./include/wiki_helper.php");
+
 $memo_id = isset($_GET["tagmemo_id"]) ? intval($_GET["tagmemo_id"]) : "";
 //$memo_id = isset($_POST["tagmemo_id"]) ? intval($_POST["tagmemo_id"]) : $memo_id;
 
@@ -50,6 +52,7 @@ if($memo_id != ""){
 		}
 	}
 }
+
 // ヘッダを書くおまじない。
 /**
 * XOOPSのテンプレートのヘッダー
@@ -57,6 +60,11 @@ if($memo_id != ""){
 //set template file after including header because not use cache 
 include (XOOPS_ROOT_PATH.'/header.php');
 $xoopsOption['template_main'] = 'tagmemo_edit.html';
+
+// Wikiヘルパー
+$he = & WikiHelper::getInstance();
+$xoopsTpl->assign("helper", $he->get());
+
 $xoopsTpl->assign("memo", $memo);
 if($memo_id != ""){
 	$xoopsTpl->assign("xoopsGTicket_html", $xoopsGTicket->getTicketHtml( __LINE__ ));

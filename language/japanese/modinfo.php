@@ -20,4 +20,8 @@ define('_MI_SYSTEM_ADMENU1','Index');
 define('_MI_SYSTEM_ADMENU2','ブロック・グループ管理');
 define('_MI_TAGMEMO_UPDATE','Update');
 define('_MI_TAGMEMO_GOMODULES','Go to Modules');
+
+define('_MI_TAGMEMO_LIST', "メモリスト");
+define('_MI_TAGMEMO_EDIT', "新規メモ投稿");
+define('_MI_TAGMEMO_CLOUD', "タグクラウド");
 ?>

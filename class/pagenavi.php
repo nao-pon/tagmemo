@@ -57,7 +57,7 @@ class TagmemoPageNav extends XoopsPageNav
 				if ($this->asjs)
 				{
 					$js = str_replace("_NAV_",$prev,$this->asjs);
-					$ret .= '<a href="#" '.$js.'><u>&laquo;</u></a> ';
+					$ret .= '<a href="'.$this->url.$prev.'" '.$js.'><u>&laquo;</u></a> ';
 				}
 				else
 				{
@@ -76,7 +76,7 @@ class TagmemoPageNav extends XoopsPageNav
 					if ($this->asjs)
 					{
 						$js = str_replace("_NAV_",(($counter - 1) * $this->perpage),$this->asjs);
-						$ret .= '<a href="#" '.$js.'>'.$counter.'</a> ';
+						$ret .= '<a href="'.$this->url.(($counter - 1) * $this->perpage).'" '.$js.'>'.$counter.'</a> ';
 					}
 					else
 					{
@@ -93,7 +93,7 @@ class TagmemoPageNav extends XoopsPageNav
 				if ($this->asjs)
 				{
 					$js = str_replace("_NAV_",$next,$this->asjs);
-					$ret .= '<a href="#" '.$js.'><u>&raquo;</u></a> ';
+					$ret .= '<a href="'.$this->url.$next.'" '.$js.'><u>&raquo;</u></a> ';
 				}
 				else
 				{

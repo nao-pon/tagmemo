@@ -6,6 +6,39 @@
 	}
 
 
+/*------TagmemoSuggest--------*/
+div.auto_complete {
+	width: 350px;
+	background: #fff;
+	font-size: 11px;
+}
+div.auto_complete ul {
+	border:1px solid #888;
+	margin:0;
+	padding:0;
+	width:100%;
+	overflow: hidden;
+	list-style-type:none;
+	cursor: pointer;
+}
+div.auto_complete ul li {
+	margin:0;
+	padding:3px;
+	width:100%;
+}
+div.auto_complete ul li.selected { 
+	background-color: #ffb; 
+}
+div.auto_complete ul strong.highlight { 
+	color: #800; 
+	margin:0;
+	padding:0;
+}
+div.auto_complete ul li b {
+	color: #0000FF;
+	font-weight: normal;
+}
+
 /*------tagmemo_content--------*/
 #tagmemo_content {
 	font-family: Verdana, Arial, sans-serif;
@@ -298,6 +331,17 @@ span.tagmemo_list_title_ajax {
 	background-color: #fcfcfc;
 	line-height: 1.5em;
 	padding: 10px;
+	border: 1px solid #cccccc;
+	}
+	
+#tagmemo_container .quickedit_text {
+	font-family: Verdana, Arial, sans-serif;
+	font-size: 11px;
+	width:95%;
+	height: 180px;
+	background-color: #fcfcfc;
+	line-height: 1.5em;
+	padding: 5px;
 	border: 1px solid #cccccc;
 	}
 

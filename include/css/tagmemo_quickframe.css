@@ -1,0 +1,87 @@
+/*------TagmemoSuggest--------*/
+div.auto_complete {
+	width: 350px;
+	background: #fff;
+	font-size: 11px;
+}
+div.auto_complete ul {
+	border:1px solid #888;
+	margin:0;
+	padding:0;
+	width:100%;
+	overflow: hidden;
+	list-style-type:none;
+	cursor: pointer;
+}
+div.auto_complete ul li {
+	margin:0;
+	padding:3px;
+	width:100%;
+}
+div.auto_complete ul li.selected { 
+	background-color: #ffb; 
+}
+div.auto_complete ul strong.highlight { 
+	color: #800; 
+	margin:0;
+	padding:0;
+}
+div.auto_complete ul li b {
+	color: #0000FF;
+	font-weight: normal;
+}
+
+body {
+	margin: 0px 5px;
+	padding:0px;
+	border: hidden;
+	background-color: transparent;
+}
+
+a:link,
+a:visited,
+a:active {
+	font-weight: normal;
+	color: #6CA6CD;
+	text-decoration: none;
+}
+
+form {
+	margin: 0px;
+	padding: 0px;
+}
+
+input {
+	background-color: transparent;
+	font-size: 12px;
+	border: 1px solid silver;
+}
+
+textarea#tagmemo_memo {
+	height: 170px;
+	width: 355px;
+	overflow: auto;
+	font-size: 12px;
+	border: 1px solid silver;
+	margin: 0px;
+	padding: 5px;
+	background-color: transparent;
+}
+
+div#tagmemo_buttons {
+	text-align: right;
+	margin-right: 10px;
+}
+
+div#tagmemo_tag_list {
+	font-weight: normal;
+	font-size: 12px;
+	height: 28px;
+	margin: 3px 5px;
+	border: 1px dotted silver;
+	overflow: auto;
+}
+
+div#tagmemo_tag_list span {
+	cursor: pointer;
+}

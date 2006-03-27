@@ -1,5 +1,13 @@
+<script src="./include/javascript/prototype/prototype.js" type="text/javascript"></script>
+<script src="./include/javascript/scriptaculous/scriptaculous.js" type="text/javascript"></script>
+<script src="./include/javascript/tagmemo_list.js" type="text/javascript"></script>
 <link rel="stylesheet" type="text/css" media="screen" href="./include/css/tagmemo.css" />
 
+<script type="text/javascript">
+<!--
+var tagmemo_tagslist_url = "<{$xoops_url}>/modules/tagmemo/tagslist.php";
+//-->
+</script>
 <div id="tagmemo_content">
 
 <div class="navi_box">
@@ -16,7 +24,7 @@
 <div id="tagmemo_container">
 <div class="tagcloud">
 	<{foreach item=tag from=$cloud}>
-		<a href="index.php?tag_id=<{$tag.tag_id}>">
+		<a href="index.php?tag_id=<{$tag.tag_id}>" onClick="return(tagmemoList.getTagslist('<{$tag.tag_id}>',event))">
 			<span class="<{$tag.popular}>">
 			<span class="<{$tag.fresh}>">
 			<{$tag.tag}>
@@ -27,3 +35,5 @@
 </div>
 
 </div>
+
+<div id="tagmemo_tagslist"></div>

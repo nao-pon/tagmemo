@@ -27,6 +27,7 @@ TagmemoList.prototype = {
 			    onComplete: this.showResponse.bind(this)
 		    }
 		);
+		return false;
     },
 
 
@@ -45,12 +46,14 @@ TagmemoList.prototype = {
     {
 	    list.style.top = "-1000px";
 	    list.style.left = "-1000px";
+	    return false;
     },
 
 
     list_body_toggle: function(id)
     {
 	    Toggle.display($('tagmemo_list_body_ajax_'+id));
+	    return false;
     },
 
 

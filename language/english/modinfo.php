@@ -21,4 +21,7 @@ define('_MI_SYSTEM_ADMENU2','Blocks and Groups');
 define('_MI_TAGMEMO_UPDATE','Update');
 define('_MI_TAGMEMO_GOMODULES','Go to Modules');
 
+define('_MI_TAGMEMO_LIST', "Memos List");
+define('_MI_TAGMEMO_EDIT', "Post New Memo");
+define('_MI_TAGMEMO_CLOUD', "Tag Cloud");
 ?>

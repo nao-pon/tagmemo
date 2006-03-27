@@ -1,0 +1,84 @@
+.theme1 .dialog_nw {
+	width: 16px;
+	height: 36px;
+	background: transparent url(theme1/top_left.gif) no-repeat 0 0;		
+}
+
+.theme1 .dialog_n {
+	height: 36px;
+	background: transparent url(theme1/top_mid.gif) repeat-x 0 0;	
+	cursor:move;
+}
+
+.theme1 .dialog_ne {
+	width: 12px;
+	height: 36px;
+	background: transparent url(theme1/top_right.gif) no-repeat 0 0;		
+}
+
+.theme1 .dialog_e {
+	height: 100%;
+	width: 4px;
+	background: transparent url(theme1/center_right.gif) repeat-y 0 0;	
+}
+
+.theme1 .dialog_w {
+	height: 100%;
+	width: 7px;
+	background: transparent url(theme1/center_left.gif) repeat-y 0 0;		
+}
+
+.theme1 .dialog_sw {
+	width: 16px;
+	height: 24px;
+	background: transparent url(theme1/bottom_left.gif) no-repeat 0 0;			
+}
+
+.theme1 .dialog_s {
+	height: 24px;
+	background: transparent url(theme1/bottom_mid.gif) repeat-x 0 0;	
+}
+
+.theme1 .dialog_se {
+	width: 12px;
+	height: 24px;
+	background: transparent url(theme1/bottom_right.gif) no-repeat 0 0;			
+}
+
+.theme1  .dialog_sizer {
+	width: 12px;
+	height: 24px;
+	background: transparent url(theme1/sizer.gif) no-repeat 0 0;	
+	cursor:se-resize;	
+}
+
+.theme1 .dialog_close {
+	width: 19px;
+	height: 19px;
+	background: transparent url(theme1/close.png) repeat-x 0 0;			
+	position:absolute;
+	top:10px;
+	left:8px;
+	cursor:pointer;
+}
+
+.theme1 .dialog_title {
+	float:left;
+	height:14px;
+	font-size:16px;
+	text-align:center;
+	width:100%;
+	color:#FFF;
+}
+
+.theme1 .dialog_content {
+	background:#979BA1;
+}
+
+/* For this stupid IE to get alpha of PNG images */
+* html .theme1 .dialog_close {
+	background-color: transparent;
+	back\ground-color: transparent;
+	background-image: url(blank.gif);
+	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="theme1/close.png", sizingMethod="crop");
+}

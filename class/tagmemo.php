@@ -1,6 +1,4 @@
 <?php
-
-
 /**
 * たぐメモのクラス定義
 * ページコントローラからはこのファイルのクラスのみインスタンス化すること
@@ -171,8 +169,15 @@ class TagmemoTagmemoHandler {// extends XoopsObjectHandler {
 	function getTagId(&$tag_var, $force = false, $forceupdate = false) {
 		$ret = $this->_tag_handler->getTagId($tag_var);
 		if ($ret < 1 and $force) {
+			include_once("./include/hyp_kakasi.php");
 			$wk_obj_tag = & $this->_tag_handler->create(true);
 			$wk_obj_tag->setVar("tag", $tag_var);
+			$ka = new Hyp_KAKASHI();
+			$suggest = $tag_var;
+			if ($ka->get_hiragana($suggest))
+			{
+				$wk_obj_tag->setVar("suggest", $suggest);
+			}
 			$this->_tag_handler->insert($wk_obj_tag, $forceupdate);
 			$ret = $wk_obj_tag->getVar("tag_id");
 		}
@@ -460,7 +465,7 @@ class TagmemoTagmemoHandler {// extends XoopsObjectHandler {
 	
 	function makeAutolinkData() {
 		$tags = $this->getAllTags(3);
-		list($pattern, $pattern_a, $forceignorelist) = $this->_get_autolink_pattern(& $tags);
+		list($pattern, $pattern_a, $forceignorelist) = $this->_get_autolink_pattern($tags);
 		$file = XOOPS_ROOT_PATH."/cache/tagmemo_autolink.dat";
 		$fp = fopen($file, 'wb') or
 			die_message('Cannot write autolink file ' .
@@ -822,7 +827,7 @@ class TagmemoTagmemoHandler {// extends XoopsObjectHandler {
 		// ページ数が多い場合は、セパレータ \t で複数パターンに分割されている
 		foreach($auto as $pat)
 		{
-			$pattern = "/(<(?:a|A).*?<\/(?:a|A)>|<[^>]*>|&(?:#[0-9]+|#x[0-9a-f]+|[0-9a-zA-Z]+);)|($pat)/s";
+			$pattern = "/(<(?:a).*?<\/(?:a)>|<[^>]*>|&(?:#[0-9]+|#x[0-9a-f]+|[0-9a-zA-Z]+);)|($pat)/is";
 			$str = preg_replace_callback($pattern,array(&$this,'_tag_auto_link_replace'),$str);
 		}
 		
@@ -836,16 +841,17 @@ class TagmemoTagmemoHandler {// extends XoopsObjectHandler {
 		if (is_null($tags))
 		{
 			$tags = $this->getAllTags(3);
+			$tags = array_map("strtolower",$tags);
 			$tags = array_flip($tags);
 		}
 		
 		if (!empty($match[1])) return $match[1];
-		$name = $match[2];
+		$name = strtolower($match[2]);
 		
 		// 無視リストに含まれているページを捨てる
 		if (in_array($name,$this->forceignorepages)) {return $match[0];}
 		
-		return "<a href=\"#\" onClick=\"tagmemoList.getTagslist(".$tags[$name].",event);return false;\" title=\"Tags\" class=\"tagmemo_taglink\">".$name."</a>";
+		return "<a href=\"".XOOPS_URL."/modules/tagmemo/?tag_id=".$tags[$name]."\" onClick=\"return(tagmemoList.getTagslist(".$tags[$name].",event))\" title=\"Tags\" class=\"tagmemo_taglink\">".$match[2]."</a>";
 	}
 	
 	// AutoLinkのパターンを生成する
@@ -869,7 +875,7 @@ class TagmemoTagmemoHandler {// extends XoopsObjectHandler {
 			$result = $this->_get_autolink_pattern_sub($auto_pages, 0, count($auto_pages), 0);
 		}
 		
-		return array($result, '(?!)', '');
+		return array($result, '(?!)', array());
 	}
 	
 	function _get_autolink_pattern_sub(& $pages, $start, $end, $pos)

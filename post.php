@@ -46,13 +46,15 @@ $memo_id = empty($_POST["tagmemo_id"]) ? 0 : $_POST["tagmemo_id"] ;
 $content = $_POST["tagmemo_memo"];
 $public = isset($_POST["public"]) ? intval($_POST["public"]) : 0;
 $tags =  $_POST["tagmemo_tag_hidden"].' '.$left_tags;
+$is_quickedit = !empty($_POST["quick_edit"]);
 
 if(is_array($tags)){
 	$tags = implode(' ', $tags);
 }
 // echo "checkpoint 2 <br>\n";
-$title="";
-if(preg_match("/^([^\n]{0,120})/i", $content, $matches)){
+$myts =& MyTextSanitizer::getInstance();
+$title = strip_tags($myts->displayTarea($content));
+if(preg_match("/^([^\n]{0,120})/i", $title, $matches)){
 	$title = $matches[0];
 }
 $title = (strlen($title) > 0) ? $title : "NO TITLE";
@@ -67,8 +69,21 @@ if(is_object($xoopsUser)){
 	$uid = $xoopsUser->getVar("uid");
 	$isAdmin = $xoopsUser->isAdmin($module_id);
 } else {
-	$uid = 0;
-	$isAdmin = false;
+	// uname, pass があれば uid を Get!
+	if(!empty($_POST["uname"]) && !empty($_POST["pass"])) {
+		include_once(XOOPS_ROOT_PATH."/class/module.textsanitizer.php");
+		$myts =& MyTextSanitizer::getInstance();
+		$uname = $myts->stripSlashesGPC($_POST["uname"]);
+		$pass = $myts->stripSlashesGPC($_POST["pass"]);
+		$member_handler =& xoops_gethandler('member');
+		$user =& $member_handler->loginUser(addslashes($uname), addslashes($pass));
+		$uid = $user->getVar("uid");
+	}
+	if (!$uid)
+	{
+		$uid = 0;
+		$isAdmin = false;
+	}
 }
 
 $changed = true;
@@ -121,6 +136,7 @@ if($memo_owner == $uid || $isAdmin) {
 }
 // echo "checkpoint 6 <br>\n";
 
+$ret_url = "quickedit_close.html";
 //放り込め！
 if ($tagmemo_handler->insert($memo_obj, $tags)) {
 	//memo_id is set in memo_obj by xoopstableobject->insert method.
@@ -128,13 +144,15 @@ if ($tagmemo_handler->insert($memo_obj, $tags)) {
 	// make autolink data
 	$tagmemo_handler->makeAutolinkData();
 	//redirect to created/updated memo ditail.
-	redirect_header(XOOPS_URL.'/modules/tagmemo/detail.php?tagmemo_id='.$memo_id, 1, _MD_TAGMEMO_MESSAGE_SAVE);
+	if (!$is_quickedit) $ret_url = 'detail.php?tagmemo_id='.$memo_id;
+	redirect_header(XOOPS_URL.'/modules/tagmemo/'.$ret_url, 1, _MD_TAGMEMO_MESSAGE_SAVE);
 } else {
 	//get error message.
 	$message = $tagmemo_handler->getErrors(false);
 	$message = ($message == '') ? 'Your memo is not saved.' : $message; 
 	//show error messsage if insert fail.
-	redirect_header(XOOPS_URL.'/modules/tagmemo/', 3, $message);
+	if (!$is_quickedit) $ret_url = '';
+	redirect_header(XOOPS_URL.'/modules/tagmemo/'.$ret_url, 3, $message);
 }
 
 function tagmemo_input_filter($param)
