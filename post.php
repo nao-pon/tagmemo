@@ -56,7 +56,7 @@ $myts =& MyTextSanitizer::getInstance();
 if(preg_match("/^([^\n]{0,120})/i", $title, $matches)){
 	$title = $matches[0];
 }
-$title = strip_tags($myts->displayTarea($content));
+$title = strip_tags($myts->displayTarea($title));
 $title = (strlen($title) > 0) ? $title : "NO TITLE";
 //ハンドラをつくってみるよ。
 // echo "checkpoint 3 <br>\n";
