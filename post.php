@@ -54,7 +54,7 @@ if(is_array($tags)){
 // echo "checkpoint 2 <br>\n";
 
 $title = trim($content);
-if(preg_match("/^([^\n]{0,120})/i", $title, $matches)){
+if(preg_match("/^([^\r\n]{0,120})/i", $title, $matches)){
 	$title = $matches[0];
 }
 
