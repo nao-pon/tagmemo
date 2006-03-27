@@ -35,8 +35,10 @@
 require_once('../../../include/cp_header.php');
 
 //(DB update section)
-
+// suggest用フィールド存在チェック
+tagmemo_admin_set_suggest_dbcheck();
 xoops_cp_header();
+
 // add Hiro
 include('./mymenu.php');
 echo "<h4>Set Suggest</h4>";
@@ -48,6 +50,21 @@ if ($_GET['mode'] == "set")
 else
 {
 	tagmemo_admin_set_suggest_init();
+}
+
+function tagmemo_admin_set_suggest_dbcheck()
+{
+	global $xoopsDB;
+	//Suggest用DBフィールドのチェック
+	$query = "select `suggest` FROM ".$xoopsDB->prefix("tagmemo_tag")." LIMIT 1;";
+	if(!$result=$xoopsDB->query($query))
+	{
+		$query = "ALTER TABLE `".$xoopsDB->prefix("tagmemo_tag")."` ADD `suggest` VARCHAR(60) NOT NULL default '';";
+		if(!$result=$xoopsDB->queryF($query)){
+			echo "ERROR: '".$xoopsDB->prefix("tagmemo_tag")."' is already processing settled.<br/>";
+			echo $query;
+		}
+	}
 }
 
 function tagmemo_admin_set_suggest_init()
@@ -77,5 +94,4 @@ function tagmemo_admin_set_suggest()
 }
 
 xoops_cp_footer();
-?>
 ?>
