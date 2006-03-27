@@ -49,13 +49,13 @@ function createTagmemoQuickForm() {
 		container.appendChild(elem);
 			
 		/* Finally create quick form */
-		if ($('tagmemo_container'))
+		if ($('tagmemo_qp_container'))
 		{
-			document.getElementsByTagName('body')[0].removeChild($('tagmemo_container'));
+			document.getElementsByTagName('body')[0].removeChild($('tagmemo_qp_container'));
 		}
 		var title = "<a href='" + tagmemo_baseurl + "' target='_blank'>" + decodeURIComponent(tagmemo_sitename) + "</a>";
 		var win;
-		win = new Window('tagmemo_container', {top:100, left:450, width:380, height:300, zIndex:150, opacity:0.9, resizable: true, title: title});
+		win = new Window('tagmemo_qp_container', {top:100, left:450, width:380, height:300, zIndex:150, opacity:0.9, resizable: true, title: title});
 		win.getContent().innerHTML = container.innerHTML;
 		win.show();
 		return true;

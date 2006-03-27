@@ -9,24 +9,24 @@ iframe#tagmemo_quickform_frame {
 	overflow: auto;
 }
 
-div#tagmemo_container {
+div#tagmemo_qp_container {
 	position: fixed!important;
 	position: absolute;
 	margin: 0px;
 	padding: 0px;
 }
 
-div#tagmemo_container a:link,
-div#tagmemo_container a:visited,
-div#tagmemo_container a:active {
+div#tagmemo_qp_container a:link,
+div#tagmemo_qp_container a:visited,
+div#tagmemo_qp_container a:active {
 	font-weight: bold;
 	color: #FFFFFF;
 	text-decoration: none;
 }
 
-div#tagmemo_container table,
-div#tagmemo_container tr,
-div#tagmemo_container td {
+div#tagmemo_qp_container table,
+div#tagmemo_qp_container tr,
+div#tagmemo_qp_container td {
 	margin: 0px;
 	padding: 0px;
 	border: hidden;
@@ -34,7 +34,7 @@ div#tagmemo_container td {
 	border-spacing: 0px;
 }
 
-div#tagmemo_container div {
+div#tagmemo_qp_container div {
 	margin: 0px;
 	padding: 0px;	
 }
