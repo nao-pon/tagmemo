@@ -541,7 +541,7 @@ Effect.Fade = function(element) {
 Effect.Appear = function(element) {
   var options = Object.extend({
   from: (Element.getStyle(element, 'display') == 'none' ? 0.0 : Element.getOpacity(element) || 0.0),
-  to:   1.0,
+  to:   Element.getOpacity(element) || 1.0,
   beforeSetup: function(effect) { with(Element) {
     setOpacity(effect.element, effect.options.from);
     show(effect.element); }}

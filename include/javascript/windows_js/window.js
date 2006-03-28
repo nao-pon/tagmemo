@@ -29,8 +29,10 @@ Window.prototype = {
 		this.minHeight = parameters.minHeight || 100;
 		this.maxWidth = parameters.maxWidth;
 		this.maxHeight = parameters.maxHeight;
-		this.showEffect = parameters.showEffect || (this.hasEffectLib ? Effect.Appear : Element.show)
-		this.hideEffect = parameters.hideEffect || (this.hasEffectLib ? Effect.Fade : Element.Hide)
+		this.showEffect = parameters.showEffect || (this.hasEffectLib ? Effect.Appear : Element.show);
+		this.hideEffect = parameters.hideEffect || (this.hasEffectLib ? Effect.Fade : Element.Hide);
+		// nao-pon
+		this.Opacity = parameters.opacity || 1;
 		
 		var resizable = parameters.resizable != null ? parameters.resizable : true;
 		var className = parameters.className != null ? parameters.className : "";
@@ -62,7 +64,7 @@ Window.prototype = {
 		if (parameters.zIndex) {
 			Element.setStyle(this.element,{zIndex: parameters.zIndex});
 		}
-		Windows.register(this);	    
+		Windows.register(this);
   	},
  
 	// Destructor
@@ -108,6 +110,10 @@ Window.prototype = {
       	Event.observe(document, "mousemove", this.eventMouseMove);
 
 		this.toFront();
+		
+		//nao-pon
+		new Effect.Opacity(this.element, {duration:0.2, from:this.Opacity, to:0.6});
+		
       	Event.stop(event);
   	},
 
@@ -144,6 +150,9 @@ Window.prototype = {
 
 	// End drag callback
   	endDrag: function(event) {
+		//nao-pon
+		new Effect.Opacity(this.element, {duration:0.2, from:0.6, to:this.Opacity});
+		
 		// Release event observing
 		Event.stopObserving(document, "mouseup", this.eventMouseUp);
       	Event.stopObserving(document, "mousemove", this.eventMouseMove);
@@ -276,7 +285,7 @@ Window.prototype = {
 	setOpacity: function(opacity) {
 		if (Element.setOpacity)
 			Element.setOpacity(this.element, opacity);
-	}	
+	}
 };
 
 // Windows containers, register all page windows
