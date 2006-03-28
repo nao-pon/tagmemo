@@ -2,6 +2,10 @@
 /**
 * @package Page
 */
+
+// ブックマークレット投稿時の戻り ブラウザのセキュリティ設定により自動的に閉じない可能性あり
+if (!empty($_GET['quick_edit_close'])) exit('<script>parent.Windows.close("tagmemo_qp_container");</script>');
+
 // 必要なファイルを一気に取り込むおまじない。
 /**
 * XOOPS用ファイルの取り込み
@@ -141,7 +145,7 @@ if($memo_owner == $uid || $isAdmin) {
 }
 // echo "checkpoint 6 <br>\n";
 
-$ret_url = "quickedit_close.html";
+$ret_url = "post.php?quick_edit_close=1";
 //放り込め！
 if ($tagmemo_handler->insert($memo_obj, $tags)) {
 	//memo_id is set in memo_obj by xoopstableobject->insert method.
@@ -149,7 +153,7 @@ if ($tagmemo_handler->insert($memo_obj, $tags)) {
 	// make autolink data
 	$tagmemo_handler->makeAutolinkData();
 	//redirect to created/updated memo ditail.
-	if (!$is_quickedit) $ret_url = 'detail.php?tagmemo_id='.$memo_id;
+	if (!$is_quickedit) $ret_url = '?tagmemo_id='.$memo_id;
 	redirect_header(XOOPS_URL.'/modules/tagmemo/'.$ret_url, 1, _MD_TAGMEMO_MESSAGE_SAVE);
 } else {
 	//get error message.
