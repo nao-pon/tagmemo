@@ -58,14 +58,17 @@ input {
 }
 
 textarea#tagmemo_memo {
-	height: 170px;
-	width: 99%;
+	height: 100%;
+	width: 100%;
 	overflow: auto;
 	font-size: 12px;
 	border: 1px solid silver;
 	margin: 0px;
 	padding: 5px;
 	background: transparent url(../../images/content_bg.gif) repeat 0 0;
+}
+div#tagmemo_header {
+	padding-top: 5px;
 }
 
 div#tagmemo_buttons {
