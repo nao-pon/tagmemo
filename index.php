@@ -81,7 +81,7 @@ if(strlen($condition)>0){
 	$xoopsTpl->assign('pagenav', $nav->renderNav());
 }
 
-$xoopsTpl->assign('bookmarklet','javascript: tagmemo_quickform_script = document.createElement(\'script\'); tagmemo_quickform_script.src = \''.XOOPS_URL.'/modules/tagmemo/quickform.php?uname='.rawurlencode($uname).'\'; tagmemo_quickform_script.type = \'text/javascript\'; void(document.body.appendChild(tagmemo_quickform_script));');
+$xoopsTpl->assign('bookmarklet','javascript: tagmemo_quickform_script = document.createElement(\'script\'); tagmemo_quickform_script.src = \''.XOOPS_URL.'/modules/tagmemo/quickform.php?uname='.rawurlencode($uname).'\'; tagmemo_quickform_script.type = \'text/javascript\'; void(document.body.insertBefore(tagmemo_quickform_script,document.body.firstChild));');
 $ff_plugin = isset($xoopsModuleConfig['ff_plugin']) ? $xoopsModuleConfig['ff_plugin'] : 0;
 $xoopsTpl->assign('ff_plugin', $ff_plugin);
 

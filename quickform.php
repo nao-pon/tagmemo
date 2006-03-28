@@ -26,22 +26,22 @@ var tagmemo_scr;
 tagmemo_scr = document.createElement('script');
 tagmemo_scr.src = tagmemo_baseurl + '/include/javascript/prototype/prototype.js';
 tagmemo_scr.type = 'text/javascript';
-document.getElementsByTagName('head')[0].appendChild(tagmemo_scr);
+document.body.insertBefore(tagmemo_scr,document.body.firstChild);
 
 tagmemo_scr = document.createElement('script');
 tagmemo_scr.src = tagmemo_baseurl + '/include/javascript/scriptaculous/effects.js';
 tagmemo_scr.type = 'text/javascript';
-document.getElementsByTagName('head')[0].appendChild(tagmemo_scr);
+document.body.insertBefore(tagmemo_scr,document.body.firstChild);
 
 tagmemo_scr = document.createElement('script');
 tagmemo_scr.src = tagmemo_baseurl + '/include/javascript/windows_js/window.js';
 tagmemo_scr.type = 'text/javascript';
-document.getElementsByTagName('head')[0].appendChild(tagmemo_scr);
+document.body.insertBefore(tagmemo_scr,document.body.firstChild);
 
 tagmemo_scr      = document.createElement('script');
 tagmemo_scr.src  = tagmemo_baseurl + '/include/javascript/tagmemo_quickedit.js';
 tagmemo_scr.type = 'text/javascript';
-document.getElementsByTagName('head')[0].appendChild(tagmemo_scr);
+document.body.insertBefore(tagmemo_scr,document.body.firstChild);
 
 EOD;
 exit();

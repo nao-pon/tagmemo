@@ -1,4 +1,4 @@
-// Copyright (c) 2006 SŽÃŽ©bastien Gruhier (http://xilinus.com, http://itseb.com)
+// Copyright (c) 2006 SÃ©bastien Gruhier (http://xilinus.com, http://itseb.com)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -22,22 +22,24 @@
 var Window = Class.create();
 Window.prototype = {
 	// Constructor
-	// Available parameters : minWidth, minHeight, maxWidth, maxHeight, width, height, top, left, resizable, zIndex, opacity, hideEffect, showEffect
+	// Available parameters : minWidth, minHeight, maxWidth, maxHeight, width, height, top, left, resizable, zIndex, opacity, hideEffect, showEffect, url
 	initialize: function(id, parameters) {
 		this.hasEffectLib = String.prototype.parseColor != null
 		this.minWidth = parameters.minWidth || 100;
 		this.minHeight = parameters.minHeight || 100;
 		this.maxWidth = parameters.maxWidth;
 		this.maxHeight = parameters.maxHeight;
-		this.showEffect = parameters.showEffect || (this.hasEffectLib ? Effect.Appear : Element.show);
-		this.hideEffect = parameters.hideEffect || (this.hasEffectLib ? Effect.Fade : Element.Hide);
-		// nao-pon
+		this.showEffect = parameters.showEffect || (this.hasEffectLib ? Effect.Appear : Element.show)
+		this.hideEffect = parameters.hideEffect || (this.hasEffectLib ? Effect.Fade : Element.hide)
+		//nao-pon
 		this.Opacity = parameters.opacity || 1;
 		
 		var resizable = parameters.resizable != null ? parameters.resizable : true;
-		var className = parameters.className != null ? parameters.className : "";
+		var className = parameters.className != null ? parameters.className : "dialog";
 		
-		this.element = this.createWindow(id, className, resizable, parameters.title);
+			
+		this.element = this.createWindow(id, className, resizable, parameters.title, parameters.url);
+		this.isIFrame = parameters.url != null;
 		
 		// Bind event listener
 	    this.eventMouseDown = this.initDrag.bindAsEventListener(this);
@@ -53,18 +55,28 @@ Window.prototype = {
 	    }
 	
 		var top = parseFloat(parameters.top) || 10;
-		var left = parseFloat(parameters.left) || 10;
 		var width = parseFloat(parameters.width) || 200;
 		var height = parseFloat(parameters.height) || 200;
-		
-		Element.setStyle(this.element,{top: top + 'px', left: left + 'px'});
+
+		if (parameters.left != null)
+			Element.setStyle(this.element,{left: parseFloat(parameters.left) + 'px'});
+
+		if (parameters.right != null)
+			Element.setStyle(this.element,{right: parseFloat(parameters.right) + 'px'});
+
+		if (parameters.top != null)
+			Element.setStyle(this.element,{top: parameters.top + 'px'});
+
+		if (parameters.bottom != null)
+			Element.setStyle(this.element,{bottom: parameters.bottom + 'px'});
+
 		this.setSize(width, height);
 		if (parameters.opacity)
 			this.setOpacity(parameters.opacity);
 		if (parameters.zIndex) {
 			Element.setStyle(this.element,{zIndex: parameters.zIndex});
 		}
-		Windows.register(this);
+		Windows.register(this);	    
   	},
  
 	// Destructor
@@ -108,12 +120,24 @@ Window.prototype = {
 		// Register global event to capture mouseUp and mouseMove
 		Event.observe(document, "mouseup", this.eventMouseUp);
       	Event.observe(document, "mousemove", this.eventMouseMove);
-
-		this.toFront();
 		
+		// Add an invisible div to keep catching mouse event over the iframe
+		if (this.isIFrame) {
+			var objBody = document.getElementsByTagName("body").item(0);
+			var div = document.createElement("div");
+			div.style.position = "absolute";
+			div.style.top = "0px";
+			div.style.bottom = "0px";
+			div.style.zIndex = "10000";			
+			div.style.width = (this.width + 100) + "px";
+			div.style.height = (this.height + 100) + "px";
+			this.element.appendChild(div);
+			
+			this.tmpDiv = div;			
+		}
+		this.toFront();
 		//nao-pon
 		new Effect.Opacity(this.element, {duration:0.2, from:this.Opacity, to:0.6});
-		
       	Event.stop(event);
   	},
 
@@ -133,76 +157,111 @@ Window.prototype = {
 			
 			width += dx;
 			height += dy;
+			// Check if it's a right position, update it to keep upper-left corner at the same position
+			var right = Element.getStyle(this.element, 'right');
+			if (right != null) 
+				Element.setStyle(this.element,{right: (parseFloat(right) -dx) + 'px'});
+
+			// Check if it's a bottom position, update it to keep upper-left corner at the same position
+			var bottom = Element.getStyle(this.element, 'bottom');
+			if (bottom != null) 
+				Element.setStyle(this.element,{bottom: (parseFloat(bottom) -dy) + 'px'});
 			
 			this.setSize(width, height)
 		}
 		// Move case, update top/left
 		else {
-			var top = parseFloat(Element.getStyle(this.element, 'top'));
-			var left = parseFloat(Element.getStyle(this.element, 'left'));
-		
-			top += dy;
-			left += dx;
-			this.setLocation(top, left)
+			var top = Element.getStyle(this.element, 'top');
+			var left = Element.getStyle(this.element, 'left');
+			
+			if (left != null) {
+				left = parseFloat(left) + dx;
+				Element.setStyle(this.element,{left: left + 'px'});
+			}
+			else {
+				var right = Element.getStyle(this.element, 'right');
+				right = parseFloat(right) - dx;
+				Element.setStyle(this.element,{right: right + 'px'});
+			}
+			
+			if (top != null) {
+				top = parseFloat(top) + dy;
+				Element.setStyle(this.element,{top: top + 'px'});
+			} else {
+				var bottom = Element.getStyle(this.element, 'bottom');
+				bottom = parseFloat(bottom) - dy;
+				Element.setStyle(this.element,{bottom: bottom + 'px'});
+				
+			}
 		}
       	Event.stop(event);
   	},
 
 	// End drag callback
   	endDrag: function(event) {
-		//nao-pon
-		new Effect.Opacity(this.element, {duration:0.2, from:0.6, to:this.Opacity});
-		
+  		//nao-pon
+  		new Effect.Opacity(this.element, {duration:0.2, from:0.6, to:this.Opacity});
+  		
 		// Release event observing
 		Event.stopObserving(document, "mouseup", this.eventMouseUp);
       	Event.stopObserving(document, "mousemove", this.eventMouseMove);
+
+		// Remove temporary div
+		if (this.isIFrame) {
+			this.tmpDiv.parentNode.removeChild(this.tmpDiv);
+			this.tmpDiv = null;
+		}
       	Event.stop(event);
   	},
 
-	createWindow: function(id, className, resizable, title) {
+	createWindow: function(id, className, resizable, title, url) {
 		var objBody = document.getElementsByTagName("body").item(0);
 		win = document.createElement("div");
 		win.setAttribute('id', id);
-		win.className = 'dialog ' + className;
+		win.className = "dialog";
 	 	if (!title)
 			title = "&nbsp;";
 
+		var content;
+		if (url)
+			content= "<IFRAME id=\"" + id + "_content\" SRC=\"" + url + "\" frameborder=\"0\" border=\"0\" allowtransparency=\"true\" > </IFRAME>";
+		else
+			content ="<DIV id=\"" + id + "_content\" class=\"" +className + "_content\"> content</DIV>";
+			
 		win.innerHTML = "\
-		<TABLE class=\"\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" id=\""+ id + "_header\">\
-			<TR>\
+		<DIV class=\"" +className + "_close\" id=\""+ id + "_close\" onclick=\"Windows.close('"+ id + "')\"> </DIV>\
+		<TABLE background='#F00' border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" id=\""+ id + "_header\">\
+			<TR id=\""+ id + "_row1\">\
 				<TD> \
 					<TABLE border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" id=\""+ id + "_top\">\
 						<TR>\
-							<TD id=\""+ id + "_nw\"  class=\"dialog_nw\"> </DIV></TD>\
-							<TD class=\"dialog_n\"  valign=\"middle\">\
-								<DIV class=\"dialog_title\">" + title + " </DIV>						\
-								<DIV class=\"dialog_close\" onclick=\"Windows.close('"+ id + "')\"> </DIV>\
+							<TD id=\""+ id + "_nw\"  class=\"" +className + "_nw\"> </TD>\
+							<TD class=\"" +className + "_n\"  valign=\"middle\">\
+								<DIV class=\"" +className + "_title\">" + title + " </DIV>						\
 							</TD>\
-							<TD class=\"dialog_ne\"> </DIV></TD>\
+							<TD class=\"" +className + "_ne\"> </TD>\
 						</TR>\
 					</TABLE>\
 				</TD>\
 			</TR>\
-			<TR>\
+			<TR id=\""+ id + "_row2\">\
 				<TD> \
-					<TABLE class=\"\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">\
+					<TABLE class=\"" +className + "der=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">\
 						<TR>\
-							<TD class=\"dialog_w\"><DIV class=\"dialog_w\"> </DIV></TD> \
-							<TD class=\"dialog_content\">\
-									<DIV id=\"" + id + "_content\" class=\"dialog_content\"> content</DIV>\
-							</TD>\
-							<TD class=\"dialog_e\"><DIV class=\"dialog_e\"> </DIV></TD>\
+							<TD class=\"" +className + "_w\"><DIV class=\"" +className + "_w\"> </TD> \
+							<TD class=\"" +className + "_content\">" + content + "</TD>\
+							<TD class=\"" +className + "_e\"><DIV class=\"" +className + "_e\"> </TD>\
 						</TR>\
 					</TABLE>\
 				</TD>\
 			</TR>\
-			<TR>\
+			<TR id=\""+ id + "_row3\">\
 				<TD> \
-					<TABLE class=\"\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" id=\""+ id + "_bottom\">\
+					<TABLE border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" id=\""+ id + "_bottom\">\
 						<TR>\
-							<TD class=\"dialog_sw\" id=\""+ id + "_sw\"  > </DIV></TD>\
-							<TD class=\"dialog_s\" valign=\"middle\">&nbsp;</TD>\
-							<TD class=\"dialog_se\"> " + (resizable  ? "<DIV id=\""+ id + "_sizer\" class=\"dialog_sizer\"></DIV>" : "") + "</TD>\
+							<TD class=\"" +className + "_sw\" id=\""+ id + "_sw\"  > </TD>\
+							<TD class=\"" +className + "_s\" valign=\"middle\">&nbsp;</TD>\
+							<TD class=\"" +className + "_se\"> " + (resizable  ? "<DIV id=\""+ id + "_sizer\" class=\"" +className + "_sizer\"></DIV>" : "") + "</TD>\
 						</TR>\
 					</TABLE>\
 				</TD>\
@@ -210,7 +269,6 @@ Window.prototype = {
 		</TABLE>\
 		";
 		Element.hide(win);
-
 		objBody.insertBefore(win, objBody.firstChild);
 		
 		return win;
@@ -278,20 +336,26 @@ Window.prototype = {
 	},
 	
 	hide: function() {
-		this.hideEffect(this.element);
-		//document.getElementsByTagName('body')[0].removeChild(this.element);
+		// To avoid bug on scrolling bar
+		Element.setStyle(this.getContent(), {overflow: "hidden"});
+		this.hideEffect(this.element);		
 	},
 	
 	setOpacity: function(opacity) {
 		if (Element.setOpacity)
 			Element.setOpacity(this.element, opacity);
-	}
+	}	
 };
 
 // Windows containers, register all page windows
 var Windows = {
   windows: [],
   
+  // Find window from its id
+  getWindow: function(id) {
+	return this.windows.detect(function(d) { return d.getId() ==id });
+  },
+
   // Register a new window (called by Windows constructor)
   register: function(win) {
     this.windows.push(win);
@@ -304,7 +368,7 @@ var Windows = {
 
   // Close a window with its id
   close: function(id) {
-	win = this.windows.detect(function(d) { return d.getId() ==id });
+	win = this.getWindow(id);
     if (win)
 		win.hide();
   }
