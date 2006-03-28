@@ -103,6 +103,10 @@ Window.prototype = {
 	
 	// Init drag callback
 	initDrag: function(event) {
+		// disabled tagName by nao-pon
+		var src = Event.element(event);
+		if(src.tagName && src.tagName=='A') return;
+		
 		// Get pointer X,Y
        	this.pointer = [Event.pointerX(event), Event.pointerY(event)];
 		this.doResize = false;
