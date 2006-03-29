@@ -53,8 +53,8 @@ window.onload = function() {
 		</div>
 		<div id="tagmemo_buttons">
 			<{if $uname}>
-			<input type="hidden" name="uname" value="<{$uname}>" />
-			<{$uname}>'s pass:<input type="password" name="pass" size="10" />&nbsp;&nbsp;
+			id:<input type="text" class="quickedit_login" name="uname" value="<{$uname}>" size="8" />
+			pass:<input type="password" class="quickedit_login" name="pass" size="8" />&nbsp;
 			<{/if}>
 			<input type="submit" name="tagmemo_done" class="button" value="<{$smarty.const._MD_TAGMEMO_DONE}>" />
 		</div>

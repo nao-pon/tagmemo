@@ -1,5 +1,5 @@
 var Log = {
-    enable: true,
+    enable: false,
     
     debug: function(msg){
         Log._log(msg, "debug","black");

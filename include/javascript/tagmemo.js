@@ -1,4 +1,3 @@
-Log.enable = false;
 
 Form.Element.Observer.prototype.registerCallback=function(){
 	this.interval = setInterval(this.onTimerEvent.bind(this), this.frequency * 1000);
@@ -27,7 +26,7 @@ Tagmemo.prototype = {
 	
 		this._baseurl = url;
 		this._tag = new TagmemoTags(this._baseurl);
-		this.memo.focus();
+		setTimeout(function(){$('tagmemo_memo').focus();},300);
 	},
 
 	autosave: function(){
@@ -169,16 +168,21 @@ TagmemoSuggest.prototype = {
 		this.reqestOption=['If-Modified-Since','Wed, 15 Nov 1995 00:00:00 GMT'];
 
 		this.candidateList.style.position = 'absolute';
-		var offsets = Position.positionedOffset(this.tagText);
-		this.candidateList.style.left = offsets[0] + 'px';
-		this.candidateList.style.top  = (offsets[1] + this.tagText.offsetHeight) + 'px';
-		this.candidateList.style.width = this.tagText.offsetWidth + 'px';
+		
+		setTimeout(this.init_candidateList_pos.bind(this),300);
 				
 		this.hideCandidateList();
 		this.startObserver();
 	
 		Event.observe(this.tagText, "keypress", this.onKeyPress.bindAsEventListener(this));
 		Event.observe(this.tagText, "blur", this.onBlur.bindAsEventListener(this));
+	},
+	
+	init_candidateList_pos: function() {
+		var offsets = Position.positionedOffset(this.tagText);
+		this.candidateList.style.left = offsets[0] + 'px';
+		this.candidateList.style.top  = (offsets[1] + this.tagText.offsetHeight) + 'px';
+		this.candidateList.style.width = this.tagText.offsetWidth + 'px';
 	},
 		
 	startObserver: function(){

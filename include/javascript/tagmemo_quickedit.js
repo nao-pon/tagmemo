@@ -17,13 +17,9 @@ function createTagmemoQuickForm() {
 		document.getElementsByTagName('head')[0].appendChild(style);
 			
 		/* Finally create quick form */
-		if ($('tagmemo_qp_container'))
-		{
-			document.getElementsByTagName('body')[0].removeChild($('tagmemo_qp_container'));
-		}
 		var title = "<a href='" + tagmemo_baseurl + "' target='_blank'>" + decodeURIComponent(tagmemo_sitename) + "</a>";
 		var win;
-		win = new Window('tagmemo_qp_container', {top:100, left:450, width:300, height:300, zIndex:150, opacity:0.95, resizable: true, title: title, url: tagmemo_quickurl});
+		win = new Window('tagmemo_qp_container', {top:100, right:100, width:300, height:300, zIndex:150, opacity:0.95, resizable: true, title: title, url: tagmemo_quickurl});
 		win.show();
 		return true;
 		

@@ -37,6 +37,7 @@
 
 .dialog_s {
 	background: transparent url(default/bottom_mid.gif) repeat-x 0 0;		
+	cursor:move;
 }
 
 .dialog_se {

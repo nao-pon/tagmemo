@@ -56,6 +56,9 @@ input {
 	font-size: 12px;
 	border: 1px solid silver;
 }
+input.quickedit_login {
+	font-size: 11px;
+}
 
 textarea#tagmemo_memo {
 	height: 100%;

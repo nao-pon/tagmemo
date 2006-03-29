@@ -31,7 +31,8 @@ Window.prototype = {
 		this.maxHeight = parameters.maxHeight;
 		this.showEffect = parameters.showEffect || (this.hasEffectLib ? Effect.Appear : Element.show)
 		this.hideEffect = parameters.hideEffect || (this.hasEffectLib ? Effect.Fade : Element.hide)
-		//nao-pon
+		
+		// by nao-pon
 		this.Opacity = parameters.opacity || 1;
 		
 		var resizable = parameters.resizable != null ? parameters.resizable : true;
@@ -42,17 +43,20 @@ Window.prototype = {
 		this.isIFrame = parameters.url != null;
 		
 		// Bind event listener
-	    this.eventMouseDown = this.initDrag.bindAsEventListener(this);
-      	this.eventMouseUp   = this.endDrag.bindAsEventListener(this);
-      	this.eventMouseMove = this.updateDrag.bindAsEventListener(this);
+		this.eventMouseDown = this.initDrag.bindAsEventListener(this);
+		this.eventMouseUp   = this.endDrag.bindAsEventListener(this);
+		this.eventMouseMove = this.updateDrag.bindAsEventListener(this);
 
 		this.topbar = $(this.element.id + "_top");
-    	Event.observe(this.topbar, "mousedown", this.eventMouseDown);
-	
+		Event.observe(this.topbar, "mousedown", this.eventMouseDown);
+		
+		//by nao-pon
+		Event.observe($(this.element.id + "_bottom"), "mousedown", this.eventMouseDown);
+		
 		if (resizable) {
 			this.sizer = $(this.element.id + "_sizer");
-	    	Event.observe(this.sizer, "mousedown", this.eventMouseDown);
-	    }
+			Event.observe(this.sizer, "mousedown", this.eventMouseDown);
+		}
 	
 		var top = parseFloat(parameters.top) || 10;
 		var width = parseFloat(parameters.width) || 200;
@@ -76,6 +80,11 @@ Window.prototype = {
 		if (parameters.zIndex) {
 			Element.setStyle(this.element,{zIndex: parameters.zIndex});
 		}
+		
+		// by nao-pon
+		this.setPosition();
+		Event.observe(window, "scroll", this.fixWindow.bindAsEventListener(this));
+		
 		Windows.register(this);	    
   	},
  
@@ -117,7 +126,9 @@ Window.prototype = {
 			return;
 		}
 		// Check if click on sizer
-		if (this.sizer && Position.within(this.sizer, this.pointer[0], this.pointer[1])) {
+		//if (this.sizer && Position.within(this.sizer, this.pointer[0], this.pointer[1])) {
+		// by nao-pon
+		if (this.sizer && src.id == this.sizer.id) {
 			this.doResize = true;
 		}
 		
@@ -205,6 +216,7 @@ Window.prototype = {
   	endDrag: function(event) {
   		//nao-pon
   		new Effect.Opacity(this.element, {duration:0.2, from:0.6, to:this.Opacity});
+  		this.setPosition();
   		
 		// Release event observing
 		Event.stopObserving(document, "mouseup", this.eventMouseUp);
@@ -322,8 +334,39 @@ Window.prototype = {
 		this.element.style.zIndex = parseFloat(maxIndex) +1;
 	},
 	
+	// by nao-pon
+	fixWindow: function() {
+		if (document.all)
+		{
+			var arrayPageScroll = getPageScroll();
+			this.element.style.top = ((arrayPageScroll[1] + this.top) + 'px');
+			this.element.style.left = ((arrayPageScroll[0] + this.left) + 'px');
+		}
+	},
+	
+	// by nao-pon
+	setPosition: function() {
+		var arrayPageScroll = getPageScroll();
+		var arrayPageSize = getPageSize();
+		if (!this.element.style.left && this.element.style.right)
+		{
+			this.element.style.left = (arrayPageScroll[0] + arrayPageSize[2] - parseInt(this.element.style.right) - this.width) + "px";
+			this.element.style.right = 'auto';
+		}
+		if (!this.element.style.top && this.element.style.bottom)
+		{
+			this.element.style.top = (arrayPageScroll[1] + arrayPageSize[3] - parseInt(this.element.style.bottom) - this.height) + "px";			this.element.style.bottom = 'auto';
+		}
+		this.top = parseInt(this.element.style.top) - arrayPageScroll[1];
+		this.left = parseInt(this.element.style.left) - arrayPageScroll[0];
+	},
+	
 	show: function() {
 		this.setSize(this.width, this.height);
+		
+		//by nao-pon
+		this.fixWindow();
+			
 		this.showEffect(this.element);		
 	},
 	
@@ -395,16 +438,20 @@ var Windows = {
 //
 function getPageScroll(){
 	var yScroll;
+	var xScroll;
 
 	if (self.pageYOffset) {
 		yScroll = self.pageYOffset;
+		xScroll = self.pageXOffset;
 	} else if (document.documentElement && document.documentElement.scrollTop){	 // Explorer 6 Strict
 		yScroll = document.documentElement.scrollTop;
+		xScroll = document.documentElement.scrollLeft;
 	} else if (document.body) {// all other Explorers
 		yScroll = document.body.scrollTop;
+		xScroll = document.body.scrollLeft;
 	}
 
-	arrayPageScroll = new Array('',yScroll) 
+	arrayPageScroll = new Array(xScroll,yScroll) 
 	return arrayPageScroll;
 }
 
