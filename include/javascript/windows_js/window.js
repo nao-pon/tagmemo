@@ -246,7 +246,7 @@ Window.prototype = {
 			
 		win.innerHTML = "\
 		<DIV class=\"" +className + "_close\" id=\""+ id + "_close\" onclick=\"Windows.close('"+ id + "')\"> </DIV>\
-		<TABLE background='#F00' border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" id=\""+ id + "_header\">\
+		<TABLE border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" id=\""+ id + "_header\">\
 			<TR id=\""+ id + "_row1\">\
 				<TD> \
 					<TABLE border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" id=\""+ id + "_top\">\

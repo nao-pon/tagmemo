@@ -26,33 +26,60 @@ var tagmemo_qp_container = document.getElementById('tagmemo_qp_container');
 if (tagmemo_qp_container)
 {
 	document.body.removeChild(tagmemo_qp_container);
-	if (tagmemo_scr[0])	document.body.removeChild(tagmemo_scr[0]);
-	if (tagmemo_scr[1])	document.body.removeChild(tagmemo_scr[1]);
-	if (tagmemo_scr[2])	document.body.removeChild(tagmemo_scr[2]);
-	if (tagmemo_scr[3])	document.body.removeChild(tagmemo_scr[3]);
-	tagmemo_qp_container = null;
 }
 
-var tagmemo_scr = new Array();
-tagmemo_scr[0] = document.createElement('script');
-tagmemo_scr[0].src = tagmemo_baseurl + '/include/javascript/prototype/prototype.js';
-tagmemo_scr[0].type = 'text/javascript';
-document.body.insertBefore(tagmemo_scr[0],document.body.firstChild);
+var tagmemo_scr;
+if (!document.getElementById('TagmemoScriptPrototype'))
+{
+	tagmemo_scr = document.createElement('script');
+	tagmemo_scr.id = 'TagmemoScriptPrototype';
+	tagmemo_scr.src = tagmemo_baseurl + '/include/javascript/prototype/prototype.js';
+	tagmemo_scr.type = 'text/javascript';
+	document.getElementsByTagName('head')[0].appendChild(tagmemo_scr);
+}
+if (!document.getElementById('TagmemoScriptEffects'))
+{
+	tagmemo_scr = document.createElement('script');
+	tagmemo_scr.id = 'TagmemoScriptEffects';
+	tagmemo_scr.src = tagmemo_baseurl + '/include/javascript/scriptaculous/effects.js';
+	tagmemo_scr.type = 'text/javascript';
+	document.getElementsByTagName('head')[0].appendChild(tagmemo_scr);
+}
 
-tagmemo_scr[1] = document.createElement('script');
-tagmemo_scr[1].src = tagmemo_baseurl + '/include/javascript/scriptaculous/effects.js';
-tagmemo_scr[1].type = 'text/javascript';
-document.body.insertBefore(tagmemo_scr[1],document.body.firstChild);
+if (tagmemo_scr = document.getElementById('TagmemoStyleQuickedit'))
+		document.getElementsByTagName('head')[0].removeChild(tagmemo_scr);
+tagmemo_scr = document.createElement('link');
+tagmemo_scr.id = 'TagmemoStyleQuickedit';
+tagmemo_scr.href = tagmemo_baseurl + '/include/css/tagmemo_quickedit.css';
+tagmemo_scr.rel  = 'stylesheet';
+tagmemo_scr.type = 'text/css';
+document.getElementsByTagName('head')[0].appendChild(tagmemo_scr);
 
-tagmemo_scr[2] = document.createElement('script');
-tagmemo_scr[2].src = tagmemo_baseurl + '/include/javascript/windows_js/window.js';
-tagmemo_scr[2].type = 'text/javascript';
-document.body.insertBefore(tagmemo_scr[2],document.body.firstChild);
+if (tagmemo_scr = document.getElementById('TagmemoStyleWindow'))
+		document.getElementsByTagName('head')[0].removeChild(tagmemo_scr);
+var style;
+tagmemo_scr = document.createElement('link');
+tagmemo_scr.id = 'TagmemoStyleWindow';
+tagmemo_scr.href = tagmemo_baseurl + '/include/css/windows_js/default.css';
+tagmemo_scr.rel  = 'stylesheet';
+tagmemo_scr.type = 'text/css';
+document.getElementsByTagName('head')[0].appendChild(tagmemo_scr);
 
-tagmemo_scr[3]      = document.createElement('script');
-tagmemo_scr[3].src  = tagmemo_baseurl + '/include/javascript/tagmemo_quickedit.js';
-tagmemo_scr[3].type = 'text/javascript';
-document.body.insertBefore(tagmemo_scr[3],document.body.firstChild);
+if (tagmemo_scr = document.getElementById('TagmemoScriptWindow'))
+		document.body.removeChild(tagmemo_scr);
+tagmemo_scr = document.createElement('script');
+tagmemo_scr.id = 'TagmemoScriptWindow';
+tagmemo_scr.src = tagmemo_baseurl + '/include/javascript/windows_js/window.js';
+tagmemo_scr.type = 'text/javascript';
+document.body.insertBefore(tagmemo_scr,document.body.firstChild);
+
+if (tagmemo_scr = document.getElementById('TagmemoScriptQuickedit'))
+		document.body.removeChild(tagmemo_scr);
+tagmemo_scr      = document.createElement('script');
+tagmemo_scr.id = 'TagmemoScriptQuickedit';
+tagmemo_scr.src  = tagmemo_baseurl + '/include/javascript/tagmemo_quickedit.js';
+tagmemo_scr.type = 'text/javascript';
+document.body.insertBefore(tagmemo_scr,document.body.firstChild);
 
 EOD;
 exit();
