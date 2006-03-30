@@ -22,13 +22,15 @@ if (!extension_loaded('mbstring'))
 {
 	include_once('./include/mbstring.php');
 }
-
-// 前処理
-//mb_string ini_set
-@ini_set("mbstring.substitute_character"," ");
-@ini_set("mbstring.http_input","pass");
-@ini_set("mbstring.http_output","pass");
-@ini_set("mbstring.internal_encoding",_CHARSET);
+else
+{
+	// 前処理
+	//mb_string ini_set
+	@ini_set("mbstring.substitute_character"," ");
+	@ini_set("mbstring.http_input","pass");
+	@ini_set("mbstring.http_output","pass");
+	@ini_set("mbstring.internal_encoding",_CHARSET);
+}
 
 // NULL バイト除去
 $_POST = tagmemo_input_filter($_POST);

@@ -51,7 +51,8 @@ Window.prototype = {
 		Event.observe(this.topbar, "mousedown", this.eventMouseDown);
 		
 		//by nao-pon
-		Event.observe($(this.element.id + "_bottom"), "mousedown", this.eventMouseDown);
+		this.bottombar = $(this.element.id + "_bottom");
+		Event.observe(this.bottombar, "mousedown", this.eventMouseDown);
 		
 		if (resizable) {
 			this.sizer = $(this.element.id + "_sizer");
@@ -91,6 +92,7 @@ Window.prototype = {
 	// Destructor
  	destroy: function() {
     	Event.stopObserving(this.topbar, "mousedown", this.eventMouseDown);
+		Event.stopObserving(this.bottombar, "mousedown", this.eventMouseDown);
 		if (this.sizer)
     		Event.stopObserving(this.sizer, "mousedown", this.eventMouseDown);
 
@@ -386,6 +388,9 @@ Window.prototype = {
 		// To avoid bug on scrolling bar
 		Element.setStyle(this.getContent(), {overflow: "hidden"});
 		this.hideEffect(this.element);		
+		//setTimeout(function(){this.destroy();},1);
+		setTimeout(this.destroy.bind(this),1000);
+		//this.destroy();
 	},
 	
 	setOpacity: function(opacity) {
