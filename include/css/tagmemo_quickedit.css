@@ -32,10 +32,10 @@ div.auto_complete ul li b {
 }
 
 body {
-	margin: 0px 5px;
-	padding:0px;
+	margin: 0px;
+	padding: 0px;
 	border: hidden;
-	background-color: transparent;
+	background: transparent url(../../images/content_bg.gif) repeat 0 0;
 }
 
 a:link,
@@ -68,7 +68,7 @@ textarea#tagmemo_memo {
 	border: 1px solid silver;
 	margin: 0px;
 	padding: 5px;
-	background: transparent url(../../images/content_bg.gif) repeat 0 0;
+	background-color: transparent;
 }
 div#tagmemo_header {
 	padding-top: 5px;
