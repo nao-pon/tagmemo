@@ -361,14 +361,12 @@ TagmemoSuggest.prototype = {
 				//case Event.KEY_LEFT:
 				case Event.KEY_UP:
 					this.markPrevious();
-					//if(navigator.appVersion.indexOf('AppleWebKit')>0) Event.stop(event);
-					Event.stop(event);
+					if(navigator.appVersion.indexOf('AppleWebKit')>0) Event.stop(event);
 					return;
 				//case Event.KEY_RIGHT:
 				case Event.KEY_DOWN:
 					this.markNext();
-					//if(navigator.appVersion.indexOf('AppleWebKit')>0) Event.stop(event);
-					Event.stop(event);
+					if(navigator.appVersion.indexOf('AppleWebKit')>0) Event.stop(event);
 					return;
 				default:
 					if(navigator.appVersion.indexOf('AppleWebKit')>0) this.hideCandidateList();

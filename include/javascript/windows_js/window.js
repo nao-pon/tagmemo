@@ -34,6 +34,8 @@ Window.prototype = {
 		
 		// by nao-pon
 		this.Opacity = parameters.opacity || 1;
+		this.footer = parameters.footer || "::";
+		this.fixed = (!parameters.fixed)? false : true;
 		
 		var resizable = parameters.resizable != null ? parameters.resizable : true;
 		var className = parameters.className != null ? parameters.className : "dialog";
@@ -62,18 +64,33 @@ Window.prototype = {
 		var top = parseFloat(parameters.top) || 10;
 		var width = parseFloat(parameters.width) || 200;
 		var height = parseFloat(parameters.height) || 200;
-
+		
+		// by nao-pon
+		var arrayPageScroll = [0,0];
+		if (this.fixed)
+		{
+			if (document.all)
+			{
+				var arrayPageScroll = getPageScroll();
+				this.element.style.position = "absolute";
+			}
+			else
+			{
+				this.element.style.position = "fixed";
+			}
+		}
+		
 		if (parameters.left != null)
-			Element.setStyle(this.element,{left: parseFloat(parameters.left) + 'px'});
+			Element.setStyle(this.element,{left: (parseInt(parameters.left) + arrayPageScroll[0]) + 'px'});
 
 		if (parameters.right != null)
-			Element.setStyle(this.element,{right: parseFloat(parameters.right) + 'px'});
+			Element.setStyle(this.element,{right: parseInt(parameters.right) + 'px'});
 
 		if (parameters.top != null)
-			Element.setStyle(this.element,{top: parameters.top + 'px'});
+			Element.setStyle(this.element,{top: (parseInt(parameters.top) + arrayPageScroll[1]) + 'px'});
 
 		if (parameters.bottom != null)
-			Element.setStyle(this.element,{bottom: parameters.bottom + 'px'});
+			Element.setStyle(this.element,{bottom: parseInt(parameters.bottom) + 'px'});
 
 		this.setSize(width, height);
 		if (parameters.opacity)
@@ -83,10 +100,13 @@ Window.prototype = {
 		}
 		
 		// by nao-pon
-		this.setPosition();
-		Event.observe(window, "scroll", this.fixWindow.bindAsEventListener(this));
-		
-		Windows.register(this);	    
+		if (this.fixed && document.all)
+		{
+			this.setPosition();
+			Event.observe(window, "scroll", this.fixWindow.bindAsEventListener(this));
+		}
+
+		Windows.register(this);
   	},
  
 	// Destructor
@@ -238,53 +258,53 @@ Window.prototype = {
 		win.setAttribute('id', id);
 		win.className = "dialog";
 	 	if (!title)
-			title = "&nbsp;";
+			title = "::";
 
 		var content;
 		if (url)
-			content= "<IFRAME id=\"" + id + "_content\" SRC=\"" + url + "\" frameborder=\"0\" border=\"0\" allowtransparency=\"true\" > </IFRAME>";
+			content= "<iframe id=\"" + id + "_content\" src=\"" + url + "\" frameborder=\"0\" border=\"0\" allowtransparency=\"true\" > </iframe>";
 		else
-			content ="<DIV id=\"" + id + "_content\" class=\"" +className + "_content\"> content</DIV>";
+			content ="<div id=\"" + id + "_content\" class=\"" +className + "_content\"> content</div>";
 			
 		win.innerHTML = "\
-		<DIV class=\"" +className + "_close\" id=\""+ id + "_close\" onclick=\"Windows.close('"+ id + "')\"> </DIV>\
-		<TABLE border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" id=\""+ id + "_header\">\
-			<TR id=\""+ id + "_row1\">\
-				<TD> \
-					<TABLE border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" id=\""+ id + "_top\">\
-						<TR>\
-							<TD id=\""+ id + "_nw\"  class=\"" +className + "_nw\"> </TD>\
-							<TD class=\"" +className + "_n\"  valign=\"middle\">\
-								<DIV class=\"" +className + "_title\">" + title + " </DIV>						\
-							</TD>\
-							<TD class=\"" +className + "_ne\"> </TD>\
-						</TR>\
-					</TABLE>\
-				</TD>\
-			</TR>\
-			<TR id=\""+ id + "_row2\">\
-				<TD> \
-					<TABLE class=\"" +className + "der=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">\
-						<TR>\
-							<TD class=\"" +className + "_w\"><DIV class=\"" +className + "_w\"> </TD> \
-							<TD class=\"" +className + "_content\">" + content + "</TD>\
-							<TD class=\"" +className + "_e\"><DIV class=\"" +className + "_e\"> </TD>\
-						</TR>\
-					</TABLE>\
-				</TD>\
-			</TR>\
-			<TR id=\""+ id + "_row3\">\
-				<TD> \
-					<TABLE border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" id=\""+ id + "_bottom\">\
-						<TR>\
-							<TD class=\"" +className + "_sw\" id=\""+ id + "_sw\"  > </TD>\
-							<TD class=\"" +className + "_s\" valign=\"middle\">&nbsp;</TD>\
-							<TD class=\"" +className + "_se\"> " + (resizable  ? "<DIV id=\""+ id + "_sizer\" class=\"" +className + "_sizer\"></DIV>" : "") + "</TD>\
-						</TR>\
-					</TABLE>\
-				</TD>\
-			</TR>\
-		</TABLE>\
+		<div class=\"" +className + "_close\" id=\""+ id + "_close\" onclick=\"Windows.close('"+ id + "')\"> </div>\
+		<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" id=\""+ id + "_header\">\
+			<tr id=\""+ id + "_row1\">\
+				<td> \
+					<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" id=\""+ id + "_top\">\
+						<tr>\
+							<td id=\""+ id + "_nw\"  class=\"" +className + "_nw\"> </td>\
+							<td class=\"" +className + "_n\"  valign=\"middle\">\
+								<div class=\"" +className + "_title\">" + title + " </div>\
+							</td>\
+							<td class=\"" +className + "_ne\"> </td>\
+						</tr>\
+					</table>\
+				</td>\
+			</tr>\
+			<tr id=\""+ id + "_row2\">\
+				<td> \
+					<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">\
+						<tr>\
+							<td class=\"" +className + "_w\"><div class=\"" +className + "_w\"> </div></td> \
+							<td class=\"" +className + "_content\">" + content + "</td>\
+							<td class=\"" +className + "_e\"><div class=\"" +className + "_e\"> </div></td>\
+						</tr>\
+					</table>\
+				</td>\
+			</tr>\
+			<tr id=\""+ id + "_row3\">\
+				<td>\
+					<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" id=\""+ id + "_bottom\">\
+						<tr>\
+							<td class=\"" +className + "_sw\"> </td>\
+							<td class=\"" +className + "_s\">"+this.footer+" </td>\
+							<td class=\"" +className + "_se\"> " + (resizable  ? "<div id=\""+ id + "_sizer\" class=\"" +className + "_sizer\"> </div>" : "") + "</td>\
+						</tr>\
+					</table>\
+				</td>\
+			</tr>\
+		</table>\
 		";
 		Element.hide(win);
 		objBody.insertBefore(win, objBody.firstChild);
@@ -357,7 +377,8 @@ Window.prototype = {
 		}
 		if (!this.element.style.top && this.element.style.bottom)
 		{
-			this.element.style.top = (arrayPageScroll[1] + arrayPageSize[3] - parseInt(this.element.style.bottom) - this.height) + "px";			this.element.style.bottom = 'auto';
+			this.element.style.top = (arrayPageScroll[1] + arrayPageSize[3] - parseInt(this.element.style.bottom) - this.height) + "px";
+			this.element.style.bottom = 'auto';
 		}
 		this.top = parseInt(this.element.style.top) - arrayPageScroll[1];
 		this.left = parseInt(this.element.style.left) - arrayPageScroll[0];
@@ -388,9 +409,7 @@ Window.prototype = {
 		// To avoid bug on scrolling bar
 		Element.setStyle(this.getContent(), {overflow: "hidden"});
 		this.hideEffect(this.element);		
-		//setTimeout(function(){this.destroy();},1);
 		setTimeout(this.destroy.bind(this),1000);
-		//this.destroy();
 	},
 	
 	setOpacity: function(opacity) {

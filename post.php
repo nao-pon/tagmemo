@@ -4,7 +4,7 @@
 */
 
 // ブックマークレット投稿時の戻り ブラウザのセキュリティ設定により自動的に閉じない可能性あり
-if (!empty($_GET['quick_edit_close'])) exit('<script>parent.Windows.close("tagmemo_qp_container");</script>');
+if (!empty($_GET['quick_edit_close'])) exit('<script>parent.Windows.close("tagmemo_qe_container");</script>');
 
 // 必要なファイルを一気に取り込むおまじない。
 /**

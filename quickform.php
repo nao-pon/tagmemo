@@ -9,8 +9,8 @@ include_once "./include/gtickets.php" ;
 
 $token ='token should be created by php here if needed.';
 
-$uname = (empty($_GET['uname']))? "" : $_GET['uname'];
-$url = XOOPS_URL."/modules/tagmemo/quickedit.php?uname=".rawurlencode($uname)."&memo=";
+$uid = (empty($_GET['uid']))? 0 : (int)$_GET['uid'];
+$url = XOOPS_URL."/modules/tagmemo/quickedit.php?uid=".$uid."&amp;memo=";
 $base = XOOPS_URL.'/modules/tagmemo';
 $sitename = $xoopsConfig['sitename']." :: ".$xoopsModule->name();
 
@@ -22,16 +22,16 @@ header ("Content-Type: application/x-javascript; charset="._CHARSET);
 // set vars for javascript dinamically;
 echo <<<EOD
 
-var tagmemo_qp_container = document.getElementById('tagmemo_qp_container');
-if (tagmemo_qp_container)
+var tagmemo_qe_container = document.getElementById('tagmemo_qe_container');
+if (tagmemo_qe_container)
 {
 	if (confirm('{$msg_close2open}'))
 	{
-		document.body.removeChild(tagmemo_qp_container);
-		tagmemo_qp_container = null;
+		document.body.removeChild(tagmemo_qe_container);
+		tagmemo_qe_container = null;
 	}
 }
-if (!tagmemo_qp_container)
+if (!tagmemo_qe_container)
 {
 	var tagmemo_baseurl  = '$base';
 	var tagmemo_quickurl = '$url' + encodeURIComponent(document.title + "\\n" + location.href + "\\n\\n");
@@ -58,15 +58,6 @@ if (!tagmemo_qp_container)
 		tagmemo_scr.type = 'text/javascript';
 		document.getElementsByTagName('head')[0].appendChild(tagmemo_scr);
 	}
-	
-	if (tagmemo_scr = document.getElementById('TagmemoStyleQuickedit'))
-			document.getElementsByTagName('head')[0].removeChild(tagmemo_scr);
-	tagmemo_scr = document.createElement('link');
-	tagmemo_scr.id = 'TagmemoStyleQuickedit';
-	tagmemo_scr.href = tagmemo_baseurl + '/include/css/tagmemo_quickedit.css';
-	tagmemo_scr.rel  = 'stylesheet';
-	tagmemo_scr.type = 'text/css';
-	document.getElementsByTagName('head')[0].appendChild(tagmemo_scr);
 	
 	if (tagmemo_scr = document.getElementById('TagmemoStyleWindow'))
 			document.getElementsByTagName('head')[0].removeChild(tagmemo_scr);

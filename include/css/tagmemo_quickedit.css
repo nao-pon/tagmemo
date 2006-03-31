@@ -76,6 +76,7 @@ div#tagmemo_header {
 
 div#tagmemo_buttons {
 	text-align: right;
+	font-size: 11px;
 	/*margin-right: 10px;*/
 }
 

@@ -18,16 +18,24 @@ include_once ("./include/wiki_helper.php");
 $memo_id = isset($_GET["tagmemo_id"]) ? intval($_GET["tagmemo_id"]) : "";
 //$memo_id = isset($_POST["tagmemo_id"]) ? intval($_POST["tagmemo_id"]) : $memo_id;
 $memo_content = empty($_GET["memo"]) ? "" : htmlspecialchars(mb_convert_encoding($_GET["memo"],"EUC-JP","UTF-8"));
-$uname = empty($_GET["uname"]) ? "" : htmlspecialchars($_GET["uname"]);
+$uid = empty($_GET["uid"]) ? 0 : (int)$_GET["uid"];
 
 //ユーザーIDをもらおう
 if(is_object($xoopsUser)){
 	$uid = $xoopsUser->getVar("uid");
+	$uname = htmlspecialchars($xoopsUser->getVar("uname"));
 	$isAdmin = $xoopsUser->isAdmin($xoopsModule->getVar('mid'));
-	$uname = "";
+	$login = true;
 } else {
+	if ($uid)
+	{
+		$member_handler =& xoops_gethandler('member');
+		$user =& $member_handler->getUser($uid);
+		$uname = htmlspecialchars($user->getVar("uname"));
+	}
 	$uid = 0;
 	$isAdmin = false;
+	$login = false;
 }
 
 $memo = array();
@@ -60,6 +68,7 @@ $he = & WikiHelper::getInstance();
 $xoopsTpl->assign("helper", $he->get());
 
 $xoopsTpl->assign("uname", $uname);
+$xoopsTpl->assign("login", $login);
 
 $memo['content'] = $memo_content;
 $xoopsTpl->assign("memo", $memo);

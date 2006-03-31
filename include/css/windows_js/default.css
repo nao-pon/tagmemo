@@ -9,6 +9,7 @@
 	background: transparent url(default/top_mid.gif) repeat-x 0 0;	
 	cursor:move;
 	vertical-align: middle;
+	text-align: center;
 }
 
 .dialog_ne {
@@ -38,6 +39,10 @@
 .dialog_s {
 	background: transparent url(default/bottom_mid.gif) repeat-x 0 0;		
 	cursor:move;
+	vertical-align: middle;
+	text-align: center;
+	font-size: 10px;
+	color: gray;
 }
 
 .dialog_se {
@@ -59,13 +64,12 @@
 	background: transparent url(default/close.gif) no-repeat 0 0;			
 	position:absolute;
 	top:5px;
-	right:7px;
+	right:5px;
 	cursor:pointer;
 	z-index:200;
 }
 
 .dialog_title {
-	float:left;
 	height:14px;
 	font-size:12px;
 	text-align:center;
@@ -85,12 +89,38 @@
 	padding:0px;
 }
 
+.dialog a:link,
+.dialog a:visited,
+.dialog a:active {
+	font-weight: bold;
+	color: #FFFFFF;
+	text-decoration: none;
+}
+
+.dialog table,
+.dialog tr,
+.dialog td {
+	margin: 0px;
+	padding: 0px;
+	border: none;
+	border-collapse: collapse;
+	border-spacing: 0px;
+	background-color: transparent;
+}
+
+.dialog iframe {
+	border: none;
+	margin: 0px;
+	padding: 0px;
+	background-color: transparent;
+	overflow: auto;
+}
+
 .dialog_content {
 	overflow: hidden;
 	color: #DDD;
 	font-family: Tahoma, Arial, Sans Serif;
 	font-size: 10px;
-	/*background-color: #F5F5DC;*/
-	background: transparent url(default/content_bg.gif) repeat 0 0;
+	background-color: transparent;
 }
 
