@@ -69,15 +69,17 @@ function tagmemo_admin_set_suggest_dbcheck()
 
 function tagmemo_admin_set_suggest_init()
 {
-	echo "<p><a href='?mode=set'>Click to Set Suggest in empty suggest filed.</a></p>";
+	echo "<p><a href='?mode=set'>"._AM_SET_SUGGEST."</a></p>";
 }
 
 function tagmemo_admin_set_suggest()
 {
 	include_once("../include/hyp_kakasi.php");
+	global $xoopsDB, $xoopsModuleConfig;
+
 	$ka = new Hyp_KAKASHI();
-	global $xoopsDB;
-	$query = "SELECT * FROM `".$xoopsDB->prefix("tagmemo_tag")."` WHERE `suggest` = ''";
+	$ka->kakasi_path = $xoopsModuleConfig['kakasi_path'];
+	$query = "SELECT * FROM `".$xoopsDB->prefix("tagmemo_tag")."` WHERE `suggest` = '' OR `suggest` = `tag`";
 	$res = $xoopsDB->query($query);
 	if ($res)
 	{

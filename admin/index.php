@@ -40,6 +40,6 @@ xoops_cp_header();
 // add Hiro
 include('./mymenu.php');
 echo "<h4>Admin menu of tagmemo module.</h4>";
-echo "<p><a href='./set_suggest.php?mode=set'>Click to Set Suggest in empty suggest filed.</a></p>";
+echo "<p><a href='./set_suggest.php?mode=set'>"._AM_SET_SUGGEST."</a></p>";
 xoops_cp_footer();
 ?>

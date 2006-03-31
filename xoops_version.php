@@ -105,6 +105,14 @@ $modversion['config'][] = array(
 	'valuetype' => 'int',
 	'default' => '0',
 	);
+$modversion['config'][] = array(
+	'name' => 'kakasi_path',
+	'title' => '_MI_TAGMEMO_KAKASI_PATH',
+	'description' => '',
+	'formtype' => 'textbox',
+	'valuetype' => 'string',
+	'default' => '/usr/bin/kakasi',
+	);
 
 // hold setting value when module update.
 if( ! empty( $_POST['fct'] ) && ! empty( $_POST['op'] ) && $_POST['fct'] == 'modulesadmin' && $_POST['op'] == 'update_ok' && $_POST['dirname'] == $modversion['dirname'] ) {
