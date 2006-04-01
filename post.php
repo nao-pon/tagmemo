@@ -76,6 +76,7 @@ $tagmemo_handler =& xoops_getmodulehandler("tagmemo");
 $module_id = $xoopsModule->mid();
 
 //ユーザーIDをもらおう
+$uid = 0;
 if(is_object($xoopsUser)){
 	$uid = $xoopsUser->getVar("uid");
 	$isAdmin = $xoopsUser->isAdmin($module_id);
@@ -89,10 +90,10 @@ if(is_object($xoopsUser)){
 		$member_handler =& xoops_gethandler('member');
 		$user =& $member_handler->loginUser(addslashes($uname), addslashes($pass));
 		$uid = $user->getVar("uid");
+		$isAdmin = $user->isAdmin($module_id);
 	}
 	if (!$uid)
 	{
-		$uid = 0;
 		$isAdmin = false;
 	}
 }
