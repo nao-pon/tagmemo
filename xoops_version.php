@@ -113,6 +113,30 @@ $modversion['config'][] = array(
 	'valuetype' => 'string',
 	'default' => '/usr/bin/kakasi',
 	);
+$modversion['config'][] = array(
+	'name' => 'tagpopup_list',
+	'title' => '_MI_TAGMEMO_TAGPOPUP_LIST',
+	'description' => '',
+	'formtype' => 'yesno',
+	'valuetype' => 'int',
+	'default' => '0',
+	);
+$modversion['config'][] = array(
+	'name' => 'tagpopup_detail',
+	'title' => '_MI_TAGMEMO_TAGPOPUP_DETAIL',
+	'description' => '',
+	'formtype' => 'yesno',
+	'valuetype' => 'int',
+	'default' => '0',
+	);
+$modversion['config'][] = array(
+	'name' => 'tagpopup_cloud',
+	'title' => '_MI_TAGMEMO_TAGPOPUP_CLOUD',
+	'description' => '',
+	'formtype' => 'yesno',
+	'valuetype' => 'int',
+	'default' => '0',
+	);
 
 // hold setting value when module update.
 if( ! empty( $_POST['fct'] ) && ! empty( $_POST['op'] ) && $_POST['fct'] == 'modulesadmin' && $_POST['op'] == 'update_ok' && $_POST['dirname'] == $modversion['dirname'] ) {

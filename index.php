@@ -66,6 +66,9 @@ foreach($tag_condition['detail'] as $_val)
 $_tmp = join("+",$_tmp);
 $xoopsTpl->assign("xoops_pagetitle",$_tmp."-".$xoopsModule->name());
 
+// タグリストのポップアップ指定
+$xoopsTpl->assign("taglist_popup",empty($xoopsModuleConfig['tagpopup_list'])? false : true);
+
 if(strlen($condition)>0){
 	$xoopsTpl->assign("query",true);
 	$xoopsTpl->assign("rel_tags", $tagmemo_related_tags);

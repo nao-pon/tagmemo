@@ -24,7 +24,7 @@ var tagmemo_tagslist_url = "<{$xoops_url}>/modules/tagmemo/tagslist.php";
 <div id="tagmemo_container">
 <div class="tagcloud">
 	<{foreach item=tag from=$cloud}>
-		<a href="index.php?tag_id=<{$tag.tag_id}>" onClick="return(tagmemoList.getTagslist('<{$tag.tag_id}>',event))">
+		<a href="index.php?tag_id=<{$tag.tag_id}>"<{if $taglist_popup}> onClick="return(tagmemoList.getTagslist('<{$tag.tag_id}>',event))"<{/if}>>
 			<span class="<{$tag.popular}>">
 			<span class="<{$tag.fresh}>">
 			<{$tag.tag}>

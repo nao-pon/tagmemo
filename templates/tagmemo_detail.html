@@ -38,7 +38,7 @@ var tagmemo_tagslist_url = "<{$xoops_url}>/modules/tagmemo/tagslist.php";
 		
 			<div class="ditail_tag">
 		<{foreach item=tag key="tag_id" from=$memo.tags}>
-			<a href="index.php?tag_id=<{$tag_id}>" onClick="return(tagmemoList.getTagslist('<{$tag_id}>',event))">
+			<a href="index.php?tag_id=<{$tag_id}>"<{if $taglist_popup}> onClick="return(tagmemoList.getTagslist('<{$tag_id}>',event))"<{/if}>>
 				[<{$tag}>]</a>  
 		<{/foreach}>
 

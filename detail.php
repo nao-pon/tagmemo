@@ -37,6 +37,10 @@ $xoopsOption['template_main'] = 'tagmemo_detail.html';
 * XOOPSのテンプレートのヘッダー
 */
 include XOOPS_ROOT_PATH.'/header.php';
+
+// タグリストのポップアップ指定
+$xoopsTpl->assign("taglist_popup",empty($xoopsModuleConfig['tagpopup_detail'])? false : true);
+
 if($memo_id != ""){
 	$xoopsTpl->assign("memo", $memo);
 	$xoopsTpl->assign("memo_owner", $memo_owner_name);

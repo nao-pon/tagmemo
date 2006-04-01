@@ -16,6 +16,9 @@ define('_MI_TAGMEMO_USE_FF_PLUGIN', "Firefox プラグインを使用させる");
 define('_MI_TAGMEMO_PER_PAGE', "1ページの表示メモ数");
 define('_MI_TAGMEMO_USE_AUTOLINK', "本文中のオートリンクを有効にする");
 define('_MI_TAGMEMO_KAKASI_PATH', "読み仮名を取得する'KAKASI'の実行パス");
+define('_MI_TAGMEMO_TAGPOPUP_LIST', "タグリンクでポップアップする(リスト)");
+define('_MI_TAGMEMO_TAGPOPUP_DETAIL', "タグリンクでポップアップする(詳細)");
+define('_MI_TAGMEMO_TAGPOPUP_CLOUD', "タグリンクでポップアップする(クラウド)");
 
 define('_MI_SYSTEM_ADMENU1','Index');
 define('_MI_SYSTEM_ADMENU2','ブロック・グループ管理');

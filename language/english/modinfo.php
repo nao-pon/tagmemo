@@ -16,6 +16,9 @@ define('_MI_TAGMEMO_USE_FF_PLUGIN', "Use firefox search plugin");
 define('_MI_TAGMEMO_PER_PAGE', "memos per page");
 define('_MI_TAGMEMO_USE_AUTOLINK', "Autolink tags to related memos");
 define('_MI_TAGMEMO_KAKASI_PATH', "'KAKASI' path");
+define('_MI_TAGMEMO_TAGPOPUP_LIST', "Popup when click tag link (List)");
+define('_MI_TAGMEMO_TAGPOPUP_DETAIL', "Popup when click tag link (Detail)");
+define('_MI_TAGMEMO_TAGPOPUP_CLOUD', "Popup when click tag link (Cloud)");
 
 define('_MI_SYSTEM_ADMENU1','Index');
 define('_MI_SYSTEM_ADMENU2','Blocks and Groups');
