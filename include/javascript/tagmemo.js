@@ -154,6 +154,7 @@ TagmemoSuggest.prototype = {
 		this._baseurl      = baseurl;
 		this._posturl      = baseurl + "/modules/tagmemo/complete.php";
 		this.tagText       = $('tagmemo_tag_input');
+		this.finishedTagList = $('tagmemo_tag_list');
 		this.candidateList = $('tagmemo_suggest_list');
 		this.candidateTags = new Array();
 		this.selectedCandidateTagsIndex = 0;
@@ -250,12 +251,15 @@ TagmemoSuggest.prototype = {
 			var other = new Array();
 			var i = 0;
 			var re = new RegExp("^" + this.regQuote(q), "i");
+			var tags = this.getFinishedTags();
 			suggest.each( function(word) {
 				if (word.match(re)) {
-					top.push(tag[i]);
+					if (tags.indexOf(tag[i]) == -1)
+						top.push(tag[i]);
 				}
 				else {
-					other.push(tag[i]);
+					if (tags.indexOf(tag[i]) == -1)
+						other.push(tag[i]);
 				}
 				i++;
 			});
@@ -271,6 +275,17 @@ TagmemoSuggest.prototype = {
 		
 		this.updateCandidateTags();
 		this.showCandidateList();
+	},
+
+	getFinishedTags: function() {
+		var tags = new Array();
+		for(var i=0;i<this.finishedTagList.childNodes.length;i++){
+			if(this.finishedTagList.childNodes[i].nodeName == 'SPAN'){
+			    //@ref http://developer.mozilla.org/en/docs/Whitespace_in_the_DOM
+				tags[tags.length] = this.finishedTagList.childNodes[i].firstChild.data.replace(/[\t\n\r ]+/g, "");
+			}
+		}
+		return tags;
 	},
 
 	isMatch: function(value, pattern) {
