@@ -245,13 +245,13 @@ TagmemoSuggest.prototype = {
 		{
 			this.nonhit_key = "";
 		}
-		
+
+		var tags = this.getFinishedTags();		
 		if (q != "") {
 			var top = new Array();
 			var other = new Array();
 			var i = 0;
 			var re = new RegExp("^" + this.regQuote(q), "i");
-			var tags = this.getFinishedTags();
 			suggest.each( function(word) {
 				if (word.match(re)) {
 					if (tags.indexOf(tag[i]) == -1)
@@ -267,7 +267,15 @@ TagmemoSuggest.prototype = {
 			other.sort();
 			tag = top.concat(other);
 		}
-		
+		else
+		{
+			var _tag = new Array();
+			tag.each( function(word) {
+				if (tags.indexOf(word) == -1)
+					_tag.push(word);
+			});
+			tag = _tag;
+		}
 		this.finishedTagText = "";
 		this.inputtingTag = q;
 		this.candidateTags = tag;
