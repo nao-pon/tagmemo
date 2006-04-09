@@ -1,6 +1,6 @@
 <?php
 $modversion['name'] = _MI_TAGMEMO_NAME;
-$modversion['version'] = 0.1;
+$modversion['version'] = 0.2;
 $modversion['description'] = _MI_TAGMEMO_DESC;
 $modversion['credits'] = '';
 $modversion['author'] = 'yosha_01, twodash, nao-pon, fugafuga, comodita, argon (Alphabetical descending)';
