@@ -458,3 +458,19 @@ span.freshtags {
 span.oldtags {
 			color: #b0b0b0;
 }
+
+/*------ tagmemo navi ------*/
+span.tagmemo_navi_this {
+	color: #444;
+	background-color: #CCC;
+	padding: 1px 4px 1px 4px;
+	border: 1px solid #999;
+	margin-right: 5px;
+}
+
+span.tagmemo_navi_other {
+	background-color: #FFFFFF;
+	padding: 1px 4px 1px 4px;
+	border: 1px solid #999;
+	margin-right: 5px;
+}

@@ -68,7 +68,7 @@ class TagmemoPageNav extends XoopsPageNav
 			$current_page = intval(floor(($this->current + $this->perpage) / $this->perpage));
 			while ( $counter <= $total_pages ) {
 				if ( $counter == $current_page ) {
-					$ret .= '<b>('.$counter.')</b> ';
+					$ret .= '<span class="tagmemo_navi_this">'.$counter.'</span>';
 				} elseif ( ($counter > $current_page-$offset && $counter < $current_page + $offset ) || $counter == 1 || $counter == $total_pages ) {
 					if ( $counter == $total_pages && $current_page < $total_pages - $offset ) {
 						$ret .= '... ';
@@ -76,11 +76,11 @@ class TagmemoPageNav extends XoopsPageNav
 					if ($this->asjs)
 					{
 						$js = str_replace("_NAV_",(($counter - 1) * $this->perpage),$this->asjs);
-						$ret .= '<a href="'.$this->url.(($counter - 1) * $this->perpage).'" '.$js.'>'.$counter.'</a> ';
+						$ret .= '<span class="tagmemo_navi_other"><a href="'.$this->url.(($counter - 1) * $this->perpage).'" '.$js.'>'.$counter.'</a></span>';
 					}
 					else
 					{
-						$ret .= '<a href="'.$this->url.(($counter - 1) * $this->perpage).'">'.$counter.'</a> ';
+						$ret .= '<span class="tagmemo_navi_other"><a href="'.$this->url.(($counter - 1) * $this->perpage).'">'.$counter.'</a></span>';
 					}
 					if ( $counter == 1 && $current_page > 1 + $offset ) {
 						$ret .= '... ';

@@ -79,8 +79,8 @@ if(strlen($condition)>0){
 
 	$xoopsTpl->assign("query",false);
 	$maxcount = $tagmemo_handler->getMemoCount();
-	include_once XOOPS_ROOT_PATH.'/class/pagenav.php';
-	$nav = new XoopsPageNav($maxcount, $count, $start);
+	include_once './class/pagenavi.php';
+	$nav = new TagmemoPageNav($maxcount, $count, $start);
 	$xoopsTpl->assign('pagenav', $nav->renderNav());
 }
 
