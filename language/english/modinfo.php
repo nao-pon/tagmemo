@@ -5,13 +5,13 @@
 */
 define('_MI_TAGMEMO_NAME', "TagMemo");
 define('_MI_TAGMEMO_DESC', "Easy-to-use memo with tag");
-define('_MI_TAGMEMO_SEARCH', "Search");
+//define('_MI_TAGMEMO_SEARCH', "Search");
 define('_MI_TAGMEMO_POPULAR_TAG_BLOCK',"Popular Tags");
 define('_MI_TAGMEMO_RECENT_TAG_BLOCK',"Recent Tags");
 define('_MI_TAGMEMO_SERCH_TAG_BLOCK',"Search Tagmemo");
 define('_MI_TAGMEMO_TAGCLOUD_BLOCK',"Tagcloud");
-define('_MI_TAGMEMO_SEARCH_ALL', "All");
-define('_MI_TAGMEMO_SEARCH_SUB', "In this list");
+//define('_MI_TAGMEMO_SEARCH_ALL', "All");
+//define('_MI_TAGMEMO_SEARCH_SUB', "In this list");
 define('_MI_TAGMEMO_USE_FF_PLUGIN', "Use firefox search plugin");
 define('_MI_TAGMEMO_PER_PAGE', "memos per page");
 define('_MI_TAGMEMO_USE_AUTOLINK', "Autolink tags to related memos");

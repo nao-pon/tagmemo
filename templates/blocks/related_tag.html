@@ -19,14 +19,14 @@ return true;
 <div class="search_box">
  <form name="tagmemo_srcform" action="#" onsubmit="tagmemo_switch_search()">
   <input type="text" name="query" id="tagmemo_src_query" size="14" value="<{$block.query_condition}>"/>
-  <input type="button" onclick="tagmemo_search();" value="<{$smarty.const._MI_TAGMEMO_SEARCH}>" /><br />
+  <input type="button" onclick="tagmemo_search();" value="<{$smarty.const._MB_TAGMEMO_SEARCH}>" /><br />
   <input type="radio" name="src_type" value="0" <{if $block.src_type == 0}>checked <{/if}>/>Keyword
   <input type="radio" name="src_type" value="1" <{if $block.src_type == 1}>checked <{/if}>/>MemoID
 	
 <{*
   <{if $block.query}>
-   <input type="radio" name="from" value="all"><{$smarty.const._MI_TAGMEMO_SEARCH_ALL}>
-   <input type="radio" name="from" value="sub" checked><{$smarty.const._MI_TAGMEMO_SEARCH_SUB}>
+   <input type="radio" name="from" value="all"><{$smarty.const._MB_TAGMEMO_SEARCH_ALL}>
+   <input type="radio" name="from" value="sub" checked><{$smarty.const._MB_TAGMEMO_SEARCH_SUB}>
   <{/if}>
 *}>
  </form>
