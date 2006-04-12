@@ -1,7 +1,7 @@
 <?php
 // add Hiro
 $adminmenu[] = array(
-	'title' => _MI_SYSTEM_ADMENU1 ,
+	'title' => _MI_TAGMEMO_ADMENU1 ,
 	'link' => "admin/index.php"
 	);
 // add end
@@ -12,7 +12,7 @@ $adminmenu[] = array(
 	);
 
 $adminmenu[] = array(
-	'title' => _MI_SYSTEM_ADMENU2 ,
+	'title' => _MI_TAGMEMO_ADMENU2 ,
 	'link' => "admin/myblocksadmin.php"
 	);
 ?>

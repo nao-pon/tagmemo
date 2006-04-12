@@ -12,7 +12,10 @@ $token ='token should be created by php here if needed.';
 $uid = (empty($_GET['uid']))? 0 : (int)$_GET['uid'];
 $url = XOOPS_URL."/modules/tagmemo/quickedit.php?uid=".$uid."&amp;memo=";
 $base = XOOPS_URL.'/modules/tagmemo';
-$sitename = $xoopsConfig['sitename']." :: ".$xoopsModule->name();
+$sitename = str_replace("'","\'",$xoopsConfig['sitename']." :: ".$xoopsModule->name());
+
+// next version is not a copyright notice. if you'd like to rewrite. It's up to you. 
+$version = ":: tagmemo ".$xoopsModule->getInfo('version')." ::";
 
 $msg_close2open = _MD_TAGMEMO_CLOSE2OPEN;
 $msg_notWorkFrame = _MD_TAGMEMO_NOTWORKFRAME;
@@ -37,6 +40,7 @@ if (!tagmemo_qe_container)
 	var tagmemo_quickurl = '$url' + encodeURIComponent(document.title + "\\n" + location.href + "\\n\\n");
 	var tagmemo_sitename = '$sitename';
 	var tagmemo_token    = '$token';
+	var tagmemo_version  = '$version';
 	tagmemo_msg = new Array();
 	tagmemo_msg['notWorkFrame'] = '{$msg_notWorkFrame}';
 	tagmemo_msg['retryPlease'] = '{$msg_retryPlease}';

@@ -57,11 +57,17 @@ $xoopsOption['template_main'] = 'tagmemo_list.html';
 include XOOPS_ROOT_PATH.'/header.php';
 $xoopsTpl->assign("memos", $memo_array);
 
+//version 取得
+$xoopsTpl->assign("tagmemo_version", $xoopsModule->getInfo('version'));
+
 // <head>タイトル設定
 $_tmp = array();
-foreach($tag_condition['detail'] as $_val)
+if (!empty($tag_condition['detail']))
 {
-	$_tmp[] = $_val['string'];
+	foreach($tag_condition['detail'] as $_val)
+	{
+		$_tmp[] = $_val['string'];
+	}
 }
 $_tmp = join("+",$_tmp);
 $xoopsTpl->assign("xoops_pagetitle",$_tmp."-".$xoopsModule->name());

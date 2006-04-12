@@ -205,6 +205,17 @@ div.auto_complete ul li b {
 	margin: 15px;
 	text-align: center;
 	}
+
+div.tagmemo_version {
+	text-align: center;
+	padding-right: 2em;
+	color: gray;
+}
+
+div.tagmemo_version a {
+	color: gray;
+}
+
 /*------tagmemo_container--------*/
 #tagmemo_container {
 	width:90%;
@@ -433,18 +444,18 @@ span.tagmemo_list_title_ajax {
 }
 
 span.mostpopulartags {
-		font-size:300%;
+		font-size:180%;
 		font-weight:bold;
 }
 
 
 span.verypopulartags {
-		font-size:200%;
+		font-size:150%;
 		font-weight:bold;
 }
 
 span.populartags {
-		font-size:150%;
+		font-size:130%;
 }
 
 span.normaltags {

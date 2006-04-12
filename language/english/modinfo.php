@@ -20,8 +20,8 @@ define('_MI_TAGMEMO_TAGPOPUP_LIST', "Popup when click tag link (List)");
 define('_MI_TAGMEMO_TAGPOPUP_DETAIL', "Popup when click tag link (Detail)");
 define('_MI_TAGMEMO_TAGPOPUP_CLOUD', "Popup when click tag link (Cloud)");
 
-define('_MI_SYSTEM_ADMENU1','Index');
-define('_MI_SYSTEM_ADMENU2','Blocks and Groups');
+define('_MI_TAGMEMO_ADMENU1','Index');
+define('_MI_TAGMEMO_ADMENU2','Blocks and Groups');
 define('_MI_TAGMEMO_UPDATE','Update');
 define('_MI_TAGMEMO_GOMODULES','Go to Modules');
 
