@@ -1180,7 +1180,7 @@ if( ! class_exists( 'XoopsTableObjectHandler' ) ) {
 	    {
 	        $GLOBALS['_xoopsTableCache']->clear($this->tableName);
 			$this->_fullCached = false;
-			return parent::deleteAll($record, $force);
+			return parent::deleteAll($criteria, $force);
 	    }
 
 		function getAutoIncrementValue()

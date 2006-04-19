@@ -15,4 +15,9 @@ $adminmenu[] = array(
 	'title' => _MI_TAGMEMO_ADMENU2 ,
 	'link' => "admin/myblocksadmin.php"
 	);
+
+$adminmenu[] = array(
+	'title' => _MI_TAGMEMO_ADMENU3 ,
+	'link' => "admin/permissions.php"
+	);
 ?>

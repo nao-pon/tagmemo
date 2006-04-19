@@ -22,6 +22,7 @@ define('_MI_TAGMEMO_TAGPOPUP_CLOUD', "Popup when click tag link (Cloud)");
 
 define('_MI_TAGMEMO_ADMENU1','Index');
 define('_MI_TAGMEMO_ADMENU2','Blocks and Groups');
+define('_MI_TAGMEMO_ADMENU3','Permissions');
 define('_MI_TAGMEMO_UPDATE','Update');
 define('_MI_TAGMEMO_GOMODULES','Go to Modules');
 
