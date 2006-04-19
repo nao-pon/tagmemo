@@ -27,7 +27,7 @@ var tagmemo_tagslist_url = "<{$xoops_url}>/modules/tagmemo/tagslist.php";
 <p class="navi_box_first"><{$query_condition}></p>
 <p class="navi_box_first">
 <{foreach item=tag_detail from=$tag_condition.detail}>
-<a href="index.php?tag_id=<{$tag_detail.id}>"><{$tag_detail.string}></a>
+<a href="<{if $smarty.const._MD_TAGMEMO_SHORTURL}><{$tag_detail.string|escape:"url"}>.htm<{else}>index.php?tag_id=<{$tag_detail.id}><{/if}>"><{$tag_detail.string}></a>
 <a href="index.php?tag_id=<{$tag_detail.url}>&query=<{$query_condition_url}>"><img src="./images/sub.gif" alt="sub"></a>
 <{/foreach}>
 </p>
@@ -42,7 +42,7 @@ var tagmemo_tagslist_url = "<{$xoops_url}>/modules/tagmemo/tagslist.php";
 		<div id="tagmemo_list_box">
 
 			<span class="tagmemo_list_title">
-				<a href="detail.php?tagmemo_id=<{$memo.tagmemo_id}>">
+				<a href="<{if !$smarty.const._MD_TAGMEMO_SHORTURL}>detail.php?tagmemo_id=<{/if}><{$memo.tagmemo_id}><{if $smarty.const._MD_TAGMEMO_SHORTURL}>.htm<{/if}>">
 				<{$memo.title}></a>
 				<{if $memo.owner == 1 or $xoops_isadmin == 1}>
 					<span class="edit">
@@ -56,7 +56,7 @@ var tagmemo_tagslist_url = "<{$xoops_url}>/modules/tagmemo/tagslist.php";
 			</div>
 			<div class="list_tag">
 				<{foreach item=tag key="tag_id" from=$memo.tags}>
-					[<a href="index.php?tag_id=<{$tag_id}>"<{if $taglist_popup}> onClick="return(tagmemoList.getTagslist('<{$tag_id}>',event))"<{/if}>><{$tag}></a>]
+					[<a href="<{if $smarty.const._MD_TAGMEMO_SHORTURL}><{$tag|escape:"url"}>.htm<{else}>index.php?tag_id=<{$tag_id}><{/if}>"<{if $taglist_popup}> onClick="return(tagmemoList.getTagslist('<{$tag_id}>',event))"<{/if}>><{$tag}></a>]
 				<{/foreach}>
 			</div>
 		</div>

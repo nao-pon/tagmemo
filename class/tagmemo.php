@@ -852,8 +852,14 @@ class TagmemoTagmemoHandler {// extends XoopsObjectHandler {
 		
 		// 無視リストに含まれているページを捨てる
 		if (in_array($name,$this->forceignorepages)) {return $match[0];}
-		
-		return "<a href=\"".XOOPS_URL."/modules/tagmemo/?tag_id=".$tags[$name]."\" onClick=\"return(tagmemoList.getTagslist(".$tags[$name].",event))\" title=\"Tags\" class=\"tagmemo_taglink\">".$match[2]."</a>";
+		if (_MD_TAGMEMO_SHORTURL)
+		{
+			return "<a href=\"".XOOPS_URL."/modules/tagmemo/".rawurlencode($match[2]).".htm\" onClick=\"return(tagmemoList.getTagslist(".$tags[$name].",event))\" title=\"Tags\" class=\"tagmemo_taglink\">".$match[2]."</a>";
+		}
+		else
+		{
+			return "<a href=\"".XOOPS_URL."/modules/tagmemo/?tag_id=".$tags[$name]."\" onClick=\"return(tagmemoList.getTagslist(".$tags[$name].",event))\" title=\"Tags\" class=\"tagmemo_taglink\">".$match[2]."</a>";
+		}
 	}
 	
 	// AutoLinkのパターンを生成する
