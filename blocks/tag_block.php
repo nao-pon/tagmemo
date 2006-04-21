@@ -8,6 +8,7 @@
 *@return array
 */
 function b_tagmemo_poulartag(){
+	b_tagmemo_init();
 	global $tagmemo_block_popular_hide;
 	if($tagmemo_block_popular_hide == true){
 		return false;
@@ -22,6 +23,7 @@ function b_tagmemo_poulartag(){
 *@return array
 */
 function b_tagmemo_recenttag(){
+	b_tagmemo_init();
 	global $tagmemo_block_recent_hide;
 	if($tagmemo_block_recent_hide == true){
 		return false;
@@ -32,6 +34,7 @@ function b_tagmemo_recenttag(){
 }
 
 function b_tagmemo_relatedtag(){
+	b_tagmemo_init();
 	global $tagmemo_related_tags;
 	$ret["reltags"] = $tagmemo_related_tags;
 	global $tag_condition;
@@ -52,6 +55,21 @@ function b_tagmemo_id_serch(){
 function b_tagmemo_cloud(){
 	$tagmemo_handler =& xoops_getmodulehandler("tagmemo", 'tagmemo');
 	$ret = $tagmemo_handler->getAllTagsEx();
+	b_tagmemo_init();
 	return $ret;
+}
+
+function b_tagmemo_init()
+{
+	static $done = false;
+	
+	if ($done) return;
+	$done = true;
+	
+	$module_handler =& xoops_gethandler('module');
+	$Module =& $module_handler->getByDirname("tagmemo");
+	$config_handler =& xoops_gethandler('config');
+	$ModuleConfig =& $config_handler->getConfigsByCat(0, $Module->mid());
+	if (!defined("_MD_TAGMEMO_SHORTURL")) define("_MD_TAGMEMO_SHORTURL", empty($ModuleConfig['tagmemo_shorturl'])? false : true);	
 }
 ?>

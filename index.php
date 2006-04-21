@@ -9,7 +9,27 @@
 */
 require_once '../../mainfile.php';
 $myts =& MyTextSanitizer::getInstance();
-$tag_id = empty($_GET["tag_id"]) ? "" :$_GET["tag_id"];
+
+define("_MD_TAGMEMO_SHORTURL", empty($xoopsModuleConfig['tagmemo_shorturl'])? false : true);
+
+$tagmemo_handler =& xoops_getmodulehandler('tagmemo');
+
+$tag_name = empty($_GET["tag_name"]) ? "" :$_GET["tag_name"];
+$tag_names = explode(" ",$tag_name);
+if ($tag_name)
+{
+	$tag_id = array();
+	foreach($tag_names as $_name)
+	{
+		$tag_id[] = $tagmemo_handler->getTagId($_name);
+	}
+	$tag_id = join(',',$tag_id);
+	//exit ($tag_id);
+}
+else
+{
+	$tag_id = empty($_GET["tag_id"]) ? "" :$_GET["tag_id"];
+}
 $condition = $tag_id;
 $tag_id = explode(",",$tag_id);
 $keyword = empty($_GET["query"]) ? "" :$_GET["query"];
@@ -19,7 +39,7 @@ $count = isset($xoopsModuleConfig['per_page']) ? $xoopsModuleConfig['per_page'] 
 $count = (strlen($condition)>0) ? 0 : $count;
 //$search_from = empty($_GET["from"]) ? "sub" :$_GET["from"];
 $start = empty($_GET["start"]) ? 0 : intval($_GET["start"]);
-$tagmemo_handler =& xoops_getmodulehandler('tagmemo');
+
 
 if(strlen($keyword)>0){
 	$tagmemo_handler->search($keyword);

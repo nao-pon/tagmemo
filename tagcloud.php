@@ -13,6 +13,8 @@ require_once '../../mainfile.php';
 $tagmemo_handler =& xoops_getmodulehandler('tagmemo');
 //$tagmemo_objs =& $tagmemo_handler->getMemos();
 
+define("_MD_TAGMEMO_SHORTURL", empty($xoopsModuleConfig['tagmemo_shorturl'])? false : true);
+
 $xoopsOption['template_main'] = 'tagmemo_tagcloud.html';
 
 // ヘッダを書くおまじない。

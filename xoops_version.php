@@ -137,6 +137,14 @@ $modversion['config'][] = array(
 	'valuetype' => 'int',
 	'default' => '0',
 	);
+$modversion['config'][] = array(
+	'name' => 'tagmemo_shorturl',
+	'title' => '_MI_TAGMEMO_SHORTURL',
+	'description' => '',
+	'formtype' => 'yesno',
+	'valuetype' => 'int',
+	'default' => '0',
+	);
 
 // hold setting value when module update.
 if( ! empty( $_POST['fct'] ) && ! empty( $_POST['op'] ) && $_POST['fct'] == 'modulesadmin' && $_POST['op'] == 'update_ok' && $_POST['dirname'] == $modversion['dirname'] ) {

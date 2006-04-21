@@ -19,10 +19,10 @@ define('_MI_TAGMEMO_KAKASI_PATH', "読み仮名を取得する'KAKASI'の実行パス");
 define('_MI_TAGMEMO_TAGPOPUP_LIST', "タグリンクでポップアップする(リスト)");
 define('_MI_TAGMEMO_TAGPOPUP_DETAIL', "タグリンクでポップアップする(詳細)");
 define('_MI_TAGMEMO_TAGPOPUP_CLOUD', "タグリンクでポップアップする(クラウド)");
+define('_MI_TAGMEMO_SHORTURL', "Short URL を有効にする");
 
 define('_MI_TAGMEMO_ADMENU1','Index');
 define('_MI_TAGMEMO_ADMENU2','ブロック・グループ管理');
-define('_MI_TAGMEMO_ADMENU3','アクセス権限管理');
 define('_MI_TAGMEMO_UPDATE','Update');
 define('_MI_TAGMEMO_GOMODULES','Go to Modules');
 
