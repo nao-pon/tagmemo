@@ -51,6 +51,7 @@ TagmemoTags.prototype = {
 		this.gettag_pram = "";
 		
 		this._suggest = new TagmemoSuggest(baseurl);
+		this._suggest.add = function(){this.suggest_add();}.bind(this);
 
 		this.tags = this.getTagArrayFromHtml();
 		$('tagmemo_tag_hidden').value = this.getTagsAsString();
@@ -62,19 +63,32 @@ TagmemoTags.prototype = {
 	add: function(e){
 		var tag = this.input.value;
 		if (e.keyCode == Event.KEY_RETURN && tag != ""){
-			if(!this.alreadyExist(tag)){
-				this.tags[this.tags.length] = tag;
-				var url = this._baseurl + '/modules/tagmemo/ajax_tagcheck.php';
-				var pars = 'tag=' + encodeURIComponent(tag);
-	    		var tagCheckAjax = new Ajax.Request(url, {method: 'get', parameters: pars, onComplete: this.tagCheckResponseHandler.bind(this)});
-			}
-			$('tagmemo_tag_hidden').value = this.getTagsAsString();
-			this.input.value = '';
-			this.input.focus();
-			Field.select(this.input);
+			this.add_func(tag);
 			Event.stop(e);
-			return;
 		}
+		return;
+	},
+	
+	suggest_add: function(){
+		var tag = this.input.value;
+		if (tag != ""){
+			this.add_func(tag);
+		}
+		return;
+	},
+	
+	add_func: function(tag){
+		if(!this.alreadyExist(tag)){
+			this.tags[this.tags.length] = tag;
+			var url = this._baseurl + '/modules/tagmemo/ajax_tagcheck.php';
+			var pars = 'tag=' + encodeURIComponent(tag);
+    		var tagCheckAjax = new Ajax.Request(url, {method: 'get', parameters: pars, onComplete: this.tagCheckResponseHandler.bind(this)});
+		}
+		$('tagmemo_tag_hidden').value = this.getTagsAsString();
+		this.input.value = '';
+		this.input.focus();
+		Field.select(this.input);
+		return;
 	},
 	
 	remove: function(e){
@@ -111,9 +125,21 @@ TagmemoTags.prototype = {
 				tags[tags.length] = this.list.childNodes[i].firstChild.data.replace(/[\t\n\r ]+/g, "");
 				var tag = this.list.childNodes[i];
 				tag.onclick = this.remove.bindAsEventListener(this);
+				tag.onmouseover = this.highlight_on.bindAsEventListener(this);
+				tag.onmouseout = this.highlight_off.bindAsEventListener(this);
 			}
 		}
 		return tags;
+	},
+	
+	highlight_on: function(e){
+		var elm= Event.element(e);
+		elm.className = "exist_highlight";
+	},
+
+	highlight_off: function(e){
+		var elm= Event.element(e);
+		elm.className = "exist";
 	},
 	
 	alreadyExist: function(tag){
@@ -175,7 +201,9 @@ TagmemoTags.prototype = {
 			tagSpan.insertBefore(tagText, null);			
 			this.list.insertBefore(tagSpan, null);
 			
-			tagSpan.onclick = this.remove.bindAsEventListener(this);	
+			tagSpan.onclick = this.remove.bindAsEventListener(this);
+			tagSpan.onmouseover = this.highlight_on.bindAsEventListener(this);
+			tagSpan.onmouseout = this.highlight_off.bindAsEventListener(this);
 		}
 	}
 	
@@ -197,6 +225,7 @@ TagmemoSuggest.prototype = {
 		this.active = false;
 		this.focus = false;
 		this.observactive = false;
+		this.add;
 		
 		this.nonhit_key = "";
 		this.selected = false;
@@ -360,6 +389,7 @@ TagmemoSuggest.prototype = {
 				var ele = Event.findElement(event || window.event,'LI');
 				this.focus = true;
 				this.updateTagText(ele.innerHTML);
+				this.add();
 				setTimeout(function(){this.focus=false}.bind(this),1);
 			}.bind(this);
 			li.onmouseover = function(event){
