@@ -47,6 +47,8 @@ TagmemoTags.prototype = {
 		this.input    = $('tagmemo_tag_input');
 		this.list     = $('tagmemo_tag_list');
 		this.hidden   = $('tagmemo_tag_hidden');
+		this.gettag_url = "";
+		this.gettag_pram = "";
 		
 		this._suggest = new TagmemoSuggest(baseurl);
 
@@ -54,6 +56,7 @@ TagmemoTags.prototype = {
 		$('tagmemo_tag_hidden').value = this.getTagsAsString();
 			
 		this.input.onkeypress = this.add.bindAsEventListener(this);
+		$('tagmemo_gettag_btn').onclick = this.getTagsFromURL.bind(this);
 	},
 	
 	add: function(e){
@@ -120,6 +123,37 @@ TagmemoTags.prototype = {
 			}
 		}
 		return false;
+	},
+	
+	getTagsFromURL: function(){
+		new Ajax.Request(
+			this.gettag_url,{
+			method: "get",
+			onComplete: this.onTagsGetHandler.bind(this)
+		});
+	},
+	
+	onTagsGetHandler: function(originalRequest){
+		try{
+			Log.debug(originalRequest.responseText);
+
+			eval (originalRequest.responseText);
+			if (tmp.length)
+			{
+				for(var i=0;i<tmp.length;i++){
+					if(!this.alreadyExist(tmp[i])){
+						this.tags[this.tags.length] = tmp[i];
+						var url = this._baseurl + '/modules/tagmemo/ajax_tagcheck.php';
+						var pars = 'tag=' + encodeURIComponent(tmp[i]);
+			    		var tagCheckAjax = new Ajax.Request(url, {method: 'get', parameters: pars, onComplete: this.tagCheckResponseHandler.bind(this)});
+					}
+				}
+				$('tagmemo_tag_hidden').value = this.getTagsAsString();
+				this.input.value = '';
+				this.input.focus();
+				Field.select(this.input);
+			}			
+		}catch(e){Log.error(e);}		
 	},
 	
 	tagCheckResponseHandler: function(request){

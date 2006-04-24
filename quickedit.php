@@ -17,7 +17,9 @@ include_once ("./include/wiki_helper.php");
 
 $memo_id = isset($_GET["tagmemo_id"]) ? intval($_GET["tagmemo_id"]) : "";
 //$memo_id = isset($_POST["tagmemo_id"]) ? intval($_POST["tagmemo_id"]) : $memo_id;
-$memo_content = empty($_GET["memo"]) ? "" : htmlspecialchars(mb_convert_encoding($_GET["memo"],"EUC-JP","UTF-8"));
+$title = empty($_GET["t"]) ? "" : htmlspecialchars(mb_convert_encoding($_GET["t"],"EUC-JP","UTF-8"))."\n";
+$url = empty($_GET["u"]) ? "" : htmlspecialchars($_GET["u"]);
+$memo_content = $title . (($url)? $url."\n\n":"");
 $uid = empty($_GET["uid"]) ? 0 : (int)$_GET["uid"];
 
 //ユーザーIDをもらおう
@@ -71,6 +73,7 @@ $xoopsTpl->assign("uname", $uname);
 $xoopsTpl->assign("login", $login);
 
 $memo['content'] = $memo_content;
+$xoopsTpl->assign("target_url", XOOPS_URL."/modules/tagmemo/get_keyword.php?q=".rawurlencode($url));
 $xoopsTpl->assign("memo", $memo);
 if($memo_id != ""){
 	$xoopsTpl->assign("xoopsGTicket_html", $xoopsGTicket->getTicketHtml( __LINE__ ));

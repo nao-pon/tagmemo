@@ -19,6 +19,7 @@ var tagmemo = null;
 window.onload = function() {
 	tagmemo = new Tagmemo('<{$xoops_url}>');
 	new TagmemoWindow('tagmemo_area', new Array('tagmemo_header','tagmemo_tags','tagmemo_buttons'));
+	tagmemo._tag.gettag_url = "<{$target_url}>";
 }
 
 //-->
@@ -38,7 +39,7 @@ window.onload = function() {
 		</div>
 		<div id='tagmemo_tags'>
 			Tags:<input type="text" size="25" id="tagmemo_tag_input" name="tagmemo_tag_input" autocomplete='off' class="quickedit_text">
-			<img src="./images/arrow_turn.gif">
+			<img src="./images/arrow_turn.gif"> <span id="tagmemo_gettag_btn">Get Tags!</span>
 			<div id="tagmemo_tag_list">
 			<{foreach item=tag key="tag_id" from=$memo.tags}>
 				<span id='s_tag_id_<{$tag_id}>' title="<{$smarty.const._MD_TAGMEMO_TAGCLICK_DELETE}>"><{$tag}></span>

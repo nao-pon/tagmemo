@@ -92,3 +92,10 @@ div#tagmemo_tag_list {
 div#tagmemo_tag_list span {
 	cursor: pointer;
 }
+
+#tagmemo_gettag_btn {
+	cursor: pointer;
+	border: 1px solid silver;
+	font-size: 11px;
+	padding: 2px;
+}

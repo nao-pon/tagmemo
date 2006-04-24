@@ -1,5 +1,5 @@
 <?php
-// $Id: hyp_kakasi.php,v 1.2 2006/03/27 15:23:09 nao-pon Exp $
+// $Id: hyp_kakasi.php,v 1.2.6.1 2006/04/24 01:20:53 nao-pon Exp $
 // Hyp_KAKASI Class by nao-pon http://hypweb.net
 ////////////////////////////////////////////////
 
@@ -10,7 +10,7 @@ class Hyp_KAKASHI
 	var $kakasi_path = "/usr/bin/kakasi";    // KAKASI のパス
 	
 	var $encoding = "";      // 文字コード(現状はEUC-JP専用のため使用せず)
-	var $tmp_dir ="";        // 分かち書き用キャッシュ保存用ディレクトリ
+	var $tmp_dir = "";        // 分かち書き用キャッシュ保存用ディレクトリ
 	
 	var $gc_probability = 1; // gc処理する確率 x  x/1000の確率で処理
 	var $cache_expire = 24;  // キャッシュの有効期限(h)
@@ -94,6 +94,58 @@ class Hyp_KAKASHI
 			}
 		}
 		
+		return true;
+	}
+	
+	function get_keyword(&$str, $limit=10, $minlen=3, $minpoint=2)
+	{
+		
+		$keys = array();
+		$_dat = "";
+		
+		foreach (preg_split("/[\r\n]+/",$str) as $_str)
+		{
+			if ((strlen($_dat)+strlen($_str)) > 10000)
+			{
+				$_dat = substr($_dat, 0, 10000);
+				$this->get_wakatigaki($_dat);
+				$keys = array_merge($keys,explode(" ", $_dat));
+				$_dat = "";
+			}
+			else
+			{
+				$_dat .= $_str;
+			}
+		}
+		if ($_dat)
+		{
+			$this->get_wakatigaki($_dat);
+			$keys = array_merge($keys,explode(" ", $_dat));			
+		}
+		rsort($keys);
+		
+		$arr = array();
+		foreach ($keys as $key)
+		{
+			if (strlen($key) < $minlen) continue;
+			if (isset($arr[$key]))
+			{
+				$arr[$key]++;
+			}
+			else
+			{
+				$arr[$key] = 1;
+			}
+		}
+		arsort($arr);
+		$ret = array_splice($arr, 0 ,$limit);
+		$_ret = array();
+		foreach ($ret as $_key=>$_cnt)
+		{
+			if ($_cnt < $minpoint) continue;
+			$_ret[] = $_key;
+		}
+		$str = join(' ', $_ret);
 		return true;
 	}
 	

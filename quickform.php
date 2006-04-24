@@ -10,7 +10,8 @@ include_once "./include/gtickets.php" ;
 $token ='token should be created by php here if needed.';
 
 $uid = (empty($_GET['uid']))? 0 : (int)$_GET['uid'];
-$url = XOOPS_URL."/modules/tagmemo/quickedit.php?uid=".$uid."&amp;memo=";
+$url = XOOPS_URL."/modules/tagmemo/quickedit.php?uid=".$uid."&amp;";
+$taggeturl = XOOPS_URL."/modules/tagmemo/get_keyword.php?q=";
 $base = XOOPS_URL.'/modules/tagmemo';
 $sitename = str_replace("'","\'",$xoopsConfig['sitename']." :: ".$xoopsModule->name());
 
@@ -37,7 +38,7 @@ if (tagmemo_qe_container)
 if (!tagmemo_qe_container)
 {
 	var tagmemo_baseurl  = '$base';
-	var tagmemo_quickurl = '$url' + encodeURIComponent(document.title + "\\n" + location.href + "\\n\\n");
+	var tagmemo_quickurl = '$url'+ 't=' + encodeURIComponent(document.title) + "&amp;u=" + encodeURIComponent(location.href);
 	var tagmemo_sitename = '$sitename';
 	var tagmemo_token    = '$token';
 	var tagmemo_version  = '$version';
