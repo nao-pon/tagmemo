@@ -4,8 +4,8 @@ $url = (!empty($_GET['q']))? $_GET['q'] : "";
 $result = "var tmp = new Array();";
 if ($url)
 {
-	include_once("include/hyp_common_func.php");
-	include_once("include/hyp_kakasi.php");
+	include_once("include/hyp_common/hyp_common_func.php");
+	include_once("include/hyp_common/hyp_kakasi.php");
 
 	$d = new Hyp_HTTP_Request();
 

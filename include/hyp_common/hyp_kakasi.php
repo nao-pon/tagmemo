@@ -1,5 +1,5 @@
 <?php
-// $Id: hyp_kakasi.php,v 1.2.6.1 2006/04/24 01:20:53 nao-pon Exp $
+// $Id$
 // Hyp_KAKASI Class by nao-pon http://hypweb.net
 ////////////////////////////////////////////////
 
@@ -7,14 +7,16 @@ if( ! class_exists( 'Hyp_KAKASHI' ) )
 {
 class Hyp_KAKASHI
 {
+	// 基本設定
 	var $kakasi_path = "/usr/bin/kakasi";    // KAKASI のパス
 	
-	var $encoding = "";      // 文字コード(現状はEUC-JP専用のため使用せず)
+	var $encoding = "";       // 文字コード(現状はEUC-JP専用のため使用せず)
+	
 	var $tmp_dir = "";        // 分かち書き用キャッシュ保存用ディレクトリ
+	var $gc_probability = 1;  // gc処理する確率 x  x/1000の確率で処理
+	var $cache_expire = 24;   // キャッシュの有効期限(h)
 	
-	var $gc_probability = 1; // gc処理する確率 x  x/1000の確率で処理
-	var $cache_expire = 24;  // キャッシュの有効期限(h)
-	
+	// 内部変数
 	var $dicts = array();
 	var $cmd = "";
 	

@@ -1,4 +1,8 @@
 <?php
+// $Id$
+// HypCommonFunc Class by nao-pon http://hypweb.net
+////////////////////////////////////////////////
+
 if( ! class_exists( 'HypCommonFunc' ) )
 {
 
@@ -483,10 +487,23 @@ EOF;
 		return;
 	}
 	
-	function set_query_words()
+	// リファラーから検索語と検索エンジンを取得し定数に定義する
+	function set_query_words($qw="HYP_QUERY_WORD",$qw2="HYP_QUERY_WORD2",$en="HYP_SEARCH_ENGINE_NAME",$tmpdir="")
 	{
-		include_once(XOOPS_ROOT_PATH."/class/hyp_get_engine.php");
-		HypGetQueryWord::set_xoops_constants();
+		if (!defined($qw))
+		{
+			if (file_exists(dirname(__FILE__)."/hyp_get_engine.php"))
+			{
+				include_once(dirname(__FILE__)."/hyp_get_engine.php");
+				HypGetQueryWord::set_constants($qw,$qw2,$en,$tmpdir);
+			}
+			else
+			{
+				define($qw , "");
+				define($qw2, "");
+				define($en , "");
+			}
+		}
 	}
 }
 
@@ -507,7 +524,6 @@ class Hyp_HTTP_Request
 	var $method='GET';
 	var $headers='';
 	var $post=array();
-	//var $ua= "PHP ".PHP_VERSION;
 	var $ua='';
 	
 	// リダイレクト回数制限
@@ -552,16 +568,16 @@ class Hyp_HTTP_Request
 	
 	function Hyp_HTTP_Request()
 	{
-		$this->ua="PHP ".PHP_VERSION;
+		$this->ua="PHP/".PHP_VERSION;
 	}
-	
+		
 	function init()
 	{
 		$this->url='';
 		$this->method='GET';
 		$this->headers='';
 		$this->post=array();
-		$this->ua="PHP ".PHP_VERSION;
+		$this->ua="PHP/".PHP_VERSION;
 		
 		// result
 		$this->query = '';   // Query String

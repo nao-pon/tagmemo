@@ -74,7 +74,7 @@ function tagmemo_admin_set_suggest_init()
 
 function tagmemo_admin_set_suggest()
 {
-	include_once("../include/hyp_kakasi.php");
+	include_once("../include/hyp_common/hyp_kakasi.php");
 	global $xoopsDB, $xoopsModuleConfig;
 
 	$ka = new Hyp_KAKASHI();
