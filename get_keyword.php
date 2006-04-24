@@ -26,6 +26,7 @@ if ($url)
 		$src_enc = HypCommonFunc::get_encoding_by_meta($data);
 		$data = preg_replace("#<script(.+?)/script>#is","",$data);
 		$data = preg_replace("#<style(.+?)/style>#is","",$data);
+		$data = preg_replace("#<form(.+?)/form>#is","",$data);
 		
 		// タイトルタグ
 		$title = "";
