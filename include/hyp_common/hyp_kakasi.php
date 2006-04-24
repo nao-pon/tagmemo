@@ -101,7 +101,7 @@ class Hyp_KAKASHI
 	
 	function get_keyword(&$str, $limit=10, $minlen=3, $minpoint=2)
 	{
-		
+		$str = preg_replace("/[ \t]+/"," ",$str);
 		$keys = array();
 		$_dat = "";
 		
