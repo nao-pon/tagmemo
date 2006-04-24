@@ -38,6 +38,16 @@ div.auto_complete ul li b {
 	color: #0000FF;
 	font-weight: normal;
 }
+div#tagmemo_tag_list span {
+	cursor: pointer;
+}
+span.exist {
+	background-color: transparent;
+}
+
+span.exist_highlight {
+	background-color: #FFC1C1;
+}
 
 /*------tagmemo_content--------*/
 #tagmemo_content {

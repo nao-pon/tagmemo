@@ -99,3 +99,11 @@ div#tagmemo_tag_list span {
 	font-size: 11px;
 	padding: 2px;
 }
+
+span.exist {
+	background-color: transparent;
+}
+
+span.exist_highlight {
+	background-color: #FFC1C1;
+}
