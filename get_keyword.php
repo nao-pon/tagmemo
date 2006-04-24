@@ -1,6 +1,10 @@
 <?php
 define("SOURCE_ENCODING","EUC-JP");
 $url = (!empty($_GET['q']))? $_GET['q'] : "";
+
+// URLÃæ¤Î & ÂĞºö
+$url = str_replace("%26","&",$url);
+
 $result = "var tmp = new Array();";
 if ($url)
 {
@@ -11,8 +15,9 @@ if ($url)
 
 	$d->url = $url;
 	$d->method = 'GET';
+	$d->ua = 'Mozilla/4.0';
 	$d->get();
-
+	
 	if ($d->rc === 200)
 	{
 		$data = $d->data;

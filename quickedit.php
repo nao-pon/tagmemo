@@ -18,8 +18,12 @@ include_once ("./include/wiki_helper.php");
 $memo_id = isset($_GET["tagmemo_id"]) ? intval($_GET["tagmemo_id"]) : "";
 //$memo_id = isset($_POST["tagmemo_id"]) ? intval($_POST["tagmemo_id"]) : $memo_id;
 $title = empty($_GET["t"]) ? "" : htmlspecialchars(mb_convert_encoding($_GET["t"],"EUC-JP","UTF-8"))."\n";
-$url = empty($_GET["u"]) ? "" : htmlspecialchars($_GET["u"]);
-$memo_content = $title . (($url)? $url."\n\n":"");
+$url = empty($_GET["u"]) ? "" : $_GET["u"];
+$memo_content = $title . (($url)? htmlspecialchars($url)."\n\n":"");
+
+// URL中の & 対策
+$url = str_replace("&","%26",$url);
+
 $uid = empty($_GET["uid"]) ? 0 : (int)$_GET["uid"];
 
 //ユーザーIDをもらおう
