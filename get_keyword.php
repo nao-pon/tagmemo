@@ -46,11 +46,34 @@ if ($url)
 		$data = strip_tags($data);
 		$data = str_replace(array("&nbsp;","&lt;","&gt;","&amp;"),array(" ","<",">","&"),$data);
 		$data = str_replace("\0","",mb_convert_encoding($data, SOURCE_ENCODING, $src_enc));
-	
+				
+		// 既存タグとのマッチング
+		$autofile = "../../cache/tagmemo_autolink.dat";
+		@list($auto,$dum,$forceignorepages) = @file($autofile);
+		if (!$auto) $auto = "(?!)";
+		$auto = explode("\t",trim($auto));
+		// TAGが多い場合は、セパレータ \t で複数パターンに分割されている
+		$tags = "";
+		$match_tags = array();
+		foreach($auto as $pat)
+		{
+			$pattern = "/$pat/is";
+			if (preg_match_all($pattern,$data,$match,PREG_PATTERN_ORDER))
+			{
+				$match_tags = array_merge($match_tags,$match[0]);
+			}
+		}
+		if ($match_tags)
+		{
+			$tags = join(" ",$match_tags)." ";
+		}
+		
+		// 形態素解析でのマッチング
 		$k = new Hyp_KAKASHI();
 		$k->get_keyword($data);
 		
-		$data = mb_convert_encoding($title.$data, "UTF-8", "EUC-JP");
+		$data = join(" ",array_unique(explode(" ",$tags.$title.$data)));
+		$data = mb_convert_encoding($data, "UTF-8", "EUC-JP");
 		$result = 'var tmp = new Array("'.str_replace(array('"'," "),array('\"','","'),$data).'");';
 	}
 }
