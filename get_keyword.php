@@ -24,28 +24,32 @@ if ($url)
 		
 		// 文字コード判定 変換
 		$src_enc = HypCommonFunc::get_encoding_by_meta($data);
+		$data = str_replace("\0","",mb_convert_encoding($data, SOURCE_ENCODING, $src_enc));
+		
+		// 余分な部分の除去 & 整形
 		$data = preg_replace("#<script(.+?)/script>#is","",$data);
 		$data = preg_replace("#<style(.+?)/style>#is","",$data);
 		$data = preg_replace("#<form(.+?)/form>#is","",$data);
+		$data = str_replace(
+				array("&nbsp;","&lt;","&gt;","&quot;","&#39;","&amp;"),
+				array(" ",     "<",   ">",   "\"",    "'",    "&"),
+				$data);
+		$data = preg_replace("/&#[0-9]+;/i","",$data);
 		
 		// タイトルタグ
 		$title = "";
 		if (preg_match("#<title>(.+)</title>#is",$data,$match))
 		{
 			$title = $match[1];
-			$title = str_replace(array("&nbsp;","&lt;","&gt;","&amp;"),array(" ","<",">","&"),$title);
-			$title = str_replace("\0","",mb_convert_encoding($title, SOURCE_ENCODING, $src_enc));
 			
 			$k = new Hyp_KAKASHI();
-			$k->get_keyword($title, 3, 3, 1);
+			$k->get_keyword($title, 5, 3, 1);
 			
 			if ($title) $title .= " ";
 		}
 		
 		// HTML全体
 		$data = strip_tags($data);
-		$data = str_replace(array("&nbsp;","&lt;","&gt;","&amp;"),array(" ","<",">","&"),$data);
-		$data = str_replace("\0","",mb_convert_encoding($data, SOURCE_ENCODING, $src_enc));
 				
 		// 既存タグとのマッチング
 		$autofile = "../../cache/tagmemo_autolink.dat";
@@ -70,10 +74,10 @@ if ($url)
 		
 		// 形態素解析でのマッチング
 		$k = new Hyp_KAKASHI();
-		$k->get_keyword($data);
+		$k->get_keyword($data, 15, 3, 2);
 		
 		$data = join(" ",array_unique(explode(" ",$tags.$title.$data)));
-		$data = mb_convert_encoding($data, "UTF-8", "EUC-JP");
+		$data = mb_convert_encoding($data, "UTF-8", SOURCE_ENCODING);
 		$result = 'var tmp = new Array("'.str_replace(array('"'," "),array('\"','","'),$data).'");';
 	}
 }
