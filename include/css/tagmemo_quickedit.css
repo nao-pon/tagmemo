@@ -3,6 +3,7 @@ div.auto_complete {
 	width: 350px;
 	background: #fff;
 	font-size: 11px;
+	z-index: 1000;
 }
 div.auto_complete ul {
 	border:1px solid #888;
