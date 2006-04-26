@@ -27,9 +27,7 @@ if ($url)
 		$data = str_replace("\0","",mb_convert_encoding($data, SOURCE_ENCODING, $src_enc));
 		
 		// 余分な部分の除去 & 整形
-		$data = preg_replace("#<script(.+?)/script>#is","",$data);
-		$data = preg_replace("#<style(.+?)/style>#is","",$data);
-		$data = preg_replace("#<form(.+?)/form>#is","",$data);
+		$data = preg_replace("#<((?:no)?script|style|form)(.+?)/\\1>#is","",$data);
 		$data = str_replace(
 				array("&nbsp;","&lt;","&gt;","&quot;","&#39;","&amp;"),
 				array(" ",     "<",   ">",   "\"",    "'",    "&"),
