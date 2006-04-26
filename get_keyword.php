@@ -28,10 +28,6 @@ if ($url)
 		
 		// 余分な部分の除去 & 整形
 		$data = preg_replace("#<((?:no)?script|style|form)(.+?)/\\1>#is","",$data);
-		$data = str_replace(
-				array("&nbsp;","&lt;","&gt;","&quot;","&#39;","&amp;"),
-				array(" ",     "<",   ">",   "\"",    "'",    "&"),
-				$data);
 		$data = preg_replace("/&#[0-9]+;/i","",$data);
 		
 		// タイトルタグ
@@ -39,7 +35,10 @@ if ($url)
 		if (preg_match("#<title>(.+)</title>#is",$data,$match))
 		{
 			$title = $match[1];
-			
+			$title = str_replace(
+					array("&nbsp;","&lt;","&gt;","&quot;","&#39;","&amp;"),
+					array(" ",     "<",   ">",   "\"",    "'",    "&"),
+					$title);			
 			$k = new Hyp_KAKASHI();
 			$k->get_keyword($title, 5, 3, 1);
 			
@@ -48,6 +47,10 @@ if ($url)
 		
 		// HTML全体
 		$data = strip_tags($data);
+		$data = str_replace(
+				array("&nbsp;","&lt;","&gt;","&quot;","&#39;","&amp;"),
+				array(" ",     "<",   ">",   "\"",    "'",    "&"),
+				$data);
 				
 		// 既存タグとのマッチング
 		$autofile = "../../cache/tagmemo_autolink.dat";
