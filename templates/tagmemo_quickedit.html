@@ -32,6 +32,7 @@ window.onload = function() {
 		<input type="hidden" name="tagmemo_id" value="<{$memo.tagmemo_id}>" />
 		<input type="hidden" name="encode_hint" value="คื" />
 		<input type="hidden" name="quick_edit" value="1" />
+		<input type="hidden" name="tagmemo_tag_hidden" id="tagmemo_tag_hidden" value="">
 		<div id="tagmemo_header">
 			<{if ($helper.js)}>
 			<{$helper.js}>
@@ -44,10 +45,13 @@ window.onload = function() {
 			<{foreach item=tag key="tag_id" from=$memo.tags}>
 				<span id='s_tag_id_<{$tag_id}>' title="<{$smarty.const._MD_TAGMEMO_TAGCLICK_DELETE}>"><{$tag}></span>
 			<{/foreach}>
-			<input type="hidden" name="tagmemo_tag_hidden" id="tagmemo_tag_hidden" value="">
 			</div>
 			<div id='tagmemo_suggest_list' class="auto_complete"></div>
 			<{$xoopsGTicket_html}>
+			<div id="tagumemo_recommend_base">
+				<div id="tagumemo_recommend_title"><div id="tagumemo_recommend_close" onClick="tagmemo._tag.hideRecommendTags();">-Close-</div>Recommend Tags</div>
+				<div id="tagumemo_recommend_tag"></div>
+			</div>
 		</div>
 		<div id='tagmemo_area'>
 			<textarea cols="43" name="tagmemo_memo" id="tagmemo_memo" class="quickedit_text"<{$helper.form}> ><{$memo.content}></textarea>

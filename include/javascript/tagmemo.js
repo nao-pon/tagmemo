@@ -152,10 +152,29 @@ TagmemoTags.prototype = {
 	},
 	
 	getTagsFromURL: function(){
+		var rTag = $('tagumemo_recommend_tag');
+		while (rTag.childNodes.length > 0) rTag.removeChild(rTag.firstChild);
+
+		var tagSpan = document.createElement('span');
+		tagSpan.className = "tagmemo_checking";
+		tagSpan.insertBefore(document.createTextNode('Now Checking ...'), null);			
+		$('tagumemo_recommend_tag').insertBefore(tagSpan, null);
+				
+		// Set SIZE
+		var base = $('tagumemo_recommend_base');
+	    var source = $('tagmemo_area');
+	    var offsets = Position.cumulativeOffset(source);
+	    base.style.top    = (offsets[1] + 10) + 'px';
+	    base.style.left   = (offsets[0] + 10) + 'px';
+	    base.style.width  = (source.offsetWidth - 30) + 'px';
+	    //base.style.height = (source.offsetHeight - 40) + 'px';
+	    base.style.height = 'auto';		
+		
 		new Ajax.Request(
 			this.gettag_url,{
 			method: "get",
-			onComplete: this.onTagsGetHandler.bind(this)
+			onComplete: this.onTagsGetHandler.bind(this),
+			requestHeaders: ['If-Modified-Since','Wed, 15 Nov 1995 00:00:00 GMT']
 		});
 	},
 	
@@ -166,20 +185,48 @@ TagmemoTags.prototype = {
 			eval (originalRequest.responseText);
 			if (tmp.length)
 			{
-				for(var i=0;i<tmp.length;i++){
-					if(!this.alreadyExist(tmp[i])){
-						this.tags[this.tags.length] = tmp[i];
-						var url = this._baseurl + '/modules/tagmemo/ajax_tagcheck.php';
-						var pars = 'tag=' + encodeURIComponent(tmp[i]);
-			    		var tagCheckAjax = new Ajax.Request(url, {method: 'get', parameters: pars, onComplete: this.tagCheckResponseHandler.bind(this)});
-					}
-				}
-				$('tagmemo_tag_hidden').value = this.getTagsAsString();
-				this.input.value = '';
-				this.input.focus();
-				Field.select(this.input);
+				this.showRecommendTags(tmp);
 			}			
 		}catch(e){Log.error(e);}		
+	},	
+
+	showRecommendTags: function(tags){
+		var rTag = $('tagumemo_recommend_tag');
+		
+		while (rTag.childNodes.length > 0) rTag.removeChild(rTag.firstChild);
+		
+		for(var i=0;i<tags.length;i++)
+		{
+			var tag   = tags[i];
+			if(!this.alreadyExist(tag))
+			{				
+				var tagSpan = document.createElement('span');
+				tagSpan.className = "exist";
+				
+				var tagText = document.createTextNode(tag + ' ');
+				
+				//@todo is #text better to be replaced?
+				tagSpan.insertBefore(tagText, null);			
+				$('tagumemo_recommend_tag').insertBefore(tagSpan, null);
+				
+				tagSpan.onclick = this.addRecommendTag.bindAsEventListener(this);
+				tagSpan.onmouseover = this.highlight_on.bindAsEventListener(this);
+				tagSpan.onmouseout = this.highlight_off.bindAsEventListener(this);
+			}
+		}
+	},
+
+	hideRecommendTags: function(){
+		var rTag = $('tagumemo_recommend_base');
+	    rTag.style.top = '-10px';
+	    rTag.style.height = '0px';
+   	},
+	
+	addRecommendTag: function(e) {
+		var elm = Event.element(e);
+		var tag = elm.firstChild.data.replace(/[\t\n\r ]+/g, "");
+		$('tagumemo_recommend_tag').removeChild(elm);
+		this.add_func(tag);
 	},
 	
 	tagCheckResponseHandler: function(request){
@@ -191,8 +238,8 @@ TagmemoTags.prototype = {
 
 			var tagSpan = document.createElement('span');
 			// http://weblogs.macromedia.com/flashjavascript/readme.html
-			var unique = new Date().getTime();
-			tagSpan.id = 's_tag_id_' + unique;
+			//var unique = new Date().getTime();
+			//tagSpan.id = 's_tag_id_' + unique;
 			tagSpan.className = exist;
 			
 			var tagText = document.createTextNode(tag + ' ');
