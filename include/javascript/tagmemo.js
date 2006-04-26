@@ -51,8 +51,8 @@ TagmemoTags.prototype = {
 		this.gettag_pram = "";
 		
 		this._suggest = new TagmemoSuggest(baseurl);
-		this._suggest.add = function(){this.suggest_add();}.bind(this);
-
+		this._suggest.add = function(tag){this.add_func(tag);}.bind(this);
+		
 		this.tags = this.getTagArrayFromHtml();
 		$('tagmemo_tag_hidden').value = this.getTagsAsString();
 			
@@ -65,14 +65,6 @@ TagmemoTags.prototype = {
 		if (e.keyCode == Event.KEY_RETURN && tag != ""){
 			this.add_func(tag);
 			Event.stop(e);
-		}
-		return;
-	},
-	
-	suggest_add: function(){
-		var tag = this.input.value;
-		if (tag != ""){
-			this.add_func(tag);
 		}
 		return;
 	},
@@ -434,10 +426,8 @@ TagmemoSuggest.prototype = {
 			li.title=this.candidateTags[i];
 			li.onmousedown = function(event){
 				var ele = Event.findElement(event || window.event,'LI');
-				this.focus = true;
-				this.updateTagText(ele.innerHTML);
-				this.add();
-				setTimeout(function(){this.focus=false}.bind(this),1);
+				this.add(this.quoteTag(ele.innerHTML));
+				setTimeout(function(){this.tagText.focus();}.bind(this),1);
 			}.bind(this);
 			li.onmouseover = function(event){
 				var ele = Event.findElement(event || window.event,'LI');
