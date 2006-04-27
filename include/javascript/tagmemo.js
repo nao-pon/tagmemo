@@ -145,8 +145,8 @@ TagmemoTags.prototype = {
 	},
 	
 	getTagsFromURL: function(){
-		var rTag = $('tagumemo_recommend_tag');
-		while (rTag.childNodes.length > 0) rTag.removeChild(rTag.firstChild);
+		//var rTag = $('tagumemo_recommend_tag');
+		//while (rTag.childNodes.length > 0) rTag.removeChild(rTag.firstChild);
 
 		var tagSpan = document.createElement('span');
 		tagSpan.className = "tagmemo_checking";
@@ -163,9 +163,12 @@ TagmemoTags.prototype = {
 	    //base.style.height = (source.offsetHeight - 40) + 'px';
 	    base.style.height = 'auto';		
 		
+		prms = "q=" + this.gettag_url + "&t=" + encodeURIComponent($F('tagmemo_memo'));
+		
 		new Ajax.Request(
-			this.gettag_url,{
-			method: "get",
+			this._baseurl + "/modules/tagmemo/get_keyword.php",{
+			method: "post",
+			parameters: prms,
 			onComplete: this.onTagsGetHandler.bind(this),
 			requestHeaders: ['If-Modified-Since','Wed, 15 Nov 1995 00:00:00 GMT']
 		});
@@ -173,19 +176,24 @@ TagmemoTags.prototype = {
 	
 	onTagsGetHandler: function(originalRequest){
 		try{
+			//Log.enable = true;
 			Log.debug(originalRequest.responseText);
 
 			eval (originalRequest.responseText);
 			if (tmp.length)
 			{
 				this.showRecommendTags(tmp);
-			}			
+			}
+			else
+			{
+				this.hideRecommendTags();
+				alert('Tag not found.');			
+			}
 		}catch(e){Log.error(e);}		
 	},	
 
 	showRecommendTags: function(tags){
 		var rTag = $('tagumemo_recommend_tag');
-		
 		while (rTag.childNodes.length > 0) rTag.removeChild(rTag.firstChild);
 		
 		for(var i=0;i<tags.length;i++)
@@ -205,20 +213,34 @@ TagmemoTags.prototype = {
 				tagSpan.onclick = this.addRecommendTag.bindAsEventListener(this);
 				tagSpan.onmouseover = this.highlight_on.bindAsEventListener(this);
 				tagSpan.onmouseout = this.highlight_off.bindAsEventListener(this);
+
 			}
+		}
+		
+		if (rTag.childNodes.length < 2)
+		{
+			this.hideRecommendTags();
+			alert('Match tag not found.');		
 		}
 	},
 
 	hideRecommendTags: function(){
+		var rTag = $('tagumemo_recommend_tag');
+		while (rTag.childNodes.length > 0) rTag.removeChild(rTag.firstChild);
 		var rTag = $('tagumemo_recommend_base');
-	    rTag.style.top = '-10px';
+	    rTag.style.top = '-100px';
 	    rTag.style.height = '0px';
    	},
 	
 	addRecommendTag: function(e) {
 		var elm = Event.element(e);
 		var tag = elm.firstChild.data.replace(/[\t\n\r ]+/g, "");
-		$('tagumemo_recommend_tag').removeChild(elm);
+		var rTag = $('tagumemo_recommend_tag');
+		rTag.removeChild(elm);
+		if (rTag.childNodes.length < 2)
+		{
+			this.hideRecommendTags();
+		}
 		this.add_func(tag);
 	},
 	
@@ -272,6 +294,7 @@ TagmemoSuggest.prototype = {
 		this.reqestOption=['If-Modified-Since','Wed, 15 Nov 1995 00:00:00 GMT'];
 
 		this.candidateList.style.position = 'absolute';
+		this.tagText.setAttribute("autocomplete", "off");
 		
 		setTimeout(this.init_candidateList_pos.bind(this),300);
 				

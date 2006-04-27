@@ -19,8 +19,9 @@ function delete_tag(arg){
 }
 /* twodash*/
 
+var tagmemo = null;
 var onLoadHandler = function(){
-	var tagmemo = new Tagmemo('<{$xoops_url}>');
+	tagmemo = new Tagmemo('<{$xoops_url}>');
 	//	setTimeout('tagmemo.autosave()',5000);
 };
 if (window.addEventListener) {
@@ -49,7 +50,9 @@ if (window.addEventListener) {
 			<input type="hidden" name="tagmemo_id" value="<{$memo.tagmemo_id}>" />
 			<input type="hidden" name="encode_hint" value="คื" />
 			<{$helper.js}>
-			<textarea cols="43" name="tagmemo_memo" id="tagmemo_memo" class="edit_text"<{$helper.form}> ><{$memo.content}></textarea>
+			<div id='tagmemo_area'>
+				<textarea cols="43" name="tagmemo_memo" id="tagmemo_memo" class="edit_text"<{$helper.form}> ><{$memo.content}></textarea>
+			</div>
 			<div id='tagmemo_tags'>
 				<div id="tagmemo_tag_list">tags : 
 
@@ -60,8 +63,12 @@ if (window.addEventListener) {
 
 				</div>
 				<input type="text" size="25" id="tagmemo_tag_input" name="tagmemo_tag_input" autocomplete='off' class="form_text">
-				<img src="./images/arrow_turn.gif">
+				<img src="./images/arrow_turn.gif"> <span id="tagmemo_gettag_btn">Get Tags!</span>
 				<div id='tagmemo_suggest_list' class="auto_complete"></div>
+				<div id="tagumemo_recommend_base">
+					<div id="tagumemo_recommend_title"><div id="tagumemo_recommend_close" onClick="tagmemo._tag.hideRecommendTags();">-Close-</div>Recommend Tags</div>
+					<div id="tagumemo_recommend_tag"></div>
+				</div>
 				<{$xoopsGTicket_html}>
 			</div>
 			<div id="tagmemo_buttons">

@@ -77,7 +77,7 @@ $xoopsTpl->assign("uname", $uname);
 $xoopsTpl->assign("login", $login);
 
 $memo['content'] = $memo_content;
-$xoopsTpl->assign("target_url", XOOPS_URL."/modules/tagmemo/get_keyword.php?q=".rawurlencode($url));
+$xoopsTpl->assign("target_url", rawurlencode($url));
 $xoopsTpl->assign("memo", $memo);
 if($memo_id != ""){
 	$xoopsTpl->assign("xoopsGTicket_html", $xoopsGTicket->getTicketHtml( __LINE__ ));
