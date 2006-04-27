@@ -24,6 +24,8 @@ if ($url || $text)
 	{
 		$text = mb_convert_encoding($text, SOURCE_ENCODING, "UTF-8");
 		
+		str_format($text);
+		
 		// 既存タグとのマッチング
 		$body = match_saved_tag($text);
 				
@@ -61,10 +63,8 @@ if ($url || $text)
 			if (preg_match("#<title>(.+)</title>#is",$data,$match))
 			{
 				$title = $match[1];
-				$title = str_replace(
-						array("&nbsp;","&lt;","&gt;","&quot;","&#39;","&amp;"),
-						array(" ",     "<",   ">",   "\"",    "'",    "&"),
-						$title);			
+				str_format($title);
+
 				$k = new Hyp_KAKASHI();
 				$k->get_keyword($title, 5, 3, 1);
 				
@@ -73,10 +73,7 @@ if ($url || $text)
 			
 			// HTML全体
 			$data = strip_tags($data);
-			$data = str_replace(
-					array("&nbsp;","&lt;","&gt;","&quot;","&#39;","&amp;"),
-					array(" ",     "<",   ">",   "\"",    "'",    "&"),
-					$data);
+			str_format($data);
 					
 			// 既存タグとのマッチング
 			$tags = match_saved_tag($data);
@@ -122,6 +119,15 @@ function match_saved_tag(& $data)
 		$tags = join(" ",$match_tags)." ";
 	}
 	return $tags;
+}
+
+function str_format(&$str)
+{
+	$str = str_replace(
+			array("&nbsp;","&lt;","&gt;","&quot;","&#39;","&amp;","[","]","(",")"),
+			array(" ",     "<",   ">",   "\"",    "'",    "&",    " "," "," "," "),
+			$str);
+	return $str;	
 }
 
 header ("Content-Type: text/html; charset=UTF-8");
