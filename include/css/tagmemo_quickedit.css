@@ -124,7 +124,7 @@ div#tagumemo_recommend_close {
 
 div#tagumemo_recommend_base {
 	position: absolute;
-	top: -10px;
+	top: -100px;
 	height: 0px;
 	font-weight: normal;
 	font-size: 12px;
@@ -132,6 +132,9 @@ div#tagumemo_recommend_base {
 	border: 1px solid #EED2EE;
 	overflow: auto;
 	background-color: #ffffff;
+	filter:alpha(opacity=85); /*IE*/
+	-moz-opacity:0.85; /*FF*/
+	opacity:0.85;
 }
 
 div#tagumemo_recommend_tag {
