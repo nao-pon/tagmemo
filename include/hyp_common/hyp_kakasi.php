@@ -110,7 +110,11 @@ class Hyp_KAKASHI
 			if ((strlen($_dat)+strlen($_str)) > 10000)
 			{
 				$_dat = substr($_dat, 0, 10000);
-				$this->get_wakatigaki($_dat);
+				if (!$this->get_wakatigaki($_dat))
+				{
+					$str = "";
+					return false;
+				}
 				$keys = array_merge($keys,explode(" ", $_dat));
 				$_dat = "";
 			}
@@ -121,7 +125,11 @@ class Hyp_KAKASHI
 		}
 		if ($_dat)
 		{
-			$this->get_wakatigaki($_dat);
+			if (!$this->get_wakatigaki($_dat))
+			{
+				$str = "";
+				return false;
+			}
 			$keys = array_merge($keys,explode(" ", $_dat));			
 		}
 		rsort($keys);
@@ -140,14 +148,21 @@ class Hyp_KAKASHI
 			}
 		}
 		arsort($arr);
-		$ret = array_splice($arr, 0 ,$limit);
-		$_ret = array();
-		foreach ($ret as $_key=>$_cnt)
+		$ret = array_splice($arr, 0 , min($limit, count($arr)));
+		if (count($ret) > 0)
 		{
-			if ($_cnt < $minpoint) continue;
-			$_ret[] = $_key;
+			$_ret = array();
+			foreach ($ret as $_key=>$_cnt)
+			{
+				if ($_cnt < $minpoint) continue;
+				if ($_key) $_ret[] = $_key;
+			}
+			$str = join(' ', $_ret);
 		}
-		$str = join(' ', $_ret);
+		else
+		{
+			$str = "";
+		}
 		return true;
 	}
 	
