@@ -31,9 +31,9 @@ if (window.addEventListener) {
 <div id="tagmemo_tag_block">
 <div class="search_box">
  <form name="tagmemo_srcform" action="#" onsubmit="tagmemo_switch_search()">
-  <input type="text" name="query" id="tagmemo_src_query" size="14" value="<{$block.query_condition}>"/>
-  <div id='tagmemo_b_related_suggest_list' class="auto_complete"></div>
+  <input type="text" name="query" id="tagmemo_src_query" size="14" value="<{$block.query_condition}>" autocomplete="off" />
   <input type="button" onclick="tagmemo_search();" value="<{$smarty.const._MB_TAGMEMO_SEARCH}>" /><br />
+  <div id='tagmemo_b_related_suggest_list' class="auto_complete"></div>
   <input type="radio" name="src_type" value="0" <{if $block.src_type == 0}>checked <{/if}>/>Keyword
   <input type="radio" name="src_type" value="1" <{if $block.src_type == 1}>checked <{/if}>/>MemoID
 	
