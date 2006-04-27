@@ -50,8 +50,9 @@ TagmemoTags.prototype = {
 		this.gettag_url = "";
 		this.gettag_pram = "";
 		
-		this._suggest = new TagmemoSuggest(baseurl);
-		this._suggest.add = function(tag){this.add_func(tag);}.bind(this);
+		this._suggest = new TagmemoSuggest(baseurl, 'tagmemo_tag_input', 'tagmemo_suggest_list');
+		this._suggest.finishedTagList = $('tagmemo_tag_list')
+		this._suggest.clickAdd = function(tag){this.add_func(tag);}.bind(this);
 		
 		this.tags = this.getTagArrayFromHtml();
 		$('tagmemo_tag_hidden').value = this.getTagsAsString();
@@ -250,13 +251,13 @@ TagmemoTags.prototype = {
 
 var TagmemoSuggest = Class.create();
 TagmemoSuggest.prototype = {
-	initialize: function(baseurl){
+	initialize: function(baseurl, input, list){
 		
 		this._baseurl      = baseurl;
 		this._posturl      = baseurl + "/modules/tagmemo/complete.php";
-		this.tagText       = $('tagmemo_tag_input');
-		this.finishedTagList = $('tagmemo_tag_list');
-		this.candidateList = $('tagmemo_suggest_list');
+		this.tagText       = $(input);
+		this.candidateList = $(list);
+		this.finishedTagList = null;
 		this.candidateTags = new Array();
 		this.selectedCandidateTagsIndex = 0;
 		this.finishedTagText = "";
@@ -264,7 +265,7 @@ TagmemoSuggest.prototype = {
 		this.active = false;
 		this.focus = false;
 		this.observactive = false;
-		this.add;
+		this.clickAdd = false;
 		
 		this.nonhit_key = "";
 		this.selected = false;
@@ -347,8 +348,8 @@ TagmemoSuggest.prototype = {
 		{
 			this.nonhit_key = "";
 		}
-
-		var tags = this.getFinishedTags();		
+		
+		var tags = this.getFinishedTags();
 		if (q != "") {
 			var top = new Array();
 			var other = new Array();
@@ -378,6 +379,7 @@ TagmemoSuggest.prototype = {
 			});
 			tag = _tag;
 		}
+		
 		this.finishedTagText = "";
 		this.inputtingTag = q;
 		this.candidateTags = tag;
@@ -389,10 +391,13 @@ TagmemoSuggest.prototype = {
 
 	getFinishedTags: function() {
 		var tags = new Array();
-		for(var i=0;i<this.finishedTagList.childNodes.length;i++){
-			if(this.finishedTagList.childNodes[i].nodeName == 'SPAN'){
-			    //@ref http://developer.mozilla.org/en/docs/Whitespace_in_the_DOM
-				tags[tags.length] = this.finishedTagList.childNodes[i].firstChild.data.replace(/[\t\n\r ]+/g, "");
+		if (this.finishedTagList)
+		{
+			for(var i=0;i<this.finishedTagList.childNodes.length;i++){
+				if(this.finishedTagList.childNodes[i].nodeName == 'SPAN'){
+				    //@ref http://developer.mozilla.org/en/docs/Whitespace_in_the_DOM
+					tags[tags.length] = this.finishedTagList.childNodes[i].firstChild.data.replace(/[\t\n\r ]+/g, "");
+				}
 			}
 		}
 		return tags;
@@ -426,8 +431,17 @@ TagmemoSuggest.prototype = {
 			li.title=this.candidateTags[i];
 			li.onmousedown = function(event){
 				var ele = Event.findElement(event || window.event,'LI');
-				this.add(this.quoteTag(ele.innerHTML));
-				setTimeout(function(){this.tagText.focus();}.bind(this),1);
+				if (this.clickAdd)
+				{
+					this.clickAdd(this.quoteTag(ele.innerHTML));
+					setTimeout(function(){this.tagText.focus();}.bind(this),1);
+				}
+				else
+				{
+					this.focus = true;
+					this.updateTagText(ele.innerHTML);
+					setTimeout(function(){this.focus=false}.bind(this),1);
+				}
 			}.bind(this);
 			li.onmouseover = function(event){
 				var ele = Event.findElement(event || window.event,'LI');

@@ -19,11 +19,16 @@ function delete_tag(arg){
 }
 /* twodash*/
 
-var tagmemo = null;
-window.onload = function(){
-	tagmemo = new Tagmemo('<{$xoops_url}>');
-//	setTimeout('tagmemo.autosave()',5000); 	
+var onLoadHandler = function(){
+	var tagmemo = new Tagmemo('<{$xoops_url}>');
+	//	setTimeout('tagmemo.autosave()',5000);
+};
+if (window.addEventListener) {
+    window.addEventListener("load", onLoadHandler, true);
+} else {
+    window.attachEvent("onload", onLoadHandler);
 }
+
 
 //-->
 </script>

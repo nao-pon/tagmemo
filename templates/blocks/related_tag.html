@@ -1,3 +1,6 @@
+<script src="./include/javascript/prototype/prototype.js" type="text/javascript"></script>
+<script src="./include/javascript/log.js" type="text/javascript"></script>
+<script src="./include/javascript/tagmemo.js" type="text/javascript"></script>
 <script type="text/javascript">
 <!--
 function tagmemo_search(){
@@ -13,12 +16,23 @@ function tagmemo_switch_search(){
     }
 return true;
 }
+
+var onLoadHandler = function(){
+    var tagmemo_suggest = new TagmemoSuggest('<{$xoops_url}>', 'tagmemo_src_query', 'tagmemo_b_related_suggest_list');
+};
+if (window.addEventListener) {
+    window.addEventListener("load", onLoadHandler, true);
+} else {
+    window.attachEvent("onload", onLoadHandler);
+}
+
 //-->
 </script>
 <div id="tagmemo_tag_block">
 <div class="search_box">
  <form name="tagmemo_srcform" action="#" onsubmit="tagmemo_switch_search()">
   <input type="text" name="query" id="tagmemo_src_query" size="14" value="<{$block.query_condition}>"/>
+  <div id='tagmemo_b_related_suggest_list' class="auto_complete"></div>
   <input type="button" onclick="tagmemo_search();" value="<{$smarty.const._MB_TAGMEMO_SEARCH}>" /><br />
   <input type="radio" name="src_type" value="0" <{if $block.src_type == 0}>checked <{/if}>/>Keyword
   <input type="radio" name="src_type" value="1" <{if $block.src_type == 1}>checked <{/if}>/>MemoID
@@ -37,7 +51,7 @@ return true;
 <{foreach item=tag_detail from=$block.tag_condition.detail}>
 
 <a href="<{$xoops_url}>/modules/tagmemo/index.php?tag_id=<{$tag_detail.url}>"><img src="<{$xoops_url}>/modules/tagmemo/images/sub.gif" alt="sub"></a>
-<a href="<{$xoops_url}>/modules/tagmemo/index.php?tag_id=<{$tag_detail.id}>" style="font-size:150%;vertical-align: middle;"><{$tag_detail.string}></a>
+<a href="<{$xoops_url}>/modules/tagmemo/<{if $smarty.const._MD_TAGMEMO_SHORTURL}><{$tag_detail.string|escape:"url"}>.htm<{else}>index.php?tag_id=<{$tag_detail.id}><{/if}>" style="font-size:150%;vertical-align: middle;"><{$tag_detail.string}></a>
 <br />
 <{/foreach}>
 <{/if}>
@@ -47,7 +61,7 @@ return true;
 <{if $block.query}>
 <a href="<{$xoops_url}>/modules/tagmemo/index.php?tag_id=<{$block.tag_condition.url}><{$reltag.tag_id}>"><img src="<{$xoops_url}>/modules/tagmemo/images/add.gif" alt="add"></a>
 <{/if}>
-<a href="<{$xoops_url}>/modules/tagmemo/index.php?tag_id=<{$reltag.tag_id}>"><{$reltag.tag}></a>
+<a href="<{$xoops_url}>/modules/tagmemo/<{if $smarty.const._MD_TAGMEMO_SHORTURL}><{$reltag.tag|escape:"url"}>.htm<{else}>index.php?tag_id=<{$reltag.tag_id}><{/if}>"><{$reltag.tag}></a>
 <br />
 </div>
 <{/foreach}>
