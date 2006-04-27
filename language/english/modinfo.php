@@ -23,6 +23,7 @@ define('_MI_TAGMEMO_SHORTURL', "enable short url");
 
 define('_MI_TAGMEMO_ADMENU1','Index');
 define('_MI_TAGMEMO_ADMENU2','Blocks and Groups');
+define('_MI_TAGMEMO_ADMENU3','Permissions');
 define('_MI_TAGMEMO_UPDATE','Update');
 define('_MI_TAGMEMO_GOMODULES','Go to Modules');
 
