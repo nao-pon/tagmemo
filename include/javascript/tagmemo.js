@@ -1,23 +1,3 @@
-
-Form.Element.Observer.prototype.registerCallback=function(){
-	this.interval = setInterval(this.onTimerEvent.bind(this), this.frequency * 1000);
-};
-Form.Element.Observer.prototype.clearTimerEvent=function(){
-	clearInterval(this.interval);
-};
-Form.Element.Observer.prototype.onTimerEvent=function(){
-	try{
-		var node = this.element.parentNode.tagName;
-	}catch(e){
-		this.clearTimerEvent();
-	}	 
-	var value = this.getValue();
-	if (this.lastValue != value) {
-		this.callback(this.element, value);
-		this.lastValue = value;
-	}
-};
-
 var Tagmemo = Class.create();
 Tagmemo.prototype = {
 
@@ -274,6 +254,34 @@ TagmemoTags.prototype = {
 var TagmemoSuggest = Class.create();
 TagmemoSuggest.prototype = {
 	initialize: function(baseurl, input, list){
+		
+		if (!Form.Element.Observer.prototype.registerCallback)
+		{
+			Form.Element.Observer.prototype.registerCallback=function(){
+				this.interval = setInterval(this.onTimerEvent.bind(this), this.frequency * 1000);
+			};
+		}
+		if (!Form.Element.Observer.prototype.clearTimerEvent)
+		{
+			Form.Element.Observer.prototype.clearTimerEvent=function(){
+				clearInterval(this.interval);
+			};
+		}
+		if (!Form.Element.Observer.prototype.onTimerEvent)
+		{
+			Form.Element.Observer.prototype.onTimerEvent=function(){
+				try{
+					var node = this.element.parentNode.tagName;
+				}catch(e){
+					this.clearTimerEvent();
+				}	 
+				var value = this.getValue();
+				if (this.lastValue != value) {
+					this.callback(this.element, value);
+					this.lastValue = value;
+				}
+			};
+		}
 		
 		this._baseurl      = baseurl;
 		this._posturl      = baseurl + "/modules/tagmemo/complete.php";
