@@ -75,6 +75,7 @@ TagmemoTags.prototype = {
 		}
 		$('tagmemo_tag_hidden').value = this.getTagsAsString();
 		this.list.removeChild(element);
+		this.input.focus();
 		return;
 	},
 
@@ -125,8 +126,8 @@ TagmemoTags.prototype = {
 	},
 	
 	getTagsFromURL: function(){
-		//var rTag = $('tagumemo_recommend_tag');
-		//while (rTag.childNodes.length > 0) rTag.removeChild(rTag.firstChild);
+		var rTag = $('tagumemo_recommend_tag');
+		while (rTag.childNodes.length > 0) rTag.removeChild(rTag.firstChild);
 
 		var tagSpan = document.createElement('span');
 		tagSpan.className = "tagmemo_checking";
@@ -152,6 +153,7 @@ TagmemoTags.prototype = {
 			onComplete: this.onTagsGetHandler.bind(this),
 			requestHeaders: ['If-Modified-Since','Wed, 15 Nov 1995 00:00:00 GMT']
 		});
+		this.input.focus();
 	},
 	
 	onTagsGetHandler: function(originalRequest){
