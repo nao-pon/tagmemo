@@ -105,7 +105,7 @@ class HypCommonFunc
 		</params>
 	</methodCall>
 EOF;
-
+		//<?
 		$ping_update = mb_convert_encoding
 					   ( $ping_update , "UTF-8" , "EUC-JP" );
 
@@ -226,7 +226,54 @@ EOF;
 
 	// サムネイル画像を作成。
 	// 成功ならサムネイルのファイルのパス、不成功なら元ファイルパスを返す
-	function make_thumb($o_file, $s_file, $max_width, $max_height, $zoom_limit="5,90", $refresh=FALSE, $quality = 75)
+	function make_thumb($o_file, $s_file, $max_width, $max_height, $zoom_limit="1,95", $refresh=FALSE, $quality=75)
+	{
+		// すでに作成済み
+		if (!$refresh && file_exists($s_file)) return $s_file;
+		
+		// GDで処理可能なメモリーサイズ
+		static $memory_limit = NULL;
+		if (is_null($memory_limit))
+		{
+			$memory_limit = HypCommonFunc::return_bytes(ini_get('memory_limit'));
+		}
+		
+		@unlink($s_file);
+
+		$size = @getimagesize($o_file);
+		if (!$size) return $o_file;//画像ファイルではない
+		
+		// 元画像のサイズ
+		$org_w = $size[0];
+		$org_h = $size[1];
+		
+		// ビットマップ展開時のメモリー上のサイズ
+		$bitmap_size = $org_w * $org_h * 3 + 54;
+		
+		if ($max_width >= $org_w && $max_height >= $org_h) return $o_file;//指定サイズが元サイズより大きい
+		
+		// 縮小率の設定
+		list($zoom_limit_min,$zoom_limit_max) = explode(",",$zoom_limit);
+		$zoom = min(($max_width/$org_w),($max_height/$org_h));
+		if (!$zoom || $zoom < $zoom_limit_min/100 || $zoom > $zoom_limit_max/100) return $o_file;//ZOOM値が範囲外
+		
+		if (defined('HYP_IMAGEMAGICK_PATH'))
+		{
+			// ImageMagick を使用
+			return HypCommonFunc::make_thumb_imagemagick($o_file, $s_file, $zoom, $quality, $size[2], $org_w, $org_h);
+		}
+		else
+		{
+			if ($bitmap_size > $memory_limit - memory_get_usage() - (1 * 1024 * 1024))
+			{
+				// メモリー制限に引っ掛かりそう。（マージン 1MB）
+				return $o_file;
+			}
+			return HypCommonFunc::make_thumb_gd($o_file, $s_file, $zoom, $quality, $size[2], $org_w, $org_h);
+		}
+	}
+	
+	function make_thumb_gd($o_file, $s_file, $zoom, $quality, $type ,$org_w, $org_h)
 	{
 		//GD のバージョンを取得
 		static $gd_ver = null;
@@ -235,9 +282,6 @@ EOF;
 			$gd_ver = HypCommonFunc::gdVersion();
 		}
 		
-		// すでに作成済み
-		if (!$refresh && file_exists($s_file)) return $s_file;
-		
 		// gd fuction のチェック
 		if ($gd_ver < 1 || !function_exists("imagecreate")) return $o_file;//gdをサポートしていない
 		
@@ -245,19 +289,6 @@ EOF;
 		$imagecreate = ($gd_ver >= 2)? "imagecreatetruecolor" : "imagecreate";
 		$imageresize = ($gd_ver >= 2)? "imagecopyresampled" : "imagecopyresized";
 		
-		$size = @getimagesize($o_file);
-		if (!$size) return $o_file;//画像ファイルではない
-		
-		// 元画像のサイズ
-		$org_w = $size[0];
-		$org_h = $size[1];
-		
-		if ($max_width >= $org_w && $max_height >= $org_h) return $o_file;//指定サイズが元サイズより大きい
-		
-		// 縮小率の設定
-		list($zoom_limit_min,$zoom_limit_max) = explode(",",$zoom_limit);
-		$zoom = min(($max_width/$org_w),($max_height/$org_h));
-		if (!$zoom || $zoom < $zoom_limit_min/100 || $zoom > $zoom_limit_max/100) return $o_file;//ZOOM値が範囲外
 		$width = $org_w * $zoom;
 		$height = $org_h * $zoom;
 		
@@ -265,7 +296,7 @@ EOF;
 		$s_ext = "";
 		$s_ext = preg_replace("/\.([^\.]+)$/","$1",$s_file);
 		
-		switch($size[2])
+		switch($type)
 		{
 			case "1": //gif形式
 				if (function_exists ("imagecreatefromgif"))
@@ -360,7 +391,46 @@ EOF;
 		}
 		@imagedestroy($dst_im);
 		@imagedestroy($src_im);
+		//chmod($o_file, 0666);
 		return $o_file;
+	}
+	
+	function make_thumb_imagemagick($o_file, $s_file, $zoom, $quality, $type ,$org_w, $org_h)
+	{
+		$zoom = intval($zoom * 100);
+		$quality = intval($quality);
+		$org_w = intval($org_w);
+		$org_h = intval($org_h);
+
+		$ro_file = realpath($o_file);
+		$rs_file = realpath(dirname($s_file))."/".basename($s_file);
+		
+		// Make Thumb and check success
+		if ( ini_get('safe_mode') != "1" )
+		{
+			exec( HYP_IMAGEMAGICK_PATH."convert -size {$org_w}x{$org_h} -geometry {$zoom}% -quality {$quality} +profile \"*\" {$ro_file} {$rs_file}" ) ;
+			//@chmod($s_file, 0666);
+		}
+		else
+		{
+			// safeモードの場合は、CGIを起動して取得してみる
+			
+			$cmds = "?m=r".
+					"&p=".rawurlencode(HYP_IMAGEMAGICK_PATH).
+					"&z=".$zoom.
+					"&q=".$quality.
+					"&o=".rawurlencode($ro_file).
+					"&s=".rawurlencode($rs_file);
+						
+			HypCommonFunc::exec_image_magick_cgi($cmds);
+		}
+		
+		if( ! is_readable( $s_file ) )
+		{
+			// can't exec convert, big thumbs!
+			return $o_file;
+		}
+		return $s_file;
 	}
 	
 	// GD のバージョンを取得
@@ -405,58 +475,239 @@ EOF;
 	// イメージを回転
 	function rotateImage($src, $count = 1, $quality = 95)
 	{
+		$src = realpath($src);
+		
 		if (!file_exists($src)) {
 			return false;
 		}
 
-		list($w, $h) = getimagesize($src);
+		list($w, $h, $type) = @getimagesize($src);
 		
-		if (!$w || !$h) return false;
-
-		if (($in = imageCreateFromJpeg($src)) === false) {
-			return false;
+		if (!$w || !$h || (!defined('HYP_IMAGEMAGICK_PATH') && $type != 2)) return false;
+		
+		$angle = (($count > 0 && $count < 4) ? $count : 0 ) * 90;
+		if (!$angle) return false;
+		
+		if (defined('HYP_JPEGTRAN_PATH') && $type == 2)
+		{
+			// jpegtran を使用
+			if (ini_get('safe_mode') != "1")
+			{
+				$ret = true;
+				$tmpfname = @tempnam(dirname($src), "tmp_");
+				exec( HYP_JPEGTRAN_PATH."jpegtran -rotate {$angle} -copy all {$src} > {$tmpfname}" );
+				if ( ! @filesize($tmpfname) || ! @unlink($src) )
+				{
+					$ret = false;
+				}
+				else
+				{
+					rename($tmpfname, $src);
+					//chmod($src, 0666);
+				}
+				unlink($tmpfname);
+				return $ret;
+			}
+			else
+			{
+				$cmds = "?m=rj".
+						"&p=".rawurlencode(HYP_JPEGTRAN_PATH).
+						"&z=".$angle.
+						"&q=".$quality.
+						"&s=".rawurlencode($src);
+							
+				return HypCommonFunc::exec_image_magick_cgi($cmds);				
+			}
 		}
-
-		$angle = 360 - ((($count > 0 && $count < 4) ? $count : 0 ) * 90);
-
-		if ($w == $h || $angle == 180) {
-			$out = imageRotate($in, $angle, 0);
-		} elseif ($angle == 90 || $angle == 270) {
-			$size = ($w > $h ? $w : $h);
-			
-			$portrait = ($h > $w)? true : false; 
-			
-			// Create a square image the size of the largest side of our src image
-			if (($tmp = imageCreateTrueColor($size, $size)) == false) {
-				//echo "Failed create square trueColor<br>";
+		else if (defined('HYP_IMAGEMAGICK_PATH'))
+		{
+			// image magick を使用
+			if (ini_get('safe_mode') != "1")
+			{
+				$ret = true;
+				$out = array();
+				exec( HYP_IMAGEMAGICK_PATH."convert -size {$w}x{$h} -rotate +{$angle} -quality {$quality} {$src} {$src}", $out ) ;
+				if ($out)
+				{
+					$ret = false;
+				}
+				else
+				{
+					//chmod($src, 0666);
+				}
+				return $ret;
+			}
+			else
+			{
+				$cmds = "?m=ri".
+						"&p=".rawurlencode(HYP_IMAGEMAGICK_PATH).
+						"&z=".$angle.
+						"&q=".$quality.
+						"&s=".rawurlencode($src);
+							
+				return HypCommonFunc::exec_image_magick_cgi($cmds);				
+			}
+		}
+		else
+		{
+			// GD を使用
+			$angle = 360 - $angle;
+			if (($in = imageCreateFromJpeg($src)) === false) {
 				return false;
 			}
-
-			// Exchange sides
-			if (($out = imageCreateTrueColor($h, $w)) == false) {
-				//echo "Failed create trueColor<br>";
-				return false;
+			if ($w == $h || $angle == 180) {
+				$out = imageRotate($in, $angle, 0);
+			} elseif ($angle == 90 || $angle == 270) {
+				$size = ($w > $h ? $w : $h);
+				
+				$portrait = ($h > $w)? true : false; 
+				
+				// Create a square image the size of the largest side of our src image
+				if (($tmp = imageCreateTrueColor($size, $size)) == false) {
+					//echo "Failed create square trueColor<br>";
+					return false;
+				}
+	
+				// Exchange sides
+				if (($out = imageCreateTrueColor($h, $w)) == false) {
+					//echo "Failed create trueColor<br>";
+					return false;
+				}
+	
+				// Now copy our src image to tmp where we will rotate and then copy that to $out
+				imageCopy($tmp, $in, 0, 0, 0, 0, $w, $h);
+				$tmp2 = imageRotate($tmp, $angle, 0);
+	
+				// Now copy tmp2 to $out;
+				imageCopy($out, $tmp2, 0, 0, (($angle == 270 && !$portrait) ? abs($w - $h) : 0), (($angle == 90 && $portrait) ? abs($w - $h) : 0), $h, $w);
+				imageDestroy($tmp);
+				imageDestroy($tmp2);
+			} elseif ($angle == 360) {
+				imageDestroy($in);
+				return true;
 			}
-
-			// Now copy our src image to tmp where we will rotate and then copy that to $out
-			imageCopy($tmp, $in, 0, 0, 0, 0, $w, $h);
-			$tmp2 = imageRotate($tmp, $angle, 0);
-
-			// Now copy tmp2 to $out;
-			imageCopy($out, $tmp2, 0, 0, (($angle == 270 && !$portrait) ? abs($w - $h) : 0), (($angle == 90 && $portrait) ? abs($w - $h) : 0), $h, $w);
-			imageDestroy($tmp);
-			imageDestroy($tmp2);
-		} elseif ($angle == 360) {
+			unlink($src);
+			imageJpeg($out, $src, $quality);
 			imageDestroy($in);
+			imageDestroy($out);
+			//chmod($src, 0666);
 			return true;
 		}
-
-		imageJpeg($out, $src, $quality);
-		imageDestroy($in);
-		imageDestroy($out);
-		return true;
+	}
+	
+	// image_magick.cgi へアクセス
+	function exec_image_magick_cgi($cmds)
+	{
+		if (defined('HYP_IMAGE_MAGICK_URL'))
+		{
+			$url = HYP_IMAGE_MAGICK_URL;
+		}
+		else
+		{
+			die('ERROR: "image_magick.cgi" path is not set.');
+		}
+		
+		$url .= $cmds;
+		
+		$d = new Hyp_HTTP_Request();
+	
+		$d->url = $url;
+		$d->connect_try = 2;
+		$d->connect_timeout = 5;
+		$d->read_timeout = 60;
+		
+		$d->get();
+		
+		if ($d->rc != 200) die("'".$url."' is NG. Not found or access denied.");
+		
+		$ret = trim((string)$d->data);
+		$ret = ($ret == "ERROR: 0")? true : false;
+		
+		return $ret;
+	}
+	
+	// 外部実行コマンドのパスを設定
+	function set_exec_path($dir)
+	{
+		HypCommonFunc::set_jpegtran_path($dir);
+		HypCommonFunc::set_imagemagick_path($dir);
+		HypCommonFunc::set_hyp_image_magic_url();
+	}
+	
+	// Image Magick のパスを設定(定数化)
+	function set_imagemagick_path($dir)
+	{
+		// すでに設定済み
+		if (defined('HYP_IMAGEMAGICK_PATH')) return;
+		
+		if (substr($dir, -1) != "/") $dir .= "/"; 
+		if (file_exists($dir."convert"))
+		{
+			define ('HYP_IMAGEMAGICK_PATH', $dir);
+		}
+		return;
 	}
 
+	// jpegtran のパスを設定(定数化)
+	function set_jpegtran_path($dir)
+	{
+		// すでに設定済み
+		if (defined('HYP_JPEGTRAN_PATH')) return;
+		if (substr($dir, -1) != "/") $dir .= "/"; 
+		if (file_exists($dir."jpegtran"))
+		{
+			define ('HYP_JPEGTRAN_PATH', $dir);
+		}
+		return;
+	}
+	
+	
+	function set_hyp_image_magic_url($url='')
+	{
+		// すでに設定済み
+		if (defined('HYP_IMAGE_MAGICK_URL')) return;
+		
+		if ($url)
+		{
+			define('HYP_IMAGE_MAGICK_URL', $url);
+		}
+		else
+		{
+			// セーフモード時は、image_magick.cgi へのURLを探索してみる
+			if ( ini_get('safe_mode') == "1" )
+			{
+				if (defined('XOOPS_URL'))
+				{
+					//XOOPS環境下
+					$moddir = basename(dirname($_SERVER['REQUEST_URI']));
+					if (file_exists(XOOPS_ROOT_PATH."/class/hyp_common/image_magick.cgi"))
+					{
+						define('HYP_IMAGE_MAGICK_URL', XOOPS_URL."/class/hyp_common/image_magick.cgi");
+					}
+					else if (file_exists(XOOPS_ROOT_PATH."/modules/{$moddir}/include/hyp_common/image_magick.cgi"))
+					{
+						define('HYP_IMAGE_MAGICK_URL', XOOPS_URL."/modules/{$moddir}/include/hyp_common/image_magick.cgi");
+					}
+				}
+				else
+				{
+					$url  = ($_SERVER['SERVER_PORT'] == 443 ? 'https://' : 'http://'); // scheme
+					$url .= $_SERVER['HTTP_HOST'];	// host
+					$url .= ($_SERVER['SERVER_PORT'] == 80 ? '' : ':' . $_SERVER['SERVER_PORT']);  // port
+		
+					// DOCUMENT_ROOT と このファイル位置から URL を計算
+					if (!empty($_SERVER['DOCUMENT_ROOT']))
+					{
+						$path = str_replace($_SERVER['DOCUMENT_ROOT'],"",dirname(__FILE__));
+						$url .= $path."/image_magick.cgi";
+						define('HYP_IMAGE_MAGICK_URL', $url);
+					}
+				}
+			}
+		}
+		return;
+	}
+	
 	// 2ch BBQ あらしお断りシステム にリスティングされているかチェック
 	function IsBBQListed($safe_reg = '/^$/', $msg = false, $ip = NULL)
 	{
@@ -505,6 +756,23 @@ EOF;
 			}
 		}
 	}
+	
+	// php.ini のサイズ記述をバイト値に変換
+	function return_bytes($val) {
+	   $val = trim($val);
+	   $last = strtolower($val{strlen($val)-1});
+	   switch($last) {
+	       // 'G' は、PHP 5.1.0 より有効となる
+	       case 'g':
+	           $val *= 1024;
+	       case 'm':
+	           $val *= 1024;
+	       case 'k':
+	           $val *= 1024;
+	   }
+	
+	   return $val;
+	}
 }
 
 /*
@@ -525,6 +793,8 @@ class Hyp_HTTP_Request
 	var $headers='';
 	var $post=array();
 	var $ua='';
+
+	var $uri='';
 	
 	// リダイレクト回数制限
 	var $redirect_max=10;
@@ -603,10 +873,10 @@ class Hyp_HTTP_Request
 		
 		$url_base = $arr['scheme'].'://'.$arr['host'].':'.$arr['port'];
 		$url_path = isset($arr['path']) ? $arr['path'] : '/';
-		$this->url = ($via_proxy ? $url_base : '').$url_path.$arr['query'];
+		$this->uri = ($via_proxy ? $url_base : '').$url_path.$arr['query'];
 
 		
-		$query = $this->method.' '.$this->url." HTTP/1.0\r\n";
+		$query = $this->method.' '.$this->uri." HTTP/1.0\r\n";
 		$query .= "Host: ".$arr['host']."\r\n";
 		if (!empty($this->ua)) $query .= "User-Agent: ".$this->ua."\r\n";
 		
@@ -724,6 +994,7 @@ class Hyp_HTTP_Request
 		// Redirect
 		switch ($rc)
 		{
+			case 303: // See Other
 			case 302: // Moved Temporarily
 			case 301: // Moved Permanently
 				$matches = array();
@@ -811,6 +1082,38 @@ function xoops_update_rpc_ping($default_update="http://bulkfeeds.net/rpc http://
 	return HypCommonFunc::update_rpc_ping($default_update);
 }
 }
+
+if( !function_exists('memory_get_usage') )
+{
+function memory_get_usage()
+{
+	$output = array();
+	//If its Windows
+	//Tested on Win XP Pro SP2. Should work on Win 2003 Server too
+	//Doesn't work for 2000
+	//If you need it to work for 2000 look at http://us2.php.net/manual/en/function.memory-get-usage.php#54642
+	if ( substr(PHP_OS,0,3) == 'WIN')
+	{
+		exec( 'tasklist /FI "PID eq ' . getmypid() . '" /FO LIST', $output );
+		return preg_replace( '/[\D]/', '', $output[5] ) * 1024;
+	}
+	else
+	{
+		//We now assume the OS is UNIX
+		//Tested on Mac OS X 10.4.6 and Linux Red Hat Enterprise 4
+		//This should work on most UNIX systems
+		$pid = getmypid();
+		exec("ps -eo%mem,rss,pid | grep $pid", $output);
+		$output = explode("  ", $output[0]);
+		//rss is given in 1024 byte units
+		return $output[1] * 1024;
+	}
+}
+}
+
+// 初期化作業
+// ImageMagick のパスを指定 (多くは /usr/bin/ ?)
+HypCommonFunc::set_exec_path("/usr/bin/");
 
 }
 ?>
