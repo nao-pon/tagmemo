@@ -874,9 +874,11 @@ class Hyp_HTTP_Request
 		$url_base = $arr['scheme'].'://'.$arr['host'].':'.$arr['port'];
 		$url_path = isset($arr['path']) ? $arr['path'] : '/';
 		$this->uri = ($via_proxy ? $url_base : '').$url_path.$arr['query'];
-
+		$this->method = strtoupper($this->method);
+		$method = ($this->method == 'HEAD')? 'GET' : $this->method;
+		$readsize = ($this->method == 'HEAD')? 1024 : 4096;
 		
-		$query = $this->method.' '.$this->uri." HTTP/1.0\r\n";
+		$query = $method.' '.$this->uri." HTTP/1.0\r\n";
 		$query .= "Host: ".$arr['host']."\r\n";
 		if (!empty($this->ua)) $query .= "User-Agent: ".$this->ua."\r\n";
 		
@@ -897,7 +899,7 @@ class Hyp_HTTP_Request
 		$query .= $this->headers;
 		
 		// POST 時は、urlencode したデータとする
-		if (strtoupper($this->method) == 'POST')
+		if ($this->method == 'POST')
 		{
 			if (is_array($this->post))
 			{
@@ -962,14 +964,14 @@ class Hyp_HTTP_Request
 		}
 		
 		$response = '';
-		while (!feof($fp))
+		while (!feof($fp) && ($this->method != 'HEAD' || strpos($response,"\r\n\r\n") === FALSE))
 		{
 			if ($this->read_timeout)
 			{
 				@set_time_limit($this->read_timeout + $max_execution_time);
 				socket_set_timeout($fp, $this->read_timeout);
 			}
-			$_response = fread($fp,4096);
+			$_response = fread($fp, $readsize);
 			$_status = socket_get_status($fp);
 			if ($_status['timed_out'] === false)
 			{
