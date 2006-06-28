@@ -59,6 +59,7 @@ $oq = '"'.str_replace('"','\"',$oq).'"';
 $ret = "this.setSuggest($oq,new Array(".mb_convert_encoding(join(", ",$tags),"UTF-8","EUC-JP")."),new Array(".mb_convert_encoding(join(", ",$suggests),"UTF-8","EUC-JP")."));";
 
 header ("Content-Type: text/html; charset=UTF-8");
+header ("Content-Length: ".strlen($ret));
 echo $ret;
 
 ?>
