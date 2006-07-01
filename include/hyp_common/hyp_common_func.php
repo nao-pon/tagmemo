@@ -231,24 +231,12 @@ EOF;
 		// すでに作成済み
 		if (!$refresh && file_exists($s_file)) return $s_file;
 		
-		// GDで処理可能なメモリーサイズ
-		static $memory_limit = NULL;
-		if (is_null($memory_limit))
-		{
-			$memory_limit = HypCommonFunc::return_bytes(ini_get('memory_limit'));
-		}
-		
-		@unlink($s_file);
-
 		$size = @getimagesize($o_file);
 		if (!$size) return $o_file;//画像ファイルではない
 		
 		// 元画像のサイズ
 		$org_w = $size[0];
 		$org_h = $size[1];
-		
-		// ビットマップ展開時のメモリー上のサイズ
-		$bitmap_size = $org_w * $org_h * 3 + 54;
 		
 		if ($max_width >= $org_w && $max_height >= $org_h) return $o_file;//指定サイズが元サイズより大きい
 		
@@ -257,6 +245,8 @@ EOF;
 		$zoom = min(($max_width/$org_w),($max_height/$org_h));
 		if (!$zoom || $zoom < $zoom_limit_min/100 || $zoom > $zoom_limit_max/100) return $o_file;//ZOOM値が範囲外
 		
+		@unlink($s_file);
+		
 		if (defined('HYP_IMAGEMAGICK_PATH'))
 		{
 			// ImageMagick を使用
@@ -264,7 +254,7 @@ EOF;
 		}
 		else
 		{
-			if ($bitmap_size > $memory_limit - memory_get_usage() - (1 * 1024 * 1024))
+			if (!HypCommonFunc::chech_memory4gd($org_w,$org_h))
 			{
 				// メモリー制限に引っ掛かりそう。（マージン 1MB）
 				return $o_file;
@@ -472,6 +462,26 @@ EOF;
 		return $match[0];
 	}
 	
+	function chech_memory4gd($w,$h)
+	{
+		// GDで処理可能なメモリーサイズ
+		static $memory_limit = NULL;
+		if (is_null($memory_limit))
+		{
+			$memory_limit = HypCommonFunc::return_bytes(ini_get('memory_limit'));
+		}
+		// ビットマップ展開時のメモリー上のサイズ
+		$bitmap_size = $w * $h * 3 + 54;
+		
+		if ($bitmap_size > $memory_limit - memory_get_usage() - (1 * 1024 * 1024))
+		{
+			// メモリー制限に引っ掛かりそう。（マージン 1MB）
+			return false;
+		}
+		
+		return true;
+	}
+	
 	// イメージを回転
 	function rotateImage($src, $count = 1, $quality = 95)
 	{
@@ -551,6 +561,10 @@ EOF;
 		else
 		{
 			// GD を使用
+			
+			// メモリーチェック
+			if (!HypCommonFunc::chech_memory4gd($w,$h)) return false;
+			
 			$angle = 360 - $angle;
 			if (($in = imageCreateFromJpeg($src)) === false) {
 				return false;
