@@ -752,6 +752,69 @@ EOF;
 		return;
 	}
 	
+	// POST SPAM Check
+	function PostSpam_Check($post)
+	{
+		static $filters = NULL;
+		if (is_null($filters)) {$filters = HypCommonFunc::PostSpam_filter();}
+		$counts = array();
+		$counts[0] = $counts[1] = $counts[2] = $counts[3] = 0;
+		foreach($post as $dat)
+		{
+			$tmp = array();
+			$tmp['a'] = $tmp['bb'] = $tmp['url'] = $tmp['filter'] = 0;
+			if (is_array($dat))
+			{
+				list($tmp['a'],$tmp['bb'],$tmp['url'],$tmp['filter']) = HypCommonFunc::PostSpam_Check($dat);
+			}
+			else
+			{
+				// <a> タグの個数
+				$tmp['a'] = count(preg_split("/<a.+?\/a>/i",$dat)) - 1;
+				// [url] タグの個数
+				$tmp['bb'] = count(preg_split("/\[url=.+?\/url\]/i",$dat)) - 1;
+				// URL の個数
+				$tmp['url'] = count(preg_split("/(ht|f)tps?:\/\/[^\s]+/i",$dat)) - 1;
+				// フィルター
+				if ($filters)
+				{
+					foreach($filters as $reg => $point)
+					{
+						$counts[3] += (count(preg_split($reg,$dat)) - 1) * $point;
+						//echo $dat."<br>".$reg.": ".$counts[3]."<hr>";
+					}
+				}
+			}
+			$counts[0] += $tmp['a'];
+			$counts[1] += $tmp['bb'];
+			$counts[2] += $tmp['url'];
+			$counts[3] += $tmp['filter'];
+		}
+		return $counts;
+	}
+	
+	// POST SPAM フィルター
+	function PostSpam_filter($reg="", $point=1)
+	{
+		static $regs = array();
+		if (empty($reg)) {return $regs;}
+		$regs[$reg] = $point;
+	}
+	
+	// POST SPAM Check 汎用関数
+	function get_postspam_avr($alink=1,$bb=1,$url=1)
+	{
+		if ($_SERVER['REQUEST_METHOD'] == 'POST')
+		{
+			list($a_p,$bb_p,$url_p,$filter_p) = HypCommonFunc::PostSpam_Check($_POST);
+			return $a_p * $alink + $bb_p * $bb + $url_p * $url + $filter_p;
+		}
+		else
+		{
+			return 0;
+		}
+	}
+	
 	// リファラーから検索語と検索エンジンを取得し定数に定義する
 	function set_query_words($qw="HYP_QUERY_WORD",$qw2="HYP_QUERY_WORD2",$en="HYP_SEARCH_ENGINE_NAME",$tmpdir="")
 	{
