@@ -1,7 +1,15 @@
 #!/usr/bin/env php
-
 <?
 error_reporting(0);
+
+if (php_sapi_name() == "cli")
+{
+	echo "Content-Type: text/plain\n\n";
+}
+else
+{
+	header("Content-Type: text/plain");
+}
 
 // Ìá¤êÃÍ
 $ret = "ERROR: 9";

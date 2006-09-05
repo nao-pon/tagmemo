@@ -13,7 +13,7 @@ class HypCommonFunc
 	{
 		$e_mail = "";
 		$i = 0;
-		while($str[$i])
+		while(isset($str[$i]))
 		{
 			$e_mail .= "&#".ord((string)$str[$i]).";";
 			$i++;
@@ -247,7 +247,7 @@ EOF;
 		
 		@unlink($s_file);
 		
-		if (defined('HYP_IMAGEMAGICK_PATH'))
+		if (defined('HYP_IMAGEMAGICK_PATH') && HYP_IMAGEMAGICK_PATH)
 		{
 			// ImageMagick を使用
 			return HypCommonFunc::make_thumb_imagemagick($o_file, $s_file, $zoom, $quality, $size[2], $org_w, $org_h);
@@ -493,12 +493,12 @@ EOF;
 
 		list($w, $h, $type) = @getimagesize($src);
 		
-		if (!$w || !$h || (!defined('HYP_IMAGEMAGICK_PATH') && $type != 2)) return false;
+		if (!$w || !$h || ((!defined('HYP_IMAGEMAGICK_PATH') || !HYP_IMAGEMAGICK_PATH) && $type != 2)) return false;
 		
 		$angle = (($count > 0 && $count < 4) ? $count : 0 ) * 90;
 		if (!$angle) return false;
 		
-		if (defined('HYP_JPEGTRAN_PATH') && $type == 2)
+		if (defined('HYP_JPEGTRAN_PATH') && HYP_JPEGTRAN_PATH && $type == 2)
 		{
 			// jpegtran を使用
 			if (ini_get('safe_mode') != "1")
@@ -529,7 +529,7 @@ EOF;
 				return HypCommonFunc::exec_image_magick_cgi($cmds);				
 			}
 		}
-		else if (defined('HYP_IMAGEMAGICK_PATH'))
+		else if (defined('HYP_IMAGEMAGICK_PATH') && HYP_IMAGEMAGICK_PATH)
 		{
 			// image magick を使用
 			if (ini_get('safe_mode') != "1")
@@ -1191,8 +1191,14 @@ function memory_get_usage()
 }
 
 // 初期化作業
+// ImageMagick のパス設定ファイルがあれば読み込む
+if (file_exists(dirname(__FILE__)."/execpath.inc.php"))
+{
+	include_once(dirname(__FILE__)."/execpath.inc.php");	
+}
 // ImageMagick のパスを指定 (多くは /usr/bin/ ?)
 HypCommonFunc::set_exec_path("/usr/bin/");
+
 
 }
 ?>
