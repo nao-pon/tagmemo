@@ -774,6 +774,12 @@ class TagmemoTagmemoHandler {// extends XoopsObjectHandler {
 		$ret["timestamp"] = formatTimestamp($objMemo->getVar("timestamp", $format), "mysql");
 		$ret["public"] = $objMemo->getVar("public", $format);
 		$ret["tags"] = $this->_parseRelatedTags($memo_id);
+		// リンクの抽出
+		$ret['links'] = array();
+		if (preg_match_all('#<a[^>]+href="([^"]+)"#',$ret["content"],$match,PREG_PATTERN_ORDER)) {
+			$ret['links'] = $match[1];
+		}
+		
 		return $ret;
 	}
 	/**

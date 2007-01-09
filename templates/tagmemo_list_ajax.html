@@ -19,6 +19,11 @@
 	<div class="tagmemo_list_box_ajax">
 		<div class="tagmemo_list_title_ajax">
 			<a href="#" onClick="return(tagmemoList.list_body_toggle(<{$memo.tagmemo_id}>))"><{$memo.title}></a>
+			<{if $memo.links }>
+				<{foreach item=link from=$memo.links}>
+					<a href="<{$link}>" title="<{$link}>" target="_blank"><img src="./images/ext_link.gif" alt="<{link}>" width="16" height="11" /></a> 
+				<{/foreach}>
+			<{/if}>
 		</div>
 		<div id="tagmemo_list_body_ajax_<{$memo.tagmemo_id}>" class="tagmemo_list_body_ajax">
 			<{$memo.content}>
