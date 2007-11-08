@@ -107,6 +107,7 @@ Window.prototype = {
 		}
 
 		Windows.register(this);
+
   	},
  
 	// Destructor
@@ -262,7 +263,7 @@ Window.prototype = {
 
 		var content;
 		if (url)
-			content= "<iframe id=\"" + id + "_content\" src=\"" + url + "\" frameborder=\"0\" border=\"0\" allowtransparency=\"true\" > </iframe>";
+			content= "<div style=\"width:100%;height:100%\"><iframe id=\"" + id + "_content\" src=\"" + url + "\" frameborder=\"0\" border=\"0\" allowtransparency=\"true\"> </iframe></div>";
 		else
 			content ="<div id=\"" + id + "_content\" class=\"" +className + "_content\"> content</div>";
 			
@@ -340,9 +341,9 @@ Window.prototype = {
 		Element.setStyle(this.element,{height: height + 'px'});
 
 		// Update content height
-		var content = $(this.element.id + '_content')
-		Element.setStyle(content,{height: height  + 'px'});
-		Element.setStyle(content,{width: width  + 'px'});
+		var content = $(this.element.id + '_content');
+		Element.setStyle(content,{height: height - 45 + 'px'});
+		Element.setStyle(content,{width: width + 'px'});
 	},
 	
 	// Bring to front
@@ -385,11 +386,12 @@ Window.prototype = {
 	},
 	
 	show: function() {
-		this.setSize(this.width, this.height);
-		
+	
 		//by nao-pon
 		this.fixWindow();
-			
+
+		this.setSize(this.width, this.height);
+
 		this.showEffect(this.element);		
 	},
 	
