@@ -24,6 +24,11 @@ $modversion['sub'][] = array(	'name' => _MI_TAGMEMO_EDIT,
 $modversion['sub'][] = array(	'name' => _MI_TAGMEMO_CLOUD,
 								'url'  => 'tagcloud.php' );
 
+// Search
+$modversion['hasSearch'] = 1;
+$modversion['search']['file'] = "include/xoops_search.php";
+$modversion['search']['func'] = "tagmemo_search";
+
 // Templates
 /* $modversion['templates'][0]['file'] = 'index.html';
 $modversion['templates'][0]['description'] = 'tagmemo'; */
