@@ -8,6 +8,7 @@ TagmemoList.prototype = {
     getTagslist: function(tag_id,e,start)
     {
     	list = $('tagmemo_tagslist');
+    	list.style.zIndex = '1000';
 	    list.innerHTML = "Now loading.....";
 	
     	if (start == undefined)
