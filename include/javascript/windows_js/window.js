@@ -348,7 +348,7 @@ Window.prototype = {
 	
 	// Bring to front
 	toFront: function() {
-		windows = document.getElementsByClassName("dialog");
+		windows = document.body.getElementsByClassName("dialog");
 		var maxIndex= 0;
 		for (i = 0; i<windows.length; i++){
 			if (maxIndex < parseFloat(windows[i].style.zIndex))
