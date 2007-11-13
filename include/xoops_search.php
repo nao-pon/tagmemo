@@ -1,12 +1,15 @@
 <?php
 function tagmemo_search($queryarray, $andor, $limit, $offset, $userid = 0)
 {
-	///////////////////////
-	// Do search from tags. (TRUE or FALSE)
-	$do_search_tag = FALSE;
-	///////////////////////
-	
 	global $xoopsDB;
+
+	$module_handler =& xoops_gethandler('module');
+	$config_handler =& xoops_gethandler('config');
+	$basename = basename(dirname(dirname(__FILE__)));
+	$xoopsModule =& $module_handler->getByDirname($basename);
+	$xoopsModuleConfig =& $config_handler->getConfigsByCat(0, $xoopsModule->getVar('mid'));
+
+	$do_search_tag = $xoopsModuleConfig['tagmemo_search_tag'];
 	
 	$flg_search_tag = ($do_search_tag && $queryarray);
 	

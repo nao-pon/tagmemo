@@ -20,6 +20,7 @@ define('_MI_TAGMEMO_TAGPOPUP_LIST', "Popup when click tag link (List)");
 define('_MI_TAGMEMO_TAGPOPUP_DETAIL', "Popup when click tag link (Detail)");
 define('_MI_TAGMEMO_TAGPOPUP_CLOUD', "Popup when click tag link (Cloud)");
 define('_MI_TAGMEMO_SHORTURL', "enable short url");
+define('_MI_TAGMEMO_SEARCH_TAG', "Tag name is included on XOOPS search.");
 
 define('_MI_TAGMEMO_ADMENU1','Index');
 define('_MI_TAGMEMO_ADMENU2','Blocks and Groups');
