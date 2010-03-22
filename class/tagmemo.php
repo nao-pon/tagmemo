@@ -2,9 +2,9 @@
 /**
 * たぐメモのクラス定義
 * ページコントローラからはこのファイルのクラスのみインスタンス化すること
-* 
-* 
-* 
+*
+*
+*
 * @package Persistence
 */
 /**
@@ -20,7 +20,7 @@ class TagmemoTagmemoHandler {// extends XoopsObjectHandler {
 	//public vars
 	var $forceignorepages = '';
 	//Nothing
-	//public function	
+	//public function
 	//Constructor
 	/**
 	* コンストラクタ
@@ -48,7 +48,7 @@ class TagmemoTagmemoHandler {// extends XoopsObjectHandler {
 
 	/**
 	* 新規にタグのオブジェクトを取得
-	* 
+	*
 	* @param bool 新規に作成
 	* @access public
 	* @return TagmemoTagObject
@@ -155,7 +155,7 @@ class TagmemoTagmemoHandler {// extends XoopsObjectHandler {
 		$ret = ($wk_tag_id > 0) ? 1 : 0;
 		//		$this->_getTag2Cache();
 		//		$ret =& in_array($tag_var, $this->_tags);
-		//$ret =& in_array($this->_tags); hey!hey!	
+		//$ret =& in_array($this->_tags); hey!hey!
 		return $ret;
 	}
 
@@ -464,7 +464,7 @@ class TagmemoTagmemoHandler {// extends XoopsObjectHandler {
 		}
 		return $this->_memo_handler->getCount();
 	}
-	
+
 	function makeAutolinkData() {
 		$tags = $this->getAllTags(3);
 		list($pattern, $pattern_a, $forceignorelist) = $this->_get_autolink_pattern($tags);
@@ -480,9 +480,9 @@ class TagmemoTagmemoHandler {// extends XoopsObjectHandler {
 		fputs($fp, $pattern_a . "\n");
 		fputs($fp, join("\t", $forceignorelist) . "\n");
 		flock($fp, LOCK_UN);
-		fclose($fp);		
+		fclose($fp);
 	}
-	
+
 	function setError($error_str)
 	{
 		$this->_errors[] = $error_str;
@@ -499,7 +499,7 @@ class TagmemoTagmemoHandler {// extends XoopsObjectHandler {
 		}
 		return $error_str;
 	}
-	
+
 	//private vars
 	/**
 	* @access private
@@ -692,7 +692,7 @@ class TagmemoTagmemoHandler {// extends XoopsObjectHandler {
 	*/
 	function & _tag2array($tags) {
 		$wk_tagstr = strval($tags);
-		if (function_exists('mb_convert_kana')){		
+		if (function_exists('mb_convert_kana')){
 			$wk_tagstr = mb_convert_kana($wk_tagstr, "asKHV");
 		}
 		$pattern[] = "/,/";
@@ -776,10 +776,10 @@ class TagmemoTagmemoHandler {// extends XoopsObjectHandler {
 		$ret["tags"] = $this->_parseRelatedTags($memo_id);
 		// リンクの抽出
 		$ret['links'] = array();
-		if (preg_match_all('#<a[^>]+href="([^"]+)"#',$ret["content"],$match,PREG_PATTERN_ORDER)) {
-			$ret['links'] = $match[1];
+		if (preg_match_all('/https?:\/\/[\w\/\@\$()!?&%#:;.,~\'=*+-]+/i',$objMemo->getVar("content", 'n'),$match,PREG_PATTERN_ORDER)) {
+			$ret['links'] = $match[0];
 		}
-		
+
 		return $ret;
 	}
 	/**
@@ -815,12 +815,12 @@ class TagmemoTagmemoHandler {// extends XoopsObjectHandler {
 		$this->_condition_memo = $memo_ids;
 		$this->_flg_chenge_condition_tag = true;
 	}
-	
+
 	function _tag_auto_link(&$str)
 	{
 		static $auto;
 		static $forceignorepages;
-		
+
 		if (!$auto)
 		{
 			$autofile = XOOPS_ROOT_PATH."/cache/tagmemo_autolink.dat";
@@ -829,45 +829,45 @@ class TagmemoTagmemoHandler {// extends XoopsObjectHandler {
 			$auto = explode("\t",trim($auto));
 			$forceignorepages = explode("\t",trim($forceignorepages));
 		}
-		
+
 		$this->forceignorepages = $forceignorepages;
-		
+
 		// ページ数が多い場合は、セパレータ \t で複数パターンに分割されている
 		foreach($auto as $pat)
 		{
 			$pattern = "/(<(?:a).*?<\/(?:a)>|<[^>]*>|&(?:#[0-9]+|#x[0-9a-f]+|[0-9a-zA-Z]+);)|($pat)/is";
 			$str = preg_replace_callback($pattern,array(&$this,'_tag_auto_link_replace'),$str);
 		}
-		
+
 		return ;
 	}
-	
+
 	function _tag_auto_link_replace($match)
 	{
 		static $tags = null;
-		
+
 		if (is_null($tags))
 		{
 			$tags = $this->getAllTags(3);
 			$tags = array_map("strtolower",$tags);
 			$tags = array_flip($tags);
 		}
-		
+
 		if (!empty($match[1])) return $match[1];
 		$name = strtolower($match[2]);
-		
+
 		// 無視リストに含まれているページを捨てる
 		if (in_array($name,$this->forceignorepages)) {return $match[0];}
 		if (_MD_TAGMEMO_SHORTURL)
 		{
-			return "<a href=\"".XOOPS_URL."/modules/tagmemo/".rawurlencode($match[2]).".htm\" onClick=\"return(tagmemoList.getTagslist(".$tags[$name].",event))\" title=\"Tags\" class=\"tagmemo_taglink\">".$match[2]."</a>";
+			return "<a href=\"".XOOPS_URL."/modules/tagmemo/".str_replace('%', '%25', rawurlencode($match[2])).".htm\" onClick=\"return(tagmemoList.getTagslist(".$tags[$name].",event))\" title=\"Tags\" class=\"tagmemo_taglink\">".$match[2]."</a>";
 		}
 		else
 		{
 			return "<a href=\"".XOOPS_URL."/modules/tagmemo/?tag_id=".$tags[$name]."\" onClick=\"return(tagmemoList.getTagslist(".$tags[$name].",event))\" title=\"Tags\" class=\"tagmemo_taglink\">".$match[2]."</a>";
 		}
 	}
-	
+
 	// AutoLinkのパターンを生成する
 	function _get_autolink_pattern(& $pages)
 	{
@@ -876,7 +876,7 @@ class TagmemoTagmemoHandler {// extends XoopsObjectHandler {
 		//	$auto_pages[] = $page;
 		//}
 		$auto_pages = array_values($pages);
-		
+
 		if (count($auto_pages) == 0)
 		{
 			$result = '(?!)';
@@ -885,28 +885,28 @@ class TagmemoTagmemoHandler {// extends XoopsObjectHandler {
 		{
 			$auto_pages = array_unique($auto_pages);
 			sort($auto_pages, SORT_STRING);
-	
+
 			$result = $this->_get_autolink_pattern_sub($auto_pages, 0, count($auto_pages), 0);
 		}
-		
+
 		return array($result, '(?!)', array());
 	}
-	
+
 	function _get_autolink_pattern_sub(& $pages, $start, $end, $pos)
 	{
 		static $lev = 0;
-		
+
 		if ($end == 0) return '(?!)';
-		
+
 		$lev ++;
-		
+
 		$result = '';
 		$count = $i = $j = 0;
-		
+
 		$x = (mb_strlen($pages[$start]) <= $pos);
-		
+
 		if ($x) { ++$start; }
-		
+
 		for ($i = $start; $i < $end; $i = $j) // What is the initial state of $j?
 		{
 			$char = mb_substr($pages[$i], $pos, 1);
@@ -924,7 +924,7 @@ class TagmemoTagmemoHandler {// extends XoopsObjectHandler {
 				{
 					$result .= '|';
 				}
-				
+
 			}
 			if ($i >= ($j - 1))
 			{
@@ -935,7 +935,7 @@ class TagmemoTagmemoHandler {// extends XoopsObjectHandler {
 				$result .= str_replace(' ', '\\ ', preg_quote($char, '/')) .
 					$this->_get_autolink_pattern_sub($pages, $i, $j, $pos + 1);
 			}
-			
+
 			++$count;
 		}
 		if ($lev === 1)
