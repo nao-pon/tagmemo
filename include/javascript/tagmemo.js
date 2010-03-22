@@ -3,18 +3,18 @@ Tagmemo.prototype = {
 
 	initialize: function(url){
 		this.memo = $('tagmemo_memo');
-	
+
 		this._baseurl = url;
 		this._tag = new TagmemoTags(this._baseurl);
-		setTimeout(function(){$('tagmemo_memo').focus();},300);
+		setTimeout(function(){$('tagmemo_tag_input').focus();},300);
 	},
 
 	autosave: function(){
-		//@todo do something in future!
+		// @todo do something in future!
 	},
-	
+
 	autosaveResponseHandler: function(){
-		//@todo do something in future!
+		// @todo do something in future!
 	}
 }
 
@@ -22,25 +22,25 @@ var TagmemoTags = Class.create();
 TagmemoTags.prototype = {
 
 	initialize: function(baseurl){
-		
+
 		this._baseurl = baseurl;
 		this.input    = $('tagmemo_tag_input');
 		this.list     = $('tagmemo_tag_list');
 		this.hidden   = $('tagmemo_tag_hidden');
 		this.gettag_url = "";
 		this.gettag_pram = "";
-		
+
 		this._suggest = new TagmemoSuggest(baseurl, 'tagmemo_tag_input', 'tagmemo_suggest_list');
 		this._suggest.finishedTagList = $('tagmemo_tag_list')
 		this._suggest.clickAdd = function(tag){this.add_func(tag);}.bind(this);
-		
+
 		this.tags = this.getTagArrayFromHtml();
 		$('tagmemo_tag_hidden').value = this.getTagsAsString();
-			
+
 		this.input.onkeypress = this.add.bindAsEventListener(this);
 		$('tagmemo_gettag_btn').onclick = this.getTagsFromURL.bind(this);
 	},
-	
+
 	add: function(e){
 		var tag = this.input.value;
 		if (e.keyCode == Event.KEY_RETURN && tag != ""){
@@ -49,7 +49,7 @@ TagmemoTags.prototype = {
 		}
 		return;
 	},
-	
+
 	add_func: function(tag){
 		if(!this.alreadyExist(tag)){
 			this.tags[this.tags.length] = tag;
@@ -63,7 +63,7 @@ TagmemoTags.prototype = {
 		Field.select(this.input);
 		return;
 	},
-	
+
 	remove: function(e){
 		var element = Event.element(e);
 		var tag = element.firstChild.data.replace(/[\t\n\r ]+/g, "");
@@ -90,12 +90,12 @@ TagmemoTags.prototype = {
 		}
 		return '';
 	},
-	
+
 	getTagArrayFromHtml: function(){
 		var tags = Array();
 		for(var i=0;i<this.list.childNodes.length;i++){
 			if(this.list.childNodes[i].nodeName == 'SPAN'){
-			    //@ref http://developer.mozilla.org/en/docs/Whitespace_in_the_DOM
+			    // @ref http://developer.mozilla.org/en/docs/Whitespace_in_the_DOM
 				tags[tags.length] = this.list.childNodes[i].firstChild.data.replace(/[\t\n\r ]+/g, "");
 				var tag = this.list.childNodes[i];
 				tag.onclick = this.remove.bindAsEventListener(this);
@@ -105,7 +105,7 @@ TagmemoTags.prototype = {
 		}
 		return tags;
 	},
-	
+
 	highlight_on: function(e){
 		var elm= Event.element(e);
 		elm.className = "exist_highlight";
@@ -115,7 +115,7 @@ TagmemoTags.prototype = {
 		var elm= Event.element(e);
 		elm.className = "exist";
 	},
-	
+
 	alreadyExist: function(tag){
 		for(var i=0;i<this.tags.length;i++){
 			if(this.tags[i] == tag){
@@ -124,16 +124,16 @@ TagmemoTags.prototype = {
 		}
 		return false;
 	},
-	
+
 	getTagsFromURL: function(){
 		var rTag = $('tagumemo_recommend_tag');
 		while (rTag.childNodes.length > 0) rTag.removeChild(rTag.firstChild);
 
 		var tagSpan = document.createElement('span');
 		tagSpan.className = "tagmemo_checking";
-		tagSpan.insertBefore(document.createTextNode('Now Checking ...'), null);			
+		tagSpan.insertBefore(document.createTextNode('Now Checking ...'), null);
 		$('tagumemo_recommend_tag').insertBefore(tagSpan, null);
-				
+
 		// Set SIZE
 		var base = $('tagumemo_recommend_base');
 	    var source = $('tagmemo_area');
@@ -142,10 +142,11 @@ TagmemoTags.prototype = {
 	    base.style.left   = (offsets[0] + 10) + 'px';
 	    base.style.width  = (source.offsetWidth - 30) + 'px';
 	    //base.style.height = (source.offsetHeight - 40) + 'px';
-	    base.style.height = 'auto';		
-		
+	    base.style.height = 'auto';
+	    base.style.zIndex = '1000';
+
 		prms = "q=" + this.gettag_url + "&t=" + encodeURIComponent($F('tagmemo_memo'));
-		
+
 		new Ajax.Request(
 			this._baseurl + "/modules/tagmemo/get_keyword.php",{
 			method: "post",
@@ -155,7 +156,7 @@ TagmemoTags.prototype = {
 		});
 		this.input.focus();
 	},
-	
+
 	onTagsGetHandler: function(originalRequest){
 		try{
 			//Log.enable = true;
@@ -169,40 +170,40 @@ TagmemoTags.prototype = {
 			else
 			{
 				this.hideRecommendTags();
-				alert('Tag not found.');			
+				alert('Tag not found.');
 			}
-		}catch(e){Log.error(e);}		
-	},	
+		}catch(e){Log.error(e);}
+	},
 
 	showRecommendTags: function(tags){
 		var rTag = $('tagumemo_recommend_tag');
 		while (rTag.childNodes.length > 0) rTag.removeChild(rTag.firstChild);
-		
+
 		for(var i=0;i<tags.length;i++)
 		{
 			var tag   = tags[i];
 			if(!this.alreadyExist(tag))
-			{				
+			{
 				var tagSpan = document.createElement('span');
 				tagSpan.className = "exist";
-				
+
 				var tagText = document.createTextNode(tag + ' ');
-				
-				//@todo is #text better to be replaced?
-				tagSpan.insertBefore(tagText, null);			
+
+				// @todo is #text better to be replaced?
+				tagSpan.insertBefore(tagText, null);
 				$('tagumemo_recommend_tag').insertBefore(tagSpan, null);
-				
+
 				tagSpan.onclick = this.addRecommendTag.bindAsEventListener(this);
 				tagSpan.onmouseover = this.highlight_on.bindAsEventListener(this);
 				tagSpan.onmouseout = this.highlight_off.bindAsEventListener(this);
 
 			}
 		}
-		
+
 		if (rTag.childNodes.length < 2)
 		{
 			this.hideRecommendTags();
-			alert('Match tag not found.');		
+			alert('Match tag not found.');
 		}
 	},
 
@@ -213,7 +214,7 @@ TagmemoTags.prototype = {
 	    rTag.style.top = '-100px';
 	    rTag.style.height = '0px';
    	},
-	
+
 	addRecommendTag: function(e) {
 		var elm = Event.element(e);
 		var tag = elm.firstChild.data.replace(/[\t\n\r ]+/g, "");
@@ -225,38 +226,38 @@ TagmemoTags.prototype = {
 		}
 		this.add_func(tag);
 	},
-	
+
 	tagCheckResponseHandler: function(request){
 		var xmlDoc = request.responseXML;
         if (xmlDoc.documentElement) {
-                  
-            var tag   = xmlDoc.documentElement.childNodes[0].firstChild.data;				
-            var exist = xmlDoc.documentElement.childNodes[1].firstChild.data;				
+
+            var tag   = xmlDoc.documentElement.childNodes[0].firstChild.data;
+            var exist = xmlDoc.documentElement.childNodes[1].firstChild.data;
 
 			var tagSpan = document.createElement('span');
 			// http://weblogs.macromedia.com/flashjavascript/readme.html
 			//var unique = new Date().getTime();
 			//tagSpan.id = 's_tag_id_' + unique;
 			tagSpan.className = exist;
-			
+
 			var tagText = document.createTextNode(tag + ' ');
-			
-			//@todo is #text better to be replaced?
-			tagSpan.insertBefore(tagText, null);			
+
+			// @todo is #text better to be replaced?
+			tagSpan.insertBefore(tagText, null);
 			this.list.insertBefore(tagSpan, null);
-			
+
 			tagSpan.onclick = this.remove.bindAsEventListener(this);
 			tagSpan.onmouseover = this.highlight_on.bindAsEventListener(this);
 			tagSpan.onmouseout = this.highlight_off.bindAsEventListener(this);
 		}
 	}
-	
+
 }
 
 var TagmemoSuggest = Class.create();
 TagmemoSuggest.prototype = {
 	initialize: function(baseurl, input, list){
-		
+
 		if (!Form.Element.Observer.prototype.registerCallback)
 		{
 			Form.Element.Observer.prototype.registerCallback=function(){
@@ -276,7 +277,7 @@ TagmemoSuggest.prototype = {
 					var node = this.element.parentNode.tagName;
 				}catch(e){
 					this.clearTimerEvent();
-				}	 
+				}
 				var value = this.getValue();
 				if (this.lastValue != value) {
 					this.callback(this.element, value);
@@ -284,7 +285,7 @@ TagmemoSuggest.prototype = {
 				}
 			};
 		}
-		
+
 		this._baseurl      = baseurl;
 		this._posturl      = baseurl + "/modules/tagmemo/complete.php";
 		this.tagText       = $(input);
@@ -298,30 +299,30 @@ TagmemoSuggest.prototype = {
 		this.focus = false;
 		this.observactive = false;
 		this.clickAdd = false;
-		
+
 		this.nonhit_key = "";
 		this.selected = false;
 		this.reqestOption=['If-Modified-Since','Wed, 15 Nov 1995 00:00:00 GMT'];
 
 		this.candidateList.style.position = 'absolute';
 		this.tagText.setAttribute("autocomplete", "off");
-		
+
 		setTimeout(this.init_candidateList_pos.bind(this),300);
-				
+
 		this.hideCandidateList();
 		this.startObserver();
-	
+
 		Event.observe(this.tagText, "keypress", this.onKeyPress.bindAsEventListener(this));
 		Event.observe(this.tagText, "blur", this.onBlur.bindAsEventListener(this));
 	},
-	
+
 	init_candidateList_pos: function() {
 		var offsets = Position.positionedOffset(this.tagText);
 		this.candidateList.style.left = offsets[0] + 'px';
 		this.candidateList.style.top  = (offsets[1] + this.tagText.offsetHeight) + 'px';
 		this.candidateList.style.width = this.tagText.offsetWidth + 'px';
 	},
-		
+
 	startObserver: function(){
 		if(this.observactive) return;
 		this.observer = new Form.Element.Observer(this.tagText,0.3,this.tagTextOnChange.bind(this));
@@ -331,7 +332,7 @@ TagmemoSuggest.prototype = {
 		this.observer.clearTimerEvent();
 		this.observactive = false;
 	},
-	
+
 	tagTextOnChange: function(){
 		if($F(this.tagText).length == 0){
 			this.candidateTags = new Array();
@@ -362,15 +363,15 @@ TagmemoSuggest.prototype = {
 			});
 		}
 	},
-	
+
 	onTagSplitComplete: function(originalRequest){
-		
+
 		try{
 			Log.debug(originalRequest.responseText);
 			eval (originalRequest.responseText);
-		}catch(e){Log.error(e);}		
+		}catch(e){Log.error(e);}
 	},
-	
+
 	setSuggest: function(q,tag,suggest)
 	{
 		if (tag.length < 1)
@@ -381,7 +382,7 @@ TagmemoSuggest.prototype = {
 		{
 			this.nonhit_key = "";
 		}
-		
+
 		var tags = this.getFinishedTags();
 		if (q != "") {
 			var top = new Array();
@@ -412,12 +413,12 @@ TagmemoSuggest.prototype = {
 			});
 			tag = _tag;
 		}
-		
+
 		this.finishedTagText = "";
 		this.inputtingTag = q;
 		this.candidateTags = tag;
 		this.selected = false;
-		
+
 		this.updateCandidateTags();
 		this.showCandidateList();
 	},
@@ -428,7 +429,7 @@ TagmemoSuggest.prototype = {
 		{
 			for(var i=0;i<this.finishedTagList.childNodes.length;i++){
 				if(this.finishedTagList.childNodes[i].nodeName == 'SPAN'){
-				    //@ref http://developer.mozilla.org/en/docs/Whitespace_in_the_DOM
+				    // @ref http://developer.mozilla.org/en/docs/Whitespace_in_the_DOM
 					tags[tags.length] = this.finishedTagList.childNodes[i].firstChild.data.replace(/[\t\n\r ]+/g, "");
 				}
 			}
@@ -441,7 +442,7 @@ TagmemoSuggest.prototype = {
 		if (!pattern) return value;
 		pattern = this.escTag(pattern);
 		pattern = this.regQuote(this.escTag(pattern));
-		
+
 		var re = new RegExp("(" + pattern + ")", "ig");
 		return value.replace(re, "<b>$1</b>");
 	},
@@ -449,12 +450,12 @@ TagmemoSuggest.prototype = {
 	updateCandidateTags: function(){
 		this.selectedCandidateTagsIndex=0;
 		if(this.candidateList.firstChild) this.candidateList.removeChild(this.candidateList.firstChild);
-		
+
 		if(this.candidateTags.length == 0){
 			this.hideCandidateList();
 			return;
 		}
-		
+
 		var ul = document.createElement("ul");
 		for(var i=0;i<this.candidateTags.length;i++){
 			var li = document.createElement("li");
@@ -478,7 +479,7 @@ TagmemoSuggest.prototype = {
 			}.bind(this);
 			li.onmouseover = function(event){
 				var ele = Event.findElement(event || window.event,'LI');
-				Element.addClassName(ele,"selected"); 
+				Element.addClassName(ele,"selected");
 			}.bind(this);
 			li.onmouseout = function(event){
 				var ele = Event.findElement(event || window.event,'LI');
@@ -486,10 +487,10 @@ TagmemoSuggest.prototype = {
 			}.bind(this);
 			ul.appendChild(li);
 		}
-		
+
 		this.candidateList.appendChild(ul);
 	},
-	
+
 	showCandidateList: function(){
 		this.hideCandidateList();
 		if(this.candidateTags.length == 0) return;
@@ -497,12 +498,12 @@ TagmemoSuggest.prototype = {
 		this.active = true;
 		this.markSelected();
 	},
-	
+
 	hideCandidateList: function(){
 		Element.hide(this.candidateList);
 		this.active = false;
 	},
-	
+
 	onBlur: function(event){
 		if(this.focus){
 			Log.debug('onblur cancel. because focus:'+this.focus);
@@ -517,7 +518,7 @@ TagmemoSuggest.prototype = {
 		}
 		this.hideCandidateList();
 	},
-	
+
 	onKeyPress: function(event){
 		if(this.active){
 			switch(event.keyCode) {
@@ -552,7 +553,7 @@ TagmemoSuggest.prototype = {
 			}
 		}
 	},
-  
+
 	getEntry: function(index) {
 		return this.candidateList.firstChild.childNodes[index];
 	},
@@ -565,9 +566,9 @@ TagmemoSuggest.prototype = {
 		$(this.tagText).value = this.quoteTag(this.getEntry(this.selectedCandidateTagsIndex).innerHTML);
 		this.selected = true;
 	},
-  
+
 	markNext: function() {
-	
+
 		Element.removeClassName(this.getEntry(this.selectedCandidateTagsIndex),"selected");
 		if(this.selected && this.selectedCandidateTagsIndex < this.candidateTags.length-1) this.selectedCandidateTagsIndex++
 			else this.selectedCandidateTagsIndex = 0;
@@ -575,28 +576,28 @@ TagmemoSuggest.prototype = {
 		$(this.tagText).value = this.quoteTag(this.getEntry(this.selectedCandidateTagsIndex).innerHTML);
 		this.selected = true;
 	},
-	
+
 	markSelected: function() {
 		if( this.selected && this.candidateTags.length > 0) {
 			for (var i = 0; i <	 this.candidateTags.length; i++){
-				this.selectedCandidateTagsIndex==i ? 
-					Element.addClassName(this.getEntry(i),"selected") : 
+				this.selectedCandidateTagsIndex==i ?
+					Element.addClassName(this.getEntry(i),"selected") :
 					Element.removeClassName(this.getEntry(i),"selected");
 			}
 		}
 	},
-	
+
 	selectEntry: function() {
 		var entry = this.getEntry(this.selectedCandidateTagsIndex);
 		this.updateTagText(entry.innerHTML);
 	},
-	
+
 	updateTagText: function(str) {
 		str = this.quoteTag(str);
 		Log.info('select tag : \"'+ str + '"');
 		this.stopObserver();
 		this.inputtingTag = str;
-		
+
 		this.tagText.value = str;
 		this.hideCandidateList();
 
@@ -605,25 +606,25 @@ TagmemoSuggest.prototype = {
 			this.tagText.select();
 			this.tagText.setSelectionRange(this.tagText.value.length,this.tagText.value.length);
 		}
-		
+
 		this.startObserver();
 	},
-	
-	quoteTag: function(tag) {  
+
+	quoteTag: function(tag) {
 		tag = tag.replace(/^[\s]+/,"");
 		tag = tag.replace(/[\s]+$/,"");
 		tag = tag.replace(/[\s]+/g," ");
 		tag = tag.replace(/<.+?>/g,"");
-		
+
 		tag = tag.replace(/&lt;/gi,"<");
 		tag = tag.replace(/&gt;/gi,">");
-		
+
 		if(tag.length == 0) return "";
-		
+
 		return tag;
 		/*
 		var quote="";
-		
+
 		if(tag.match(/"/) && tag.match(/'/)){
 			tag = tag.replace(/"/g,"'");
 			quote = '"';
@@ -637,13 +638,13 @@ TagmemoSuggest.prototype = {
 		return quote + tag + quote;
 		*/
 	},
-	
+
 	escTag : function(tag) {
 		tag = tag.replace(/</g,"&lt;");
 		tag = tag.replace(/>/g,"&gt;");
 		return tag;
 	},
-	
+
 	regQuote : function(v) {
 		return v.replace(/([\\\.\+\*\?\[\^\]\$\(\)\{\}\=\!\<\>\|\:])/g,"\\$1");
 	}
