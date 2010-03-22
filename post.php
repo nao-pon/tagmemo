@@ -3,14 +3,17 @@
 * @package Page
 */
 
-// ブックマークレット投稿時の戻り ブラウザのセキュリティ設定により自動的に閉じない可能性あり
-if (!empty($_GET['quick_edit_close'])) exit('<script>parent.Windows.close("tagmemo_qe_container");</script>');
-
 // 必要なファイルを一気に取り込むおまじない。
 /**
 * XOOPS用ファイルの取り込み
 */
 require_once '../../mainfile.php';
+
+// ブックマークレット投稿時の戻り
+if (!empty($_GET['quick_edit_close'])) {
+	echo('<html><head></head><body></body></html>');
+	exit();
+}
 
 //GIJOE さんのワンタイムチケット
 include_once "./include/gtickets.php" ;
@@ -66,7 +69,8 @@ if(preg_match("/^([^\r\n]{0,120})/i", $title, $matches)){
 
 // タイトル用に装飾タグ(BBコードなど)を除去
 $myts =& MyTextSanitizer::getInstance();
-$title = strip_tags($myts->displayTarea($title));
+$title = $myts->displayTarea($title);
+$title = trim(strip_tags(preg_replace('#<(script|style).*?/\\1>#is', '', $title)));
 
 $title = (strlen($title) > 0) ? $title : "NO TITLE";
 //ハンドラをつくってみるよ。
@@ -161,7 +165,7 @@ if ($tagmemo_handler->insert($memo_obj, $tags)) {
 } else {
 	//get error message.
 	$message = $tagmemo_handler->getErrors(false);
-	$message = ($message == '') ? 'Your memo is not saved.' : $message; 
+	$message = ($message == '') ? 'Your memo is not saved.' : $message;
 	//show error messsage if insert fail.
 	if (!$is_quickedit) $ret_url = '';
 	redirect_header(XOOPS_URL.'/modules/tagmemo/'.$ret_url, 3, $message);
