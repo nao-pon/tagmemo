@@ -36,12 +36,20 @@ $tagmemo_related_tags = $tagmemo_handler->getRelatedTags();
 
 $memo_array = array_splice($memo_array,$start,$count);
 
+// favicon_src.
+if (is_file(XOOPS_ROOT_PATH . '/class/hyp_common/favicon.php')) {
+	$favicon_src = XOOPS_URL . '/class/hyp_common/favicon.php';
+} else {
+	$favicon_src = '';
+}
+
 $xoopsOption['template_main'] = 'tagmemo_list_ajax.html';
 
 require_once XOOPS_ROOT_PATH.'/class/template.php';
 $xoopsTpl = new XoopsTpl();
 
 $xoopsTpl->assign("memos", $memo_array);
+$xoopsTpl->assign("favicon_src", $favicon_src);
 $xoopsTpl->assign("rel_tags", $tagmemo_related_tags);
 $xoopsTpl->assign("query_condition", $query_condition);
 $xoopsTpl->assign("query_condition_url", urlencode($query_condition));

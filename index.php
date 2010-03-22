@@ -68,6 +68,14 @@ if(strlen($condition)>0){
 	$tagmemo_query=false;
 //	$tagmemo_block_recent_hide = true;
 }
+
+// favicon_src.
+if (is_file(XOOPS_ROOT_PATH . '/class/hyp_common/favicon.php')) {
+	$favicon_src = XOOPS_URL . '/class/hyp_common/favicon.php';
+} else {
+	$favicon_src = '';
+}
+
 $xoopsOption['template_main'] = 'tagmemo_list.html';
 // echo 'my uid =' . $xoopsUser->getVar("uid");
 // ヘッダを書くおまじない。
@@ -76,6 +84,7 @@ $xoopsOption['template_main'] = 'tagmemo_list.html';
 */
 include XOOPS_ROOT_PATH.'/header.php';
 $xoopsTpl->assign("memos", $memo_array);
+$xoopsTpl->assign("favicon_src", $favicon_src);
 
 //version 取得
 $xoopsTpl->assign("tagmemo_version", $xoopsModule->getInfo('version'));

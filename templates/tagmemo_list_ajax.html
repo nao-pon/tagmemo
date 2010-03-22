@@ -21,7 +21,11 @@
 			<a href="#" onClick="return(tagmemoList.list_body_toggle(<{$memo.tagmemo_id}>))"><{$memo.title}></a>
 			<{if $memo.links }>
 				<{foreach item=link from=$memo.links}>
-					<a href="<{$link}>" title="<{$link}>" target="_blank"><img src="./images/ext_link.gif" alt="<{link}>" width="16" height="11" /></a> 
+					<{if $favicon_src }>
+					<a href="<{$link}>" title="<{$link}>" target="_blank" class="extlink"><img src="<{$favicon_src}>?url=<{$link|escape:"url"}>" alt="<{$link}>" width="16" height="16" /></a>
+					<{else}>
+					<a href="<{$link}>" title="<{$link}>" target="_blank"><img src="./images/ext_link.gif" alt="<{link}>" width="16" height="11" /></a>
+					<{/if}>
 				<{/foreach}>
 			<{/if}>
 		</div>
@@ -32,7 +36,7 @@
 			</div>
 		</div>
 	</div>
-<{/foreach}>	
+<{/foreach}>
 </div>
 <{if $pagenav}>
 <hr />

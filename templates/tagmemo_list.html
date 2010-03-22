@@ -46,7 +46,11 @@ var tagmemo_tagslist_url = "<{$xoops_url}>/modules/tagmemo/tagslist.php";
 				<{$memo.title}></a>
 				<{if $memo.links }>
 					<{foreach item=link from=$memo.links}>
-						<a href="<{$link}>" title="<{$link}>" target="_blank"><img src="./images/ext_link.gif" alt="<{$link}>" width="16" height="11" /></a> 
+						<{if $favicon_src }>
+						<a href="<{$link}>" title="<{$link}>" target="_blank" class="extlink"><img src="<{$favicon_src}>?url=<{$link|escape:"url"}>" alt="<{$link}>" width="16" height="16" /></a>
+						<{else}>
+						<a href="<{$link}>" title="<{$link}>" target="_blank"><img src="./images/ext_link.gif" alt="<{$link}>" width="16" height="11" /></a>
+						<{/if}>
 					<{/foreach}>
 				<{/if}>
 				<{if $memo.owner == 1 or $xoops_isadmin == 1}>
@@ -55,18 +59,18 @@ var tagmemo_tagslist_url = "<{$xoops_url}>/modules/tagmemo/tagslist.php";
 					</span>
 				<{/if}>
 			</span>
-		
+
 			<div class="list_date">
 				[<{$memo.tagmemo_id}>] <{$memo.timestamp|date_format:"%Y/%m/%d"}>
 			</div>
 			<div class="list_tag">
 				<{foreach item=tag key="tag_id" from=$memo.tags}>
-					[<a href="<{if $smarty.const._MD_TAGMEMO_SHORTURL}><{$tag|escape:"url"}>.htm<{else}>index.php?tag_id=<{$tag_id}><{/if}>"<{if $taglist_popup}> onClick="return(tagmemoList.getTagslist('<{$tag_id}>',event))"<{/if}>><{$tag}></a>]
+					[<a href="<{if $smarty.const._MD_TAGMEMO_SHORTURL}><{$tag|escape:"url"|replace:'%':'%25'}>.htm<{else}>index.php?tag_id=<{$tag_id}><{/if}>"<{if $taglist_popup}> onClick="return(tagmemoList.getTagslist('<{$tag_id}>',event))"<{/if}>><{$tag}></a>]
 				<{/foreach}>
 			</div>
 		</div>
 
-	<{/foreach}>	
+	<{/foreach}>
 	</div><hr />
 	<div class="pagenav">
 <{$pagenav}>
