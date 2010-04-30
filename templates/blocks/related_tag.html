@@ -36,7 +36,7 @@ if (window.addEventListener) {
   <div id='tagmemo_b_related_suggest_list' class="auto_complete"></div>
   <input type="radio" name="src_type" value="0" <{if $block.src_type == 0}>checked <{/if}>/>Keyword
   <input type="radio" name="src_type" value="1" <{if $block.src_type == 1}>checked <{/if}>/>MemoID
-	
+
 <{*
   <{if $block.query}>
    <input type="radio" name="from" value="all"><{$smarty.const._MB_TAGMEMO_SEARCH_ALL}>
@@ -51,7 +51,7 @@ if (window.addEventListener) {
 <{foreach item=tag_detail from=$block.tag_condition.detail}>
 
 <a href="<{$xoops_url}>/modules/tagmemo/index.php?tag_id=<{$tag_detail.url}>"><img src="<{$xoops_url}>/modules/tagmemo/images/sub.gif" alt="sub"></a>
-<a href="<{$xoops_url}>/modules/tagmemo/<{if $smarty.const._MD_TAGMEMO_SHORTURL}><{$tag_detail.string|escape:"url"}>.htm<{else}>index.php?tag_id=<{$tag_detail.id}><{/if}>" style="font-size:150%;vertical-align: middle;"><{$tag_detail.string}></a>
+<a href="<{$xoops_url}>/modules/tagmemo/<{if $smarty.const._MD_TAGMEMO_SHORTURL}><{$tag_detail.string|escape:"url"|replace:'%':'%25'}>.htm<{else}>index.php?tag_id=<{$tag_detail.id}><{/if}>" style="font-size:150%;vertical-align: middle;"><{$tag_detail.string}></a>
 <br />
 <{/foreach}>
 <{/if}>
