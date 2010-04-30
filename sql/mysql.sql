@@ -33,5 +33,7 @@ PRIMARY KEY (`tag_id`)
 CREATE TABLE `tagmemo_rel` (
 `tag_id` smallint(5) unsigned NOT NULL,
 `tagmemo_id` smallint(5) unsigned NOT NULL,
-PRIMARY KEY (`tag_id`,`tagmemo_id`)
+PRIMARY KEY (`tag_id`,`tagmemo_id`),
+KEY `tag_id` (`tag_id`),
+KEY `tagmemo_id` (`tagmemo_id`)
 ) TYPE=MyISAM;

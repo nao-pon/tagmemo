@@ -9,12 +9,12 @@ $modversion['license'] = 'GPL see LICENSE';
 $modversion['official'] = 0;
 $modversion['image'] = 'images/tagmemo_slogo.png';
 $modversion['dirname'] = 'tagmemo';
- 
+
 // Admin
 $modversion['hasAdmin'] = 1;
 $modversion['adminindex'] = "admin/index.php";
 $modversion['adminmenu'] = "admin/menu.php";
- 
+
 // Menu
 $modversion['hasMain'] = 1;
 $modversion['sub'][] = array(	'name' => _MI_TAGMEMO_LIST,
@@ -63,25 +63,25 @@ $modversion['blocks'][1]['description'] = "Popular Tags";
 
 $modversion['blocks'][2]['file'] = "tag_block.php";
 $modversion['blocks'][2]['name'] = _MI_TAGMEMO_RECENT_TAG_BLOCK;
-$modversion['blocks'][2]['show_func'] = "b_tagmemo_recenttag"; 
+$modversion['blocks'][2]['show_func'] = "b_tagmemo_recenttag";
 $modversion['blocks'][2]['template'] = "recent_tag.html";
 $modversion['blocks'][2]['description'] = "Recent Tags";
 
 $modversion['blocks'][3]['file'] = "tag_block.php";
 $modversion['blocks'][3]['name'] = _MI_TAGMEMO_SERCH_TAG_BLOCK;
-$modversion['blocks'][3]['show_func'] = "b_tagmemo_relatedtag"; 
+$modversion['blocks'][3]['show_func'] = "b_tagmemo_relatedtag";
 $modversion['blocks'][3]['template'] = "related_tag.html";
 $modversion['blocks'][3]['description'] = "Related Tags";
 
 $modversion['blocks'][4]['file'] = "tag_block.php";
 $modversion['blocks'][4]['name'] = "Memo ID Search";
-$modversion['blocks'][4]['show_func'] = "b_tagmemo_id_serch"; 
+$modversion['blocks'][4]['show_func'] = "b_tagmemo_id_serch";
 $modversion['blocks'][4]['template'] = "id_search.html";
 $modversion['blocks'][4]['description'] = "Memo ID Search";
 
 $modversion['blocks'][5]['file'] = "tag_block.php";
 $modversion['blocks'][5]['name'] = _MI_TAGMEMO_TAGCLOUD_BLOCK;
-$modversion['blocks'][5]['show_func'] = "b_tagmemo_cloud"; 
+$modversion['blocks'][5]['show_func'] = "b_tagmemo_cloud";
 $modversion['blocks'][5]['template'] = "cloud_block.html";
 $modversion['blocks'][5]['description'] = "Tagmemo Tag Cloud";
 
@@ -158,6 +158,8 @@ $modversion['config'][] = array(
 	'valuetype' => 'int',
 	'default' => '0',
 	);
+
+$modversion['onUpdate'] = 'include/onupdate.php';
 
 // hold setting value when module update.
 if( ! empty( $_POST['fct'] ) && ! empty( $_POST['op'] ) && $_POST['fct'] == 'modulesadmin' && $_POST['op'] == 'update_ok' && $_POST['dirname'] == $modversion['dirname'] ) {
