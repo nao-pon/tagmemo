@@ -1,6 +1,6 @@
 <{foreach item=poptag from=$block}>
 <div id="tagmemo_tag_block">
-<span>(<{$poptag.count}>) <a href="<{$xoops_url}>/modules/tagmemo/<{if $smarty.const._MD_TAGMEMO_SHORTURL}><{$poptag.tag|escape:"url"|replace:'%':'%25'}>.htm<{else}>index.php?tag_id=<{$poptag.tag_id}><{/if}>"><{$poptag.tag}></a></span>
+<span>(<{$poptag.count}>) <a href="<{$xoops_url}>/modules/tagmemo/<{if $smarty.const._MD_TAGMEMO_SHORTURL}><{$poptag.tag|escape:"url"}>.htm<{else}>index.php?tag_id=<{$poptag.tag_id}><{/if}>"><{$poptag.tag}></a></span>
 
 </div>
 <{/foreach}>
