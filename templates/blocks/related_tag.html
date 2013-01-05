@@ -34,8 +34,8 @@ if (window.addEventListener) {
   <input type="text" name="query" id="tagmemo_src_query" size="14" value="<{$block.query_condition}>" autocomplete="off" />
   <input type="button" onclick="tagmemo_search();" value="<{$smarty.const._MB_TAGMEMO_SEARCH}>" /><br />
   <div id='tagmemo_b_related_suggest_list' class="auto_complete"></div>
-  <input type="radio" name="src_type" value="0" <{if $block.src_type == 0}>checked <{/if}>/>Keyword
-  <input type="radio" name="src_type" value="1" <{if $block.src_type == 1}>checked <{/if}>/>MemoID
+  <input id="tagmemo_src_type_0" type="radio" name="src_type" value="0" <{if $block.src_type == 0}>checked <{/if}>/><label for="tagmemo_src_type_0">Keyword</label>
+  <input id="tagmemo_src_type_1" type="radio" name="src_type" value="1" <{if $block.src_type == 1}>checked <{/if}>/><label for="tagmemo_src_type_1">MemoID</label>
 
 <{*
   <{if $block.query}>
@@ -51,7 +51,7 @@ if (window.addEventListener) {
 <{foreach item=tag_detail from=$block.tag_condition.detail}>
 
 <a href="<{$xoops_url}>/modules/tagmemo/index.php?tag_id=<{$tag_detail.url}>"><img src="<{$xoops_url}>/modules/tagmemo/images/sub.gif" alt="sub"></a>
-<a href="<{$xoops_url}>/modules/tagmemo/<{if $smarty.const._MD_TAGMEMO_SHORTURL}><{$tag_detail.string|escape:"url"|replace:'%':'%25'}>.htm<{else}>index.php?tag_id=<{$tag_detail.id}><{/if}>" style="font-size:150%;vertical-align: middle;"><{$tag_detail.string}></a>
+<a href="<{$xoops_url}>/modules/tagmemo/<{if $smarty.const._MD_TAGMEMO_SHORTURL}><{$tag_detail.string|escape:"url"}>.htm<{else}>index.php?tag_id=<{$tag_detail.id}><{/if}>" style="font-size:150%;vertical-align: middle;"><{$tag_detail.string}></a>
 <br />
 <{/foreach}>
 <{/if}>
