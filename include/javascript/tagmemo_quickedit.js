@@ -29,8 +29,12 @@ function createTagmemoQuickForm() {
 
 if (!document.getElementsByTagName('frameset')[0])
 {
-	if (!createTagmemoQuickForm())
-		alert(tagmemo_msg['retryPlease']);
+	if (!createTagmemoQuickForm()) {
+		// retry once
+		if (!createTagmemoQuickForm()) {
+			alert(tagmemo_msg['retryPlease']);
+		}
+	}
 }
 else
 {
