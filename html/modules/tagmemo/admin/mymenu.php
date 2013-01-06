@@ -9,7 +9,9 @@
 	}
 	include( './menu.php' ) ;
 	$menuitem_dirname = $module->getvar('dirname') ;
-	array_push( $adminmenu , array( 'title' => _PREFERENCES , 'link' => 'admin/admin.php?fct=preferences&op=showmod&mod=' . $module->getvar('mid') ) ) ;
+	$preflink = (defined('XOOPS_CUBE_LEGACY'))? '../legacy/admin/index.php?action=PreferenceEdit&confmod_id='
+	                                          : 'admin/admin.php?fct=preferences&op=showmod&mod=';
+	array_push( $adminmenu , array( 'title' => _PREFERENCES , 'link' => $preflink . $module->getvar('mid') ) ) ;
 	// 管理画面の上部メニュー
 	echo "<div style='font-size: 7pt; padding-right: 20px;padding-bottom: 20px;'>
 		<font style='font-size: large;color: #2F5376;'>" . _MI_TAGMEMO_NAME . "</font>&nbsp;&nbsp;&nbsp;&nbsp;
