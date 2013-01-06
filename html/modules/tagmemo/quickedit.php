@@ -17,7 +17,7 @@ include_once ("./include/wiki_helper.php");
 
 $memo_id = isset($_GET["tagmemo_id"]) ? intval($_GET["tagmemo_id"]) : "";
 //$memo_id = isset($_POST["tagmemo_id"]) ? intval($_POST["tagmemo_id"]) : $memo_id;
-$title = empty($_GET["t"]) ? "" : htmlspecialchars(mb_convert_encoding($_GET["t"],"EUC-JP","UTF-8"))."\n";
+$title = empty($_GET["t"]) ? "" : htmlspecialchars(mb_convert_encoding($_GET["t"], _CHARSET, "UTF-8"))."\n";
 $url = empty($_GET["u"]) ? "" : $_GET["u"];
 $memo_content = $title . (($url)? htmlspecialchars($url)."\n\n":"");
 
@@ -84,6 +84,6 @@ if($memo_id != ""){
 }
 
 $xoopsCachedTemplate = 'db:'.$xoopsOption['template_main'];
-header ("Content-Type: text/html; charset=EUC-JP");
+header ("Content-Type: text/html; charset=" . _CHARSET);
 $xoopsTpl->display($xoopsCachedTemplate);
 ?>
