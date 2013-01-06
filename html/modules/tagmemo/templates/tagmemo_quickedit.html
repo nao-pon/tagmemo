@@ -30,7 +30,7 @@ window.onload = function() {
 <{$helper.map}>
 	<form name="tagmemo_form" id="tagmemo_form" method='post' action="post.php">
 		<input type="hidden" name="tagmemo_id" value="<{$memo.tagmemo_id}>" />
-		<input type="hidden" name="encode_hint" value="คื" />
+		<{if $smarty.const._MD_TAGMEMO_ENCODEHINT}><input type="hidden" name="encode_hint" value="<{$smarty.const._MD_TAGMEMO_ENCODEHINT}>" /><{/if}>
 		<input type="hidden" name="quick_edit" value="1" />
 		<input type="hidden" name="tagmemo_tag_hidden" id="tagmemo_tag_hidden" value="">
 		<div id="tagmemo_header">

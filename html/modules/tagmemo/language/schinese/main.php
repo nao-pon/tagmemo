@@ -38,4 +38,5 @@ define('_MD_TAGMEMO_BOOKMARKLET', "标签记事");
 define('_MD_TAGMEMO_CLOSE2OPEN', "关闭已经开启的书签工具视窗？");
 define('_MD_TAGMEMO_NOTWORKFRAME', "书签工具无法在框架页下使用");
 define('_MD_TAGMEMO_RETRYPLEASE', "书签工具启动失败, 请重新启动。");
+define('_MD_TAGMEMO_ENCODEHINT', '');
 ?>

@@ -38,4 +38,5 @@ define('_MD_TAGMEMO_BOOKMARKLET', "Bookmarklet");
 define('_MD_TAGMEMO_CLOSE2OPEN', "A bookmarklet was already opened. close it for new one?");
 define('_MD_TAGMEMO_NOTWORKFRAME', "Bookmarklet can\'t work in a frame page.");
 define('_MD_TAGMEMO_RETRYPLEASE', "Couldn\'t show a bookmarklet, please retry.");
+define('_MD_TAGMEMO_ENCODEHINT', '');
 ?>

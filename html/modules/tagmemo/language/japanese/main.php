@@ -38,4 +38,5 @@ define('_MD_TAGMEMO_BOOKMARKLET', "たぐめも");
 define('_MD_TAGMEMO_CLOSE2OPEN', "すでに開いているブックマークレットを閉じて新しいウィンドウを開きますか？");
 define('_MD_TAGMEMO_NOTWORKFRAME', "フレームページではブックマークレットを利用できません。");
 define('_MD_TAGMEMO_RETRYPLEASE', "ブックマークレットの起動に失敗しました。もう一度試してください。");
+define('_MD_TAGMEMO_ENCODEHINT', 'ぷ');
 ?>
