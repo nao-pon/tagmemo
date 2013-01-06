@@ -10,7 +10,7 @@ CREATE TABLE `tagmemo` (
 `public` enum('0','1') NOT NULL,
 `timestamp` int(10) unsigned NOT NULL,
 PRIMARY KEY (`tagmemo_id`)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;
 # --------------------------------------------------------
 
 #
@@ -23,7 +23,7 @@ CREATE TABLE `tagmemo_tag` (
 `tag` varchar(20) NOT NULL,
 `suggest` varchar(60) NOT NULL,
 PRIMARY KEY (`tag_id`)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;
 
 
 #
@@ -36,4 +36,4 @@ CREATE TABLE `tagmemo_rel` (
 PRIMARY KEY (`tag_id`,`tagmemo_id`),
 KEY `tag_id` (`tag_id`),
 KEY `tagmemo_id` (`tagmemo_id`)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;
