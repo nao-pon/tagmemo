@@ -4,7 +4,7 @@ function addEngine(name,ext,cat,url)
   window.sidebar.addSearchEngine == "function"))
   {
     window.sidebar.addSearchEngine(
-      url + "/modules/tagmemo/include/src/"+name+".src",
+      url + "/uploads/tagmemo/"+name+".src",
       url + "/modules/tagmemo/images/"+name+"."+ext,
       name,
       cat );

@@ -3,8 +3,8 @@
     description="tagmemo search"
     method="GET"
     action="XOOPS_URL/modules/tagmemo/index.php"
-    queryEncoding="EUC-JP"
-    queryCharset="EUC-JP"
+    queryEncoding="_CHARSET"
+    queryCharset="_CHARSET"
  >
  <input name="query" user>
  <input name="action" value="showall">
@@ -12,6 +12,6 @@
  <input name="andor" value="AND">
  <interpret
      browserResultType="results"
-     charset = "EUC-JP"
+     charset = "_CHARSET"
  >
  </search>

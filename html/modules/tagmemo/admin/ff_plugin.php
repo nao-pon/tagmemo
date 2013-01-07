@@ -15,8 +15,8 @@ if ($op != 'main') {
 		exit('Irregular post found');
 	}
 }
-$filename = XOOPS_ROOT_PATH."/modules/tagmemo/include/src/tagmemo.src";
-$dist = $filename.".dist";
+$dist = XOOPS_ROOT_PATH."/modules/tagmemo/include/src/tagmemo.src.dist";
+$filename = XOOPS_ROOT_PATH."/uploads/tagmemo/tagmemo.src";
 
 $error = '';
 if (!file_exists($filename)) {
@@ -31,7 +31,8 @@ if ($error == '') {
 		fclose($file);
 		
 		if(preg_match("/action=\"XOOPS_URL\/modules\/tagmemo\/index\.php\"/", $content)){
-			$content = preg_replace("/XOOPS_URL/", XOOPS_URL, $content);
+			$content = str_replace('XOOPS_URL', XOOPS_URL, $content);
+			$content = str_replace('_CHARSET', _CHARSET, $content);
 			
 			if ($op == 'seturl') {
 				if ( @$file = fopen($filename,"w") ) {
