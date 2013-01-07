@@ -2,6 +2,15 @@ var TagmemoList = Class.create();
 TagmemoList.prototype = {
 
 	initialize: function(){
+		var rm = $('tagmemo_tagslist');
+		if (rm) {
+			if (rm.parentNode) {
+				rm.parentNode.removeChild(rm);
+			}
+		}
+		var obj = document.createElement('div');
+		obj.id = 'tagmemo_tagslist';
+		document.getElementsByTagName('body')[0].appendChild(obj);
 	},
 	
 
