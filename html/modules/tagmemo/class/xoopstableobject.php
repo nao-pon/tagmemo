@@ -238,7 +238,7 @@ if( ! class_exists( 'XoopsTableObject' ) ) {
 	     */
 		function assignEditFormElement($name,$class,$params)
 		{
-			if (!$this->_form) $this->_form =& new XoopsTableObjectForm;
+			if (!$this->_form) $this->_form = new XoopsTableObjectForm;
 			$className = "XoopsForm". $class;
 			$callstr = '$this->_form->addElement("'.$name.'", new XoopsForm'.$class.'(';
 			$delim = '';
@@ -298,7 +298,7 @@ if( ! class_exists( 'XoopsTableObject' ) ) {
 	     * @deprecated
 	     */
 		function assignListTableElement($name, $type, $caption, $width) {
-			if (!$this->_list) $this->_list =& new XoopsTableObjectList;
+			if (!$this->_list) $this->_list = new XoopsTableObjectList;
 			$this->_list->addElement($name, $type, $caption, $width);
 		}
 		
@@ -1414,7 +1414,7 @@ if( ! class_exists( 'XoopsTableObjectForm' ) ) {
 				$this->_token=0;
 			}
 			
-			$formEdit =& new XoopsThemeForm($this->_caption, $this->_name, $this->_action);
+			$formEdit = new XoopsThemeForm($this->_caption, $this->_name, $this->_action);
 			foreach ($this->_elements as $key=>$formElement) {
 				$formElement->setValue($object->getVar($key,'e'));
 				$formEdit->addElement($formElement,$object->vars[$key]['required']);
