@@ -1,31 +1,44 @@
 <?php
-// $Id$
+// $Id: hyp_kakasi.php,v 1.7 2012/01/08 16:12:36 nao-pon Exp $
 // Hyp_KAKASI Class by nao-pon http://hypweb.net
 ////////////////////////////////////////////////
 
-if( ! class_exists( 'Hyp_KAKASHI' ) )
+if (! function_exists('XC_CLASS_EXISTS')) {
+	require dirname(__FILE__) . '/XC_CLASS_EXISTS.inc.php';
+}
+
+if( ! XC_CLASS_EXISTS( 'Hyp_KAKASHI' ) )
 {
 class Hyp_KAKASHI
 {
 	// 基本設定
 	var $kakasi_path = "/usr/bin/kakasi";    // KAKASI のパス
-	
-	var $encoding = "";       // 文字コード(現状はEUC-JP専用のため使用せず)
-	
+
+	var $encoding;       // 文字コード
+
 	var $tmp_dir = "";        // 分かち書き用キャッシュ保存用ディレクトリ
 	var $gc_probability = 1;  // gc処理する確率 x  x/1000の確率で処理
 	var $cache_expire = 24;   // キャッシュの有効期限(h)
-	
+
 	// 内部変数
 	var $dicts = array();
 	var $cmd = "";
-	
+
 	function Hyp_KAKASHI()
 	{
-		//$this->encoding = _CHARSET ;
-		//$this->tmp_dir = XOOPS_ROOT_PATH . "/cache2/kakasi/";
+		if (defined('HYP_POST_ENCODING')) {
+			$this->encoding = HYP_POST_ENCODING;
+		} else if (defined('_CHARSET')) {
+			$this->encoding = _CHARSET ;
+		} else {
+			$this->encoding = 'EUC-JP';
+		}
+		if (defined('HYP_KAKASI_PATH') && HYP_KAKASI_PATH) {
+			$this->kakasi_path = HYP_KAKASI_PATH . 'kakasi';
+		}
+		$this->add_dict(dirname(__FILE__). '/config/kakasi_dic.txt');
 	}
-	
+
 	function add_dict($dict)
 	{
 		if (is_file($dict))
@@ -33,11 +46,11 @@ class Hyp_KAKASHI
 			array_push($this->dicts,$dict);
 		}
 	}
-	
+
 	function get_wakatigaki(&$str)
 	{
 		if (!$this->kakasi_path) return false;
-		
+
 		if ($this->tmp_dir)
 		{
 			// gc(ガベージコレクト)
@@ -53,40 +66,41 @@ class Hyp_KAKASHI
 							unlink($this->tmp_dir.$file);
 						}
 					}
-					closedir($handle); 
+					closedir($handle);
 				}
 			}
-			
+
 			$tmpfile = $this->tmp_dir.md5($str).".tmp";
-			
+
 			// キャッシュ
 			if (file_exists($tmpfile))
 			{
-				touch($tmpfile);
+				include_once dirname(__FILE__) . '/hyp_common_func.php';
+				HypCommonFunc::touch($tmpfile);
 				$str = join("",file($tmpfile));
 				return true;
 			}
 		}
-		
+
 		$put = $str;
 		$nwa = "";
 		$match = array();
-		if (preg_match_all("/((\"|'|”|’).+?(?:\\2))/",$put,$match,PREG_PATTERN_ORDER))
+		if (preg_match_all("/((\"|').+?(?:\\2))/",$put,$match,PREG_PATTERN_ORDER))
 		{
 			$match[1] = array_unique($match[1]);
 			foreach($match[1] as $rep)
 			{
 				$put = str_replace($rep," ",$put);
 			}
-			
+
 			$put = preg_replace("/ +/"," ",$put);
 			$nwa = join(" ",$match[1])." ";
 		}
-		
+
 		if (!$this->execute($put, "-w -c")) return false;
-		
+
 		$str = $nwa.$put;
-		
+
 		if ($this->tmp_dir)
 		{
 			if ($fp = fopen($tmpfile, "wb"))
@@ -95,16 +109,16 @@ class Hyp_KAKASHI
 				fclose($fp);
 			}
 		}
-		
+
 		return true;
 	}
-	
+
 	function get_keyword(&$str, $limit=10, $minlen=3, $minpoint=2)
 	{
 		$str = preg_replace("/[ \t]+/"," ",$str);
 		$keys = array();
 		$_dat = "";
-		
+
 		foreach (preg_split("/[\r\n]+/",$str) as $_str)
 		{
 			if ((strlen($_dat)+strlen($_str)) > 10000)
@@ -130,10 +144,10 @@ class Hyp_KAKASHI
 				$str = "";
 				return false;
 			}
-			$keys = array_merge($keys,explode(" ", $_dat));			
+			$keys = array_merge($keys,explode(" ", $_dat));
 		}
 		rsort($keys);
-		
+
 		$arr = array();
 		foreach ($keys as $key)
 		{
@@ -165,7 +179,7 @@ class Hyp_KAKASHI
 		}
 		return true;
 	}
-	
+
 	function get_katakana(&$str)
 	{
 		return $this->execute($str, "-kK -HK -JK");
@@ -175,12 +189,12 @@ class Hyp_KAKASHI
 	{
 		return $this->execute($str, "-kH -KH -JH");
 	}
-	
+
 	function get_roma(&$str)
 	{
 		return $this->execute($str, "-Ha -Ka -Ja -Ea -ka");
 	}
-	
+
 	function get_expert(&$str,&$cmd)
 	{
 		$cmd = trim($cmd);
@@ -203,8 +217,14 @@ class Hyp_KAKASHI
 		$ret = false;
 		$dic = "";
 		$cmd = " -ieuc ".$cmd;
-		if (is_file($this->kakasi_path) && (function_exists('is_executable'))? is_executable($this->kakasi_path) : 1)
+		if (@ is_file($this->kakasi_path) && (function_exists('is_executable'))? @ is_executable($this->kakasi_path) : 1)
 		{
+			// 文字エンコーディング変換
+			if ($this->encoding !== 'EUC-JP') {
+				if (! function_exists('mb_convert_encoding')) { return false; }
+				$str = mb_convert_encoding($str, 'EUC-JP', $this->encoding);
+			}
+			// 追加辞書
 			if ($this->dicts)
 			{
 				$dic = " ".join(", ",$this->dicts);
@@ -232,6 +252,10 @@ class Hyp_KAKASHI
 				}
 				fclose($pipes[1]);
 				proc_close($process);
+			}
+			// 文字エンコーディング戻し
+			if ($this->encoding !== 'EUC-JP') {
+				$str = mb_convert_encoding($str, $this->encoding, 'EUC-JP');
 			}
 		}
 		return $ret;
