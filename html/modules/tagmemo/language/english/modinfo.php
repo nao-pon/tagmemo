@@ -31,4 +31,9 @@ define('_MI_TAGMEMO_GOMODULES','Go to Modules');
 define('_MI_TAGMEMO_LIST', "Memos List");
 define('_MI_TAGMEMO_EDIT', "Post New Memo");
 define('_MI_TAGMEMO_CLOUD', "Tag Cloud");
+
+define('_MI_TAGMEMO_ADMENU_MYLANGADMIN',  'Languages');
+define('_MI_TAGMEMO_ADMENU_MYTPLSADMIN',  'Templates');
+define('_MI_TAGMEMO_ADMENU_MYBLOCKSADMIN','Blocks/Permissions');
+define('_MI_TAGMEMO_ADMENU_MYPREFERENCES','Preferences');
 ?>

@@ -27,20 +27,12 @@
 * @package adminPage
 */
 
-/**
-* 管理画面用のヘッダファイル読み込み
-* s
-*/
-
-require_once('../../../include/cp_header.php');
+if( ! defined( 'XOOPS_ROOT_PATH' ) ) exit ;
 
 //(DB update section)
 // suggest用フィールド存在チェック
 tagmemo_admin_set_suggest_dbcheck();
-xoops_cp_header();
 
-// add Hiro
-include('./mymenu.php');
 echo "<h4>Set Suggest</h4>";
 
 if ($_GET['mode'] == "set")
@@ -99,6 +91,4 @@ function tagmemo_admin_set_suggest()
 		echo "<hr />End of data.<br />";
 	}
 }
-
-xoops_cp_footer();
 ?>

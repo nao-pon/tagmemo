@@ -6,7 +6,8 @@
  * Window - Preferences - PHPeclipse - PHP - Code Templates
  */
 
-require_once( '../../../include/cp_header.php' ) ;
+if( ! defined( 'XOOPS_ROOT_PATH' ) ) exit ;
+
 require_once( 'mygrouppermform.php' ) ;
 
 // for "Duplicatable"
@@ -16,11 +17,6 @@ $mydirnumber = $regs[2] === '' ? '' : intval( $regs[2] ) ;
 
 require_once( XOOPS_ROOT_PATH."/modules/$mydirname/include/gtickets.php" ) ;
 
-// language files
-$language = $xoopsConfig['language'] ;
-if( ! file_exists( XOOPS_ROOT_PATH . "/modules/system/language/$language/admin/blocksadmin.php") ) $language = 'english' ;
-include_once( XOOPS_ROOT_PATH . "/modules/system/language/$language/admin.php" ) ;
-
 if( ! empty( $_POST['submit'] ) ) {
 
 	// Ticket Check
@@ -29,8 +25,7 @@ if( ! empty( $_POST['submit'] ) ) {
 	}
 
 	include( "mygroupperm.php" ) ;
-	redirect_header( XOOPS_URL."/modules/$mydirname/admin/permissions.php" , 1 , _MD_AM_DBUPDATED );
-	exit ;
+
 }
 
 
@@ -54,9 +49,6 @@ foreach( $item_list as $item_id => $item_name) {
 	$form->addItem( $item_id , $item_name ) ;
 }
 
-xoops_cp_header();
-include( './mymenu.php' ) ;
 echo $form->render() ;
-xoops_cp_footer();
 
 ?>

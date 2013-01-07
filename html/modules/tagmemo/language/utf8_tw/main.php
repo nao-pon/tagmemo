@@ -38,4 +38,5 @@ define('_MD_TAGMEMO_BOOKMARKLET', "標籤記事");
 define('_MD_TAGMEMO_CLOSE2OPEN', "關閉已經開啟的書籤工具視窗？");
 define('_MD_TAGMEMO_NOTWORKFRAME', "書籤工具無法在框架頁下使用");
 define('_MD_TAGMEMO_RETRYPLEASE', "書簽工具啟動失敗, 請重新啟動。");
+define('_MD_TAGMEMO_ENCODEHINT', '');
 ?>

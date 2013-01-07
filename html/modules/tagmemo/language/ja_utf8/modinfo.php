@@ -31,4 +31,9 @@ define('_MI_TAGMEMO_GOMODULES','Go to Modules');
 define('_MI_TAGMEMO_LIST', "メモリスト");
 define('_MI_TAGMEMO_EDIT', "新規メモ投稿");
 define('_MI_TAGMEMO_CLOUD', "タグクラウド");
+
+define('_MI_TAGMEMO_ADMENU_MYLANGADMIN' ,   '言語定数管理' ) ;
+define('_MI_TAGMEMO_ADMENU_MYTPLSADMIN' ,   'テンプレート管理' ) ;
+define('_MI_TAGMEMO_ADMENU_MYBLOCKSADMIN' , 'ブロック管理/アクセス権限' ) ;
+define('_MI_TAGMEMO_ADMENU_MYPREFERENCES' , '一般設定' ) ;
 ?>

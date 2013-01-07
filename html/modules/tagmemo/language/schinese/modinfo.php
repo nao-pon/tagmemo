@@ -28,4 +28,9 @@ define('_MI_TAGMEMO_GOMODULES','前台首页');
 define('_MI_TAGMEMO_LIST', "记事列表");
 define('_MI_TAGMEMO_EDIT', "新增记事");
 define('_MI_TAGMEMO_CLOUD', "标签云");
+
+define('_MI_TAGMEMO_ADMENU_MYLANGADMIN',  'Languages');
+define('_MI_TAGMEMO_ADMENU_MYTPLSADMIN',  'Templates');
+define('_MI_TAGMEMO_ADMENU_MYBLOCKSADMIN','Blocks/Permissions');
+define('_MI_TAGMEMO_ADMENU_MYPREFERENCES','Preferences');
 ?>

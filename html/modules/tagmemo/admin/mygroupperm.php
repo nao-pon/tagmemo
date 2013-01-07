@@ -79,6 +79,9 @@ if (is_array($_POST['perms']) && !empty($_POST['perms'])) {
 		}
 	}
 }
+
+xoops_result($msg);
+
 /*
 $backlink = XOOPS_URL.'/admin.php';
 if ($module->getVar('hasadmin')) {

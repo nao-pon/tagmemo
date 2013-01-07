@@ -3,8 +3,7 @@
  * Created on 2006/02/13
  */
 
-require_once('../../../include/cp_header.php');
-include_once "../include/gtickets.php" ;
+if( ! defined( 'XOOPS_ROOT_PATH' ) ) exit ;
 
 $op = isset($_POST['op']) ? $_POST['op'] : 'main';
 if ($op != 'main') {
@@ -59,12 +58,10 @@ if ($error == '') {
 	}
 }
 
-xoops_cp_header();
-include('./mymenu.php');  // add Hiro
 if ($error == '') {
 	echo "<h4>Set this site's url to forefox search plugin file.</h4>\n";
 	echo "<div>Are you sure?</div>\n";
-	echo "<form method=\"post\" action=\"ff_plugin.php\">\n";
+	echo "<form method=\"post\" action=\"index.php?page=ff_plugin\">\n";
 	echo "<input type=\"hidden\" name=\"op\" value=\"seturl\"></input>\n";
 	echo "<input type=\"hidden\" name=\"op\" value=\"seturl\"></input>\n";
 	echo $xoopsGTicket->getTicketHtml( __LINE__ );
@@ -74,5 +71,4 @@ if ($error == '') {
 } else {
 	echo "<h4>{$error}</h4>";
 }
-xoops_cp_footer();
 ?>
