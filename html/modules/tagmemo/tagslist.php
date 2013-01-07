@@ -64,6 +64,6 @@ $xoopsTpl->assign('pagenav', $nav->renderNav());
 
 $xoopsCachedTemplate = 'db:'.$xoopsOption['template_main'];
 
-header ("Content-Type: text/plain; charset=EUC-JP");
+header ("Content-Type: text/plain; charset=". _CHARSET );
 $xoopsTpl->display($xoopsCachedTemplate);
 ?>

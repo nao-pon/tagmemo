@@ -175,11 +175,16 @@ class TagmemoTagmemoHandler {// extends XoopsObjectHandler {
 		$ret = $this->_tag_handler->getTagId($tag_var);
 		if ($ret < 1 and $force) {
 			global $xoopsModuleConfig;
-			include_once("./include/hyp_common/hyp_kakasi.php");
+			if (defined('XOOPS_TRUST_PATH') && is_file(XOOPS_TRUST_PATH . '/class/hyp_common/hyp_kakasi.php')) {
+				include_once XOOPS_TRUST_PATH . '/class/hyp_common/hyp_kakasi.php';
+			} else {
+				include_once './include/hyp_common/hyp_kakasi.php';
+			}
 			$wk_obj_tag = & $this->_tag_handler->create(true);
 			$wk_obj_tag->setVar("tag", $tag_var);
 			$ka = new Hyp_KAKASHI();
 			$ka->kakasi_path = $xoopsModuleConfig['kakasi_path'];
+			$ka->encoding = _CHARSET;
 			$suggest = $tag_var;
 			if ($ka->get_hiragana($suggest))
 			{

@@ -74,11 +74,16 @@ function tagmemo_admin_set_suggest_init()
 
 function tagmemo_admin_set_suggest()
 {
-	include_once("../include/hyp_common/hyp_kakasi.php");
+	if (defined('XOOPS_TRUST_PATH') && is_file(XOOPS_TRUST_PATH . '/class/hyp_common/hyp_kakasi.php')) {
+		include_once XOOPS_TRUST_PATH . '/class/hyp_common/hyp_kakasi.php';
+	} else {
+		include_once '../include/hyp_common/hyp_kakasi.php';
+	}
 	global $xoopsDB, $xoopsModuleConfig;
 
 	$ka = new Hyp_KAKASHI();
 	$ka->kakasi_path = $xoopsModuleConfig['kakasi_path'];
+	$ka->encoding = _CHARSET;
 	$query = "SELECT * FROM `".$xoopsDB->prefix("tagmemo_tag")."` WHERE `suggest` = '' OR `suggest` = `tag`";
 	$res = $xoopsDB->query($query);
 	if ($res)

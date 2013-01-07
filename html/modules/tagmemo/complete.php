@@ -18,13 +18,16 @@ $oq = $q = str_replace("\0","",$q);
 
 if ($q !== "")
 {
-	// mbstring のチェック
-	if (!extension_loaded('mbstring'))
-	{
-		include_once('./include/mbstring.php');
+	mysql_connect(XOOPS_DB_HOST, XOOPS_DB_USER, XOOPS_DB_PASS) or die(mysql_error());
+	mysql_select_db(XOOPS_DB_NAME); 
+	
+	if (function_exists('mysql_set_charset')) {
+		mysql_set_charset('utf8');
+	} else {
+		mysql_query('SET NAMES utf8');
 	}
 	
-	$q = addslashes(mb_convert_encoding($q,"EUC-JP","UTF-8"));
+	$q = mysql_real_escape_string($q);
 	
 	if ($q == ":" || $q == "：")
 	{
@@ -39,8 +42,6 @@ if ($q !== "")
 		$order = "";
 	}
 		
-	mysql_connect(XOOPS_DB_HOST, XOOPS_DB_USER, XOOPS_DB_PASS) or die(mysql_error());
-	mysql_select_db(XOOPS_DB_NAME); 
 	
 	$query = "SELECT `tag`, `suggest` FROM `".XOOPS_DB_PREFIX."_tagmemo_tag`".$where.$order." LIMIT 30";
 	
@@ -56,7 +57,7 @@ if ($q !== "")
 }
 
 $oq = '"'.str_replace('"','\"',$oq).'"';
-$ret = "this.setSuggest($oq,new Array(".mb_convert_encoding(join(", ",$tags),"UTF-8","EUC-JP")."),new Array(".mb_convert_encoding(join(", ",$suggests),"UTF-8","EUC-JP")."));";
+$ret = "this.setSuggest($oq,new Array(".join(", ",$tags)."),new Array(".join(", ",$suggests)."));";
 
 header ("Content-Type: text/html; charset=UTF-8");
 header ("Content-Length: ".strlen($ret));
