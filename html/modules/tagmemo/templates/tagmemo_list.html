@@ -65,7 +65,7 @@ var tagmemo_tagslist_url = "<{$xoops_url}>/modules/tagmemo/tagslist.php";
 			</div>
 			<div class="list_tag">
 				<{foreach item=tag key="tag_id" from=$memo.tags}>
-					[<a href="<{if $smarty.const._MD_TAGMEMO_SHORTURL}><{$tag|escape:"url"|replace:'%':'%25'}>.htm<{else}>index.php?tag_id=<{$tag_id}><{/if}>"<{if $taglist_popup}> onClick="return(tagmemoList.getTagslist('<{$tag_id}>',event))"<{/if}>><{$tag}></a>]
+					[<a href="<{if $smarty.const._MD_TAGMEMO_SHORTURL}><{$tag|escape:"url"}>.htm<{else}>index.php?tag_id=<{$tag_id}><{/if}>"<{if $taglist_popup}> onClick="return(tagmemoList.getTagslist('<{$tag_id}>',event))"<{/if}>><{$tag}></a>]
 				<{/foreach}>
 			</div>
 		</div>

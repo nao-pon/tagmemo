@@ -8,6 +8,7 @@
 * XOOPS用ファイルの取り込み
 */
 require_once '../../mainfile.php';
+define("_MD_TAGMEMO_SHORTURL", empty($xoopsModuleConfig['tagmemo_shorturl'])? false : true);
 $memo_id = isset($_GET["tagmemo_id"]) ? intval($_GET["tagmemo_id"]) : "";
 $tagmemo_handler =& xoops_getmodulehandler('tagmemo');
 //ユーザーIDをもらおう

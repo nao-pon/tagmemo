@@ -24,7 +24,7 @@ var tagmemo_tagslist_url = "<{$xoops_url}>/modules/tagmemo/tagslist.php";
 <div id="tagmemo_container">
 <div class="tagcloud">
 	<{foreach item=tag from=$cloud}>
-		<a href="<{if $smarty.const._MD_TAGMEMO_SHORTURL}><{$tag.tag|escape:"url"|replace:"%":"%25"}>.htm<{else}>index.php?tag_id=<{$tag.tag_id}><{/if}>"<{if $taglist_popup}> onClick="return(tagmemoList.getTagslist('<{$tag.tag_id}>',event))"<{/if}>>
+		<a href="<{if $smarty.const._MD_TAGMEMO_SHORTURL}><{$tag.tag|escape:"url"}>.htm<{else}>index.php?tag_id=<{$tag.tag_id}><{/if}>"<{if $taglist_popup}> onClick="return(tagmemoList.getTagslist('<{$tag.tag_id}>',event))"<{/if}>>
 			<span class="<{$tag.popular}>">
 			<span class="<{$tag.fresh}>">
 			<{$tag.tag}>
