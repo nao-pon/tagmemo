@@ -1,4 +1,7 @@
 <?php
+$xoopsOption['nocommon'] = 1;
+require '../../mainfile.php';
+
 define("SOURCE_ENCODING","EUC-JP");
 $url = (!empty($_POST['q']))? $_POST['q'] : "";
 $text = (!empty($_POST['t']))? $_POST['t'] : "";
@@ -15,8 +18,13 @@ if ($url || $text)
 		include_once('./include/mbstring.php');
 	}
 	
-	include_once("include/hyp_common/hyp_common_func.php");
-	include_once("include/hyp_common/hyp_kakasi.php");
+	if (defined('XOOPS_TRUST_PATH') && is_file(XOOPS_TRUST_PATH . '/class/hyp_common/hyp_common_func.php')) {
+		include_once XOOPS_TRUST_PATH . '/class/hyp_common/hyp_common_func.php';
+		include_once XOOPS_TRUST_PATH . '/class/hyp_common/hyp_kakasi.php';
+	} else {
+		include_once 'include/hyp_common/hyp_common_func.php';
+		include_once 'include/hyp_common/hyp_kakasi.php';
+	}
 	
 	$body = $tags = $title = $data = "";
 	
