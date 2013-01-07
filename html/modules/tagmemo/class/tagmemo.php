@@ -19,6 +19,9 @@
 class TagmemoTagmemoHandler {// extends XoopsObjectHandler {
 	//public vars
 	var $forceignorepages = '';
+	
+	private $is_utf8;
+	
 	//Nothing
 	//public function
 	//Constructor
@@ -33,6 +36,8 @@ class TagmemoTagmemoHandler {// extends XoopsObjectHandler {
 		$this->_tag_handler = & xoops_getmodulehandler('tag', 'tagmemo');
 		$this->_memo_handler = & xoops_getmodulehandler('memo', 'tagmemo');
 		$this->_rel_handler = & xoops_getmodulehandler('relation', 'tagmemo');
+		
+		$this->is_utf8 = (strtoupper(_CHARSET) === 'UTF-8');
 	}
 	//Constructor
 	/**
@@ -468,7 +473,7 @@ class TagmemoTagmemoHandler {// extends XoopsObjectHandler {
 	function makeAutolinkData() {
 		$tags = $this->getAllTags(3);
 		list($pattern, $pattern_a, $forceignorelist) = $this->_get_autolink_pattern($tags);
-		$file = XOOPS_ROOT_PATH."/cache/tagmemo_autolink.dat";
+		$file = XOOPS_ROOT_PATH.'/uploads/tagmemo/tagmemo_autolink'.($this->is_utf8? '_utf8' : '').'.dat';
 		$fp = fopen($file, 'wb') or
 			die_message('Cannot write autolink file ' .
 			$file .
@@ -481,6 +486,23 @@ class TagmemoTagmemoHandler {// extends XoopsObjectHandler {
 		fputs($fp, join("\t", $forceignorelist) . "\n");
 		flock($fp, LOCK_UN);
 		fclose($fp);
+		
+		if ($this->is_utf8) {
+			$pattern = mb_convert_encoding($pattern, 'EUC-JP', 'UTF-8');
+			$file = XOOPS_ROOT_PATH."/uploads/tagmemo/tagmemo_autolink.dat";
+			$fp = fopen($file, 'wb') or
+				die_message('Cannot write autolink file ' .
+				$file .
+				'<br />Maybe permission is not writable');
+			set_file_buffer($fp, 0);
+			flock($fp, LOCK_EX);
+			rewind($fp);
+			fputs($fp, $pattern   . "\n");
+			fputs($fp, $pattern_a . "\n");
+			fputs($fp, join("\t", $forceignorelist) . "\n");
+			flock($fp, LOCK_UN);
+			fclose($fp);
+		}
 	}
 
 	function setError($error_str)
@@ -823,7 +845,7 @@ class TagmemoTagmemoHandler {// extends XoopsObjectHandler {
 
 		if (!$auto)
 		{
-			$autofile = XOOPS_ROOT_PATH."/cache/tagmemo_autolink.dat";
+			$autofile = XOOPS_ROOT_PATH.'/uploads/tagmemo/tagmemo_autolink'.($this->is_utf8? '_utf8' : '').'.dat';
 			@list($auto,$dum,$forceignorepages) = @file($autofile);
 			if (!$auto) $auto = "(?!)";
 			$auto = explode("\t",trim($auto));
@@ -831,11 +853,13 @@ class TagmemoTagmemoHandler {// extends XoopsObjectHandler {
 		}
 
 		$this->forceignorepages = $forceignorepages;
+		
+		$utf8 = $this->is_utf8? 'u' : '';
 
 		// ページ数が多い場合は、セパレータ \t で複数パターンに分割されている
 		foreach($auto as $pat)
 		{
-			$pattern = "/(<(?:a).*?<\/(?:a)>|<[^>]*>|&(?:#[0-9]+|#x[0-9a-f]+|[0-9a-zA-Z]+);)|($pat)/is";
+			$pattern = '/(<(?:a).*?<\/(?:a)>|<[^>]*>|&(?:#[0-9]+|#x[0-9a-f]+|[0-9a-zA-Z]+);)|($pat)/is'.$utf8;
 			$str = preg_replace_callback($pattern,array(&$this,'_tag_auto_link_replace'),$str);
 		}
 

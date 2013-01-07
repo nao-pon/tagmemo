@@ -97,7 +97,7 @@ function match_saved_tag(& $data)
 	
 	if (!isset($auto))
 	{
-		$autofile = "../../cache/tagmemo_autolink.dat";
+		$autofile = "../../uploads/tagmemo/tagmemo_autolink.dat";
 		@list($auto,$dum,$forceignorepages) = @file($autofile);
 		if (!$auto) $auto = "(?!)";
 		$auto = explode("\t",trim($auto));
