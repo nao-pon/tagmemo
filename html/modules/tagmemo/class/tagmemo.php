@@ -20,6 +20,8 @@ class TagmemoTagmemoHandler {// extends XoopsObjectHandler {
 	//public vars
 	var $forceignorepages = '';
 	
+	public $mid;
+	
 	private $db;
 	private $is_utf8;
 	private $readonly;
@@ -43,13 +45,15 @@ class TagmemoTagmemoHandler {// extends XoopsObjectHandler {
 		
 		$this->setReadonly();
 		
+		$module_handler =& xoops_gethandler('module');
+		$mModule =& $module_handler->getByDirname('tagmemo');
+		$this->mid = $mModule->mid();
+		
 		// For XCL >= 2.2.1.1 (clear cache of modinfo for submenu control)
 		// Is it XCL's bug? need check next
 		// http://xoopscube.svn.sourceforge.net/viewvc/xoopscube/Package_Legacy/trunk/html/kernel/module.php?view=log
 		if (defined('LEGACY_BASE_VERSION') && version_compare(LEGACY_BASE_VERSION, '2.2.1.1', '>=')) {
-			$module_handler =& xoops_gethandler('module');
-			$thisModule =& $module_handler->getByDirname('tagmemo');
-			$thisModule->modinfo = null;
+			$mModule->modinfo = null;
 		}
 	}
 	//Constructor
@@ -495,9 +499,9 @@ class TagmemoTagmemoHandler {// extends XoopsObjectHandler {
 	 * @return boolean
 	 */
 	function checkGroupPerm($uid = null, $gperm_name = 'tagmemo_submit', $gperm_itemid = 1) {
-		global $xoopsModule, $xoopsUser;
-
-		$gperm_modid = $xoopsModule->mid();
+		global $xoopsUser;
+		
+		$gperm_modid = $this->mid;
 		
 		if (is_null($uid)) {
 			$user = $xoopsUser;
