@@ -19,8 +19,10 @@ $modversion['adminmenu'] = "admin/menu.php";
 $modversion['hasMain'] = 1;
 $modversion['sub'][] = array(	'name' => _MI_TAGMEMO_LIST,
 								'url'  => 'index.php' );
+if (isset($GLOBALS['mTagmemoReadonly']) && !$GLOBALS['mTagmemoReadonly']) {
 $modversion['sub'][] = array(	'name' => _MI_TAGMEMO_EDIT,
 								'url'  => 'edit.php' );
+}
 $modversion['sub'][] = array(	'name' => _MI_TAGMEMO_CLOUD,
 								'url'  => 'tagcloud.php' );
 

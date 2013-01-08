@@ -30,6 +30,10 @@ if(is_object($xoopsUser)){
 $memo = array();
 $tagmemo_handler =& xoops_getmodulehandler('tagmemo');
 $tagmemo_handler->setUid($uid);
+if ($tagmemo_handler->isReadonly()) {
+	redirect_header(XOOPS_URL."/modules/tagmemo/index.php", 3, _NOPERM);
+}
+
 //echo $tagmemo_handler->_condition_uid ;
 if($memo_id != ""){
 	$memo_id =intval($memo_id );

@@ -14,8 +14,10 @@ var tagmemo_tagslist_url = "<{$xoops_url}>/modules/tagmemo/tagslist.php";
 	<div class="mainlink_box">
 		<a href="./index.php" class="mainlink">
 			<img src="./images/page_text.gif" alt="<{$smarty.const._MD_TAGMEMO_IMG_LIST}>" title="<{$smarty.const._MD_TAGMEMO_IMG_LIST}>"></a>
+		<{if !$readonly}>
 		<a href="./edit.php" class="mainlink">
 			<img src="./images/page_edit.gif" alt="<{$smarty.const._MD_TAGMEMO_IMG_EDIT}>" title="<{$smarty.const._MD_TAGMEMO_IMG_EDIT}>"></a>
+		<{/if}>
 		<a href="./tagcloud.php"  class="mainlink">
 			<img src="./images/tagscloud.gif" alt="<{$smarty.const._MD_TAGMEMO_IMG_CLOUD}>" title="<{$smarty.const._MD_TAGMEMO_IMG_CLOUD}>"></a>
 	</div>

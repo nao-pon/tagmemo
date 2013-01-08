@@ -20,7 +20,9 @@ class TagmemoTagmemoHandler {// extends XoopsObjectHandler {
 	//public vars
 	var $forceignorepages = '';
 	
+	private $db;
 	private $is_utf8;
+	private $readonly;
 	
 	//Nothing
 	//public function
@@ -32,12 +34,23 @@ class TagmemoTagmemoHandler {// extends XoopsObjectHandler {
 	*/
 	function TagmemoTagmemoHandler($db=null) {
 //		$this->XoopsObjectHandler($db);
-//		$this->db = & $db;
+		$this->db = & $db;
 		$this->_tag_handler = & xoops_getmodulehandler('tag', 'tagmemo');
 		$this->_memo_handler = & xoops_getmodulehandler('memo', 'tagmemo');
 		$this->_rel_handler = & xoops_getmodulehandler('relation', 'tagmemo');
 		
 		$this->is_utf8 = (strtoupper(_CHARSET) === 'UTF-8');
+		
+		$this->setReadonly();
+		
+		// For XCL >= 2.2.1.1 (clear cache of modinfo for submenu control)
+		// Is it XCL's bug? need check next
+		// http://xoopscube.svn.sourceforge.net/viewvc/xoopscube/Package_Legacy/trunk/html/kernel/module.php?view=log
+		if (defined('LEGACY_BASE_VERSION') && version_compare(LEGACY_BASE_VERSION, '2.2.1.1', '>=')) {
+			$module_handler =& xoops_gethandler('module');
+			$thisModule =& $module_handler->getByDirname('tagmemo');
+			$thisModule->modinfo = null;
+		}
 	}
 	//Constructor
 	/**
@@ -50,7 +63,16 @@ class TagmemoTagmemoHandler {// extends XoopsObjectHandler {
 		}
 		return $instance;
 	}
-
+	
+	function setReadonly($uid = null) {
+		$this->readonly = $this->checkGroupPerm($uid)? false : true;
+		$GLOBALS['mTagmemoReadonly'] = $this->readonly;
+	}
+	
+	function isReadonly() {
+		return $this->readonly;
+	}
+	
 	/**
 	* 新規にタグのオブジェクトを取得
 	*
@@ -59,6 +81,7 @@ class TagmemoTagmemoHandler {// extends XoopsObjectHandler {
 	* @return TagmemoTagObject
 	*/
 	function & createTag($isNew = true) {
+		if ($this->readonly) return false;
 		$this->_ready(true, false, false);
 		$ret = & $this->_tag_handler->create($isNew);
 		return $ret;
@@ -71,6 +94,7 @@ class TagmemoTagmemoHandler {// extends XoopsObjectHandler {
 	* @return TagmemoMemoObject
 	*/
 	function & createMemo($isNew = true) {
+		if ($this->readonly) return false;
 		$this->_ready(false, true, false);
 		$ret = & $this->_memo_handler->create($isNew);
 		return $ret;
@@ -96,6 +120,7 @@ class TagmemoTagmemoHandler {// extends XoopsObjectHandler {
 			$this->setRelation($wk_memo_id, $wk_tag_id);
 		}
 		return $wk_memo_id;*/
+		if ($this->readonly) return false;
 		$ret = false;
 		if ($this->insertMemo($arg_memo, $force)) {
 			$wk_memo_id = $arg_memo->getVar("tagmemo_id");
@@ -111,6 +136,7 @@ class TagmemoTagmemoHandler {// extends XoopsObjectHandler {
 	 * メモオブジェクトを登録
 	 */
 	function insertMemo(&$arg_memo, $force = false) {
+		if ($this->readonly) return false;
 		if (!$this->_memo_handler->insert($arg_memo, $force)) {
 			$this->setError($this->_memo_handler->getErrors(false));
 			return false;
@@ -121,6 +147,7 @@ class TagmemoTagmemoHandler {// extends XoopsObjectHandler {
 	 * タグを登録
 	 */
 	function insertTags($arg_memo_id, $arg_tags, $force = false) {
+		if ($this->readonly) return false;
 		$ret = true;
 		$arr_tags = & $this->_tag2array($arg_tags);
 		$this->_rel_handler->setUpdateMode($force);
@@ -140,6 +167,7 @@ class TagmemoTagmemoHandler {// extends XoopsObjectHandler {
 	* @param TagmemoTagObject
 	*/
 	function deleteMemo($memoObj) {
+		if ($this->readonly) return false;
 		$wk_memo_id = $memoObj->getVar("tagmemo_id");
 		$this->_rel_handler->removeRelation($wk_memo_id);
 		if (!$this->_memo_handler->delete($memoObj)) {
@@ -398,6 +426,7 @@ class TagmemoTagmemoHandler {// extends XoopsObjectHandler {
 	*/
 	function setUid($uid = 0) {
 		$this->_condition_uid = intval($uid);
+		$this->setReadonly($uid);
 	}
 	/**
 	* 検索用のキーワード設定関数
@@ -457,6 +486,77 @@ class TagmemoTagmemoHandler {// extends XoopsObjectHandler {
 		//		return implode($this->_condition_tag, ",");
 	}
 
+	/**
+	 * グループパーミッションのチェック
+	 * @access private
+	 * @param  $gperm_name
+	 * @param  $gperm_itemid
+	 * @param  $gperm_groupid
+	 * @return boolean
+	 */
+	function checkGroupPerm($uid = null, $gperm_name = 'tagmemo_submit', $gperm_itemid = 1) {
+		global $xoopsModule, $xoopsUser;
+
+		$gperm_modid = $xoopsModule->mid();
+		
+		if (is_null($uid)) {
+			$user = $xoopsUser;
+		} else {
+			if ($uid > 0) {
+				$member_handler =& xoops_gethandler('member');
+				$user = $member_handler->getUser($uid);
+			} else {
+				$user = null;
+			}
+		}
+		
+		if (is_object($user)) {
+			$gperm_groupid = $user->getGroups();
+			if ($user->isAdmin($gperm_modid)) {
+				return true;
+			}
+		} else {
+			$gperm_groupid = XOOPS_GROUP_ANONYMOUS;
+		}
+
+		$criteria = new CriteriaCompo(new Criteria('gperm_modid', $gperm_modid));
+		$criteria->add(new Criteria('gperm_name', $gperm_name));
+		$gperm_itemid = intval($gperm_itemid);
+		if ($gperm_itemid > 0) {
+			$criteria->add(new Criteria('gperm_itemid', $gperm_itemid));
+		}
+		if (is_array($gperm_groupid)) {
+			if (in_array(XOOPS_GROUP_ADMIN, $gperm_groupid)) {
+				return true;
+			}
+			$criteria2 = new CriteriaCompo();
+			foreach ($gperm_groupid as $gid) {
+				$criteria2->add(new Criteria('gperm_groupid', $gid), 'OR');
+			}
+			$criteria->add($criteria2);
+		} else {
+			if (XOOPS_GROUP_ADMIN == $gperm_groupid) {
+				return true;
+			}
+			$criteria->add(new Criteria('gperm_groupid', $gperm_groupid));
+		}
+		
+		$sql = 'SELECT COUNT(*) FROM '.$this->db->prefix('group_permission');
+		if (isset($criteria) && is_subclass_of($criteria, 'criteriaelement')) {
+			$sql .= ' '.$criteria->renderWhere();
+		}
+		if ($result = $this->db->query($sql)) {
+			list($count) = $this->db->fetchRow($result);
+		} else {
+			$count = 0;
+		}
+		
+		if ($count > 0) {
+			return true;
+		}
+		return false;
+	}
+	
 	function getMemoCount($tag_id = null) {
 		if ($tag_id) {
 			$this->_set_condition_tag($tag_id);

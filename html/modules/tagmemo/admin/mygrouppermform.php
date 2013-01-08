@@ -156,6 +156,8 @@ class MyXoopsGroupPermForm extends XoopsForm
 		$member_handler =& xoops_gethandler('member');
 		$glist = $member_handler->getGroupList();
 		foreach (array_keys($glist) as $i) {
+			if  ($gperm_handler->checkRight('module_admin', $this->_modid, $i)) continue;
+			
 			// get selected item id(s) for each group
 			$selected = $gperm_handler->getItemIds($this->_permName, $i, $this->_modid);
 			$ele = new MyXoopsGroupFormCheckBox($glist[$i], 'perms['.$this->_permName.']', $i, $selected);

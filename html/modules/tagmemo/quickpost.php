@@ -60,6 +60,11 @@ if(is_object($xoopsUser)){
 	}
 }
 
+$tagmemo_handler->setUid($uid);
+if ($tagmemo_handler->isReadonly()) {
+	redirect_header(XOOPS_URL."/modules/tagmemo/index.php", 3, _NOPERM);
+}
+
 $memo_obj =& $tagmemo_handler->createMemo();
 
 $memo_obj->setVar('uid', $uid);

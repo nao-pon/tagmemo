@@ -85,6 +85,7 @@ $xoopsOption['template_main'] = 'tagmemo_list.html';
 include XOOPS_ROOT_PATH.'/header.php';
 $xoopsTpl->assign("memos", $memo_array);
 $xoopsTpl->assign("favicon_src", $favicon_src);
+$xoopsTpl->assign("readonly", $tagmemo_handler->isReadonly());
 
 //version ผ่ฦภ
 $xoopsTpl->assign("tagmemo_version", $xoopsModule->getInfo('version'));

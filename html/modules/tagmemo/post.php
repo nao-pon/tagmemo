@@ -102,6 +102,11 @@ if(is_object($xoopsUser)){
 	}
 }
 
+$tagmemo_handler->setUid($uid);
+if ($tagmemo_handler->isReadonly()) {
+	redirect_header(XOOPS_URL."/modules/tagmemo/index.php", 3, _NOPERM);
+}
+
 $changed = true;
 if($memo_id != 0){
 	if ( ! $xoopsGTicket->check() ) {

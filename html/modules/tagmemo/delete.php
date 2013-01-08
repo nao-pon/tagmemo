@@ -26,6 +26,12 @@ if(is_object($xoopsUser)){
 	$uid = 0;
 	$isAdmin = false;
 }
+
+$tagmemo_handler->setUid($uid);
+if ($tagmemo_handler->isReadonly()) {
+	redirect_header(XOOPS_URL."/modules/tagmemo/index.php", 3, _NOPERM);
+}
+
 if($memo_id != 0){
 	$memo_obj =& $tagmemo_handler->getMemoObj($memo_id);
 	if (!is_object($memo_obj)) {
