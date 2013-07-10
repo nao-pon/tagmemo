@@ -26,17 +26,58 @@ header ("Content-Type: application/x-javascript; charset="._CHARSET);
 // set vars for javascript dinamically;
 echo <<<EOD
 
+(function(){
+var createTagmemoQuickForm = function (cnt) {
+	if (document.getElementsByTagName('frameset')[0]) {
+		alert(tagmemo_msg['notWorkFrame']);
+		return true;
+	}
+	try {
+		if (! tagmemo_scr || tagmemo_scr.loaded < 4 ) {
+			if (100 < cnt) return false;
+			setTimeout(function(){createTagmemoQuickForm(cnt++);}, 50);
+			return true;
+		}
+		/* Finally create quick form */
+		var title = "<a href='" + tagmemo_baseurl + "' target='_blank'>" + tagmemo_sitename + "</a>";
+		var win;
+		win = new Window('tagmemo_qe_container', {top:100, right:100, width:300, height:280, zIndex:150, opacity:0.95, resizable: true, fixed: true, title: title, footer: tagmemo_version, url: tagmemo_quickurl});
+		win.show();
+		
+		$('tagmemo_qe_container').close = function(){ win.destroy(); };
+		
+		var ifm = $('tagmemo_qe_container_content');
+		var i = 0;
+		var onload = function(){
+			if (i++ > 0) {
+				win.hide();
+			}
+		};
+		ifm.onload = onload;
+		if (document.all) ifm.onreadystatechange = function(){ /* for IE */
+			if (this.readyState == 'complete') {
+				onload();
+			}
+		};
+
+		return true;
+
+	} catch(e) {
+		alert(e);
+		return false;
+	}
+};
+
 var tagmemo_qe_container = document.getElementById('tagmemo_qe_container');
-if (tagmemo_qe_container)
-{
-	if (confirm('{$msg_close2open}'))
-	{
-		document.body.removeChild(tagmemo_qe_container);
+if (tagmemo_qe_container) {
+	if (confirm('{$msg_close2open}')) {
+		tagmemo_qe_container.close();
 		tagmemo_qe_container = null;
 	}
 }
-if (!tagmemo_qe_container)
-{
+
+var tagmemo_scr;
+if (!tagmemo_qe_container) {
 	var tagmemo_baseurl  = '$base';
 	var tagmemo_quickurl = '$url'+ 't=' + encodeURIComponent(document.title) + "&amp;u=" + encodeURIComponent(location.href);
 	var tagmemo_sitename = '$sitename';
@@ -46,51 +87,75 @@ if (!tagmemo_qe_container)
 	tagmemo_msg['notWorkFrame'] = '{$msg_notWorkFrame}';
 	tagmemo_msg['retryPlease'] = '{$msg_retryPlease}';
 	
-	var tagmemo_scr;
-	if (!document.getElementById('TagmemoScriptPrototype'))
-	{
+	var head = document.getElementsByTagName('head')[0] || document.documentElement;
+	
+	if (!document.getElementById('TagmemoScriptPrototype')) {
 		tagmemo_scr = document.createElement('script');
 		tagmemo_scr.id = 'TagmemoScriptPrototype';
 		tagmemo_scr.src = tagmemo_baseurl + '/include/javascript/prototype/prototype.js';
 		tagmemo_scr.type = 'text/javascript';
-		document.getElementsByTagName('head')[0].appendChild(tagmemo_scr);
-	}
-	if (!document.getElementById('TagmemoScriptEffects'))
-	{
-		tagmemo_scr = document.createElement('script');
-		tagmemo_scr.id = 'TagmemoScriptEffects';
-		tagmemo_scr.src = tagmemo_baseurl + '/include/javascript/scriptaculous/effects.js';
-		tagmemo_scr.type = 'text/javascript';
-		document.getElementsByTagName('head')[0].appendChild(tagmemo_scr);
-	}
-	
-	if (tagmemo_scr = document.getElementById('TagmemoStyleWindow'))
-			document.getElementsByTagName('head')[0].removeChild(tagmemo_scr);
-	var style;
-	tagmemo_scr = document.createElement('link');
-	tagmemo_scr.id = 'TagmemoStyleWindow';
-	tagmemo_scr.href = tagmemo_baseurl + '/include/css/windows_js/default.css';
-	tagmemo_scr.rel  = 'stylesheet';
-	tagmemo_scr.type = 'text/css';
-	document.getElementsByTagName('head')[0].appendChild(tagmemo_scr);
-	
-	if (tagmemo_scr = document.getElementById('TagmemoScriptWindow'))
-			document.body.removeChild(tagmemo_scr);
-	tagmemo_scr = document.createElement('script');
-	tagmemo_scr.id = 'TagmemoScriptWindow';
-	tagmemo_scr.src = tagmemo_baseurl + '/include/javascript/windows_js/window.js';
-	tagmemo_scr.type = 'text/javascript';
-	document.body.insertBefore(tagmemo_scr,document.body.firstChild);
-	
-	if (tagmemo_scr = document.getElementById('TagmemoScriptQuickedit'))
-			document.body.removeChild(tagmemo_scr);
-	tagmemo_scr      = document.createElement('script');
-	tagmemo_scr.id = 'TagmemoScriptQuickedit';
-	tagmemo_scr.src  = tagmemo_baseurl + '/include/javascript/tagmemo_quickedit.js';
-	tagmemo_scr.type = 'text/javascript';
-	document.body.insertBefore(tagmemo_scr,document.body.firstChild);
-}
+		tagmemo_scr.done = false;
+		tagmemo_scr.onload = tagmemo_scr.onreadystatechange = function(){ 
+			if ( !tagmemo_scr.done && (!this.readyState || this.readyState === 'loaded' || this.readyState === 'complete') ) {
+				var tagmemo_scr1, tagmemo_scr2, tagmemo_scr3;
+				tagmemo_scr.loaded = 1;
 
+				if (tagmemo_scr1 = document.getElementById('TagmemoScriptEffects'))
+					document.body.removeChild(tagmemo_scr1);
+				tagmemo_scr1 = document.createElement('script');
+				tagmemo_scr1.id = 'TagmemoScriptEffects';
+				tagmemo_scr1.src = tagmemo_baseurl + '/include/javascript/scriptaculous/effects.js';
+				tagmemo_scr1.type = 'text/javascript';
+				tagmemo_scr1.onload = tagmemo_scr1.onreadystatechange = function(){ 
+					if ( !tagmemo_scr1.done && (!this.readyState || this.readyState === 'loaded' || this.readyState === 'complete') ) {
+						tagmemo_scr.loaded++;
+					}
+				};
+				head.appendChild(tagmemo_scr1);
+
+				if (tagmemo_scr2 = document.getElementById('TagmemoScriptWindow'))
+					document.body.removeChild(tagmemo_scr2);
+				tagmemo_scr2 = document.createElement('script');
+				tagmemo_scr2.id = 'TagmemoScriptWindow';
+				tagmemo_scr2.src = tagmemo_baseurl + '/include/javascript/windows_js/window.js';
+				tagmemo_scr2.type = 'text/javascript';
+				tagmemo_scr2.onload = tagmemo_scr2.onreadystatechange = function(){ 
+					if ( !tagmemo_scr2.done && (!this.readyState || this.readyState === 'loaded' || this.readyState === 'complete') ) {
+						tagmemo_scr.loaded++;
+					}
+				};
+				head.appendChild(tagmemo_scr2);
+				
+				var tagmemo_stl;
+				if (tagmemo_stl = document.getElementById('TagmemoStyleWindow'))
+					document.getElementsByTagName('head')[0].removeChild(tagmemo_stl);
+				tagmemo_stl = document.createElement('link');
+				tagmemo_stl.id = 'TagmemoStyleWindow';
+				tagmemo_stl.href = tagmemo_baseurl + '/include/css/windows_js/default.css';
+				tagmemo_stl.rel  = 'stylesheet';
+				tagmemo_stl.type = 'text/css';
+				tagmemo_stl.onload = tagmemo_stl.onreadystatechange = function(){ 
+					if ( !tagmemo_stl.done && (!this.readyState || this.readyState === 'loaded' || this.readyState === 'complete') ) {
+						tagmemo_scr.loaded++;
+					}
+				};
+				head.appendChild(tagmemo_stl);
+				
+				if (!createTagmemoQuickForm(0)) {
+					alert(tagmemo_msg['retryPlease']);
+				}
+			}
+		};
+		head.appendChild(tagmemo_scr);
+	} else {
+		tagmemo_scr = {};
+		tagmemo_scr.loaded = 4;
+		if (!createTagmemoQuickForm(-1)) {
+			alert(tagmemo_msg['retryPlease']);
+		}
+	}
+}
+})();
 EOD;
 exit();
 ?>

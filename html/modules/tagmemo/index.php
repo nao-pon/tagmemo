@@ -120,7 +120,7 @@ if(strlen($condition)>0){
 	$xoopsTpl->assign('pagenav', $nav->renderNav());
 }
 
-$xoopsTpl->assign('bookmarklet',"javascript:if(document.getElementById('tagmemo_scr'))document.body.removeChild(document.getElementById('tagmemo_scr'));(function(){var s=document.createElement('script');s.id='tagmemo_s';s.charset='"._CHARSET."';s.src='".XOOPS_URL."/modules/tagmemo/quickform.php?uid=".$uid."&r='+encodeURIComponent(document.URL);document.body.appendChild(s)})();");
+$xoopsTpl->assign('bookmarklet',"javascript:(function(){var h=document.getElementsByTagName('head')[0]||document.documentElement;if(document.getElementById('tagmemo_s')) h.removeChild(document.getElementById('tagmemo_s'));var s=document.createElement('script');s.id='tagmemo_s';s.charset='"._CHARSET."';s.src='".XOOPS_URL."/modules/tagmemo/quickform.php?uid=".$uid."&r='+encodeURIComponent(document.URL);h.appendChild(s);})();");
 $ff_plugin = isset($xoopsModuleConfig['ff_plugin']) ? $xoopsModuleConfig['ff_plugin'] : 0;
 $xoopsTpl->assign('ff_plugin', $ff_plugin);
 
