@@ -38,6 +38,16 @@ var createTagmemoQuickForm = function (cnt) {
 			setTimeout(function(){createTagmemoQuickForm(cnt++);}, 50);
 			return true;
 		}
+		
+		var is_ie = false;
+		/*@cc_on
+		@if (@_jscript_version >= 10)
+			is_ie = false;
+		@else
+			is_ie = true;
+		@end
+		@*/
+		
 		/* Finally create quick form */
 		var title = "<a href='" + tagmemo_baseurl + "' target='_blank'>" + tagmemo_sitename + "</a>";
 		var win;
@@ -48,17 +58,23 @@ var createTagmemoQuickForm = function (cnt) {
 		
 		var ifm = $('tagmemo_qe_container_content');
 		var i = 0;
-		var onload = function(){
+		var onload = function(isOnload){
+			if (isOnload) {
+				onload.support = true;
+			}
 			if (i++ > 0) {
 				win.hide();
 			}
 		};
-		ifm.onload = onload;
-		if (document.all) ifm.onreadystatechange = function(){ /* for IE */
-			if (this.readyState == 'complete') {
-				onload();
-			}
-		};
+		onload.support = false;
+		ifm.onload = function(){ onload(true); };
+		if (is_ie) {
+			ifm.onreadystatechange = function(){ /* for IE */
+				if (! onload.support && this.readyState == 'complete') {
+					onload(false);
+				}
+			};
+		}
 
 		return true;
 
@@ -98,6 +114,7 @@ if (!tagmemo_qe_container) {
 		tagmemo_scr.onload = tagmemo_scr.onreadystatechange = function(){ 
 			if ( !tagmemo_scr.done && (!this.readyState || this.readyState === 'loaded' || this.readyState === 'complete') ) {
 				var tagmemo_scr1, tagmemo_scr2, tagmemo_scr3;
+				tagmemo_scr.done = true;
 				tagmemo_scr.loaded = 1;
 
 				if (tagmemo_scr1 = document.getElementById('TagmemoScriptEffects'))
@@ -106,8 +123,10 @@ if (!tagmemo_qe_container) {
 				tagmemo_scr1.id = 'TagmemoScriptEffects';
 				tagmemo_scr1.src = tagmemo_baseurl + '/include/javascript/scriptaculous/effects.js';
 				tagmemo_scr1.type = 'text/javascript';
+				tagmemo_scr1.done = false;
 				tagmemo_scr1.onload = tagmemo_scr1.onreadystatechange = function(){ 
 					if ( !tagmemo_scr1.done && (!this.readyState || this.readyState === 'loaded' || this.readyState === 'complete') ) {
+						tagmemo_scr1.done = true;
 						tagmemo_scr.loaded++;
 					}
 				};
@@ -119,8 +138,10 @@ if (!tagmemo_qe_container) {
 				tagmemo_scr2.id = 'TagmemoScriptWindow';
 				tagmemo_scr2.src = tagmemo_baseurl + '/include/javascript/windows_js/window.js';
 				tagmemo_scr2.type = 'text/javascript';
+				tagmemo_scr2.done = false;
 				tagmemo_scr2.onload = tagmemo_scr2.onreadystatechange = function(){ 
 					if ( !tagmemo_scr2.done && (!this.readyState || this.readyState === 'loaded' || this.readyState === 'complete') ) {
+						tagmemo_scr2.done = true;
 						tagmemo_scr.loaded++;
 					}
 				};
@@ -134,8 +155,10 @@ if (!tagmemo_qe_container) {
 				tagmemo_stl.href = tagmemo_baseurl + '/include/css/windows_js/default.css';
 				tagmemo_stl.rel  = 'stylesheet';
 				tagmemo_stl.type = 'text/css';
+				tagmemo_stl.done = false;
 				tagmemo_stl.onload = tagmemo_stl.onreadystatechange = function(){ 
 					if ( !tagmemo_stl.done && (!this.readyState || this.readyState === 'loaded' || this.readyState === 'complete') ) {
+						tagmemo_stl.done = true;
 						tagmemo_scr.loaded++;
 					}
 				};

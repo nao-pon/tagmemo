@@ -10,7 +10,16 @@ TagmemoWindow.prototype = {
 	
 	setWindow: function()
 	{
-		if(document.all)
+		var is_ie = false;
+		/*@cc_on
+		@if (@_jscript_version >= 10)
+			is_ie = false;
+		@else
+			is_ie = true;
+		@end
+		@*/
+
+		if(is_ie)
 			var baseH = parseInt(document.body.offsetHeight);
 		else
 			var baseH = parseInt(window.innerHeight);
