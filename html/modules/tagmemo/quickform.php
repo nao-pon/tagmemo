@@ -9,10 +9,11 @@ include_once "./include/gtickets.php" ;
 
 $token ='token should be created by php here if needed.';
 
+$xoopsurl = (isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) !== 'off')? str_replace('http://', 'https://', XOOPS_URL) : XOOPS_URL;
 $uid = (empty($_GET['uid']))? 0 : (int)$_GET['uid'];
-$url = XOOPS_URL."/modules/tagmemo/quickedit.php?uid=".$uid."&amp;";
-$taggeturl = XOOPS_URL."/modules/tagmemo/get_keyword.php?q=";
-$base = XOOPS_URL.'/modules/tagmemo';
+$url = $xoopsurl."/modules/tagmemo/quickedit.php?uid=".$uid."&amp;";
+$taggeturl = $xoopsurl."/modules/tagmemo/get_keyword.php?q=";
+$base = $xoopsurl.'/modules/tagmemo';
 $sitename = str_replace("'","\'",$xoopsConfig['sitename']." :: ".$xoopsModule->name());
 
 // next version is not a copyright notice. if you'd like to rewrite. It's up to you. 
