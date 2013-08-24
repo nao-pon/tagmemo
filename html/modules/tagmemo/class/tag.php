@@ -56,7 +56,7 @@ class TagmemoTagHandler extends XoopsTableObjectHandler
     ////////////////////////////////////////
 
         //親クラスのコンストラクタ呼出
-        $this->DataObjectHandler($db);
+        $this->XoopsTableObjectHandler($db);
         
     ////////////////////////////////////////
     // 派生クラス固有の定義部分
