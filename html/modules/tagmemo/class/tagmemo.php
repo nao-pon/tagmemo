@@ -159,7 +159,7 @@ class TagmemoTagmemoHandler {// extends XoopsObjectHandler {
 		foreach ($arr_tags as $wk_tag) {
 			$wk_tag_id = $this->getTagId($wk_tag, true, $force);
 			if (!$this->setRelation($arg_memo_id, $wk_tag_id)) {
-				$this->setError('tag: '.htmlspecialchars($wk_tag).' is not related.');
+				$this->setError('tag: '.htmlspecialchars($wk_tag, ENT_COMPAT, _CHARSET).' is not related.');
 				$ret = false;
 			}
 		}

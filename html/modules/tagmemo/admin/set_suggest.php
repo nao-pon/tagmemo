@@ -85,7 +85,7 @@ function tagmemo_admin_set_suggest()
 			$suggest = $data[1];
 			$ka->get_hiragana($suggest);
 			$query = "UPDATE `".$xoopsDB->prefix("tagmemo_tag")."` SET `suggest` = '".addslashes($suggest)."' WHERE `tag_id` = ".$data[0]." LIMIT 1";
-			echo htmlspecialchars($data[1])." -> ".htmlspecialchars($suggest)."<br />";
+			echo htmlspecialchars($data[1], ENT_COMPAT, _CHARSET)." -> ".htmlspecialchars($suggest, ENT_COMPAT, _CHARSET)."<br />";
 			$xoopsDB->queryF($query);
 		}
 		echo "<hr />End of data.<br />";

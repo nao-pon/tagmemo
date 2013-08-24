@@ -12,7 +12,7 @@ require_once( 'mygrouppermform.php' ) ;
 
 // for "Duplicatable"
 $mydirname = basename( dirname( dirname( __FILE__ ) ) ) ;
-if( ! preg_match( '/^(\D+)(\d*)$/' , $mydirname , $regs ) ) echo ( "invalid dirname: " . htmlspecialchars( $mydirname ) ) ;
+if( ! preg_match( '/^(\D+)(\d*)$/' , $mydirname , $regs ) ) echo ( "invalid dirname: " . htmlspecialchars( $mydirname, ENT_COMPAT, _CHARSET ) ) ;
 $mydirnumber = $regs[2] === '' ? '' : intval( $regs[2] ) ;
 
 require_once( XOOPS_ROOT_PATH."/modules/$mydirname/include/gtickets.php" ) ;

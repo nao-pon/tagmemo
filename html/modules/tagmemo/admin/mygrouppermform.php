@@ -370,7 +370,7 @@ class MyXoopsGroupFormCheckBox extends XoopsFormElement
 		if ( isset( $this->_value ) && in_array($option['id'], $this->_value)) {
 			$tree .= ' checked="checked"';
 		}
-		$tree .= " />".$option['name']."<input type=\"hidden\" name=\"".$this->getName()."[parents][".$option['id']."]\" value=\"".implode(':', $parentIds)."\" /><input type=\"hidden\" name=\"".$this->getName()."[itemname][".$option['id']."]\" value=\"".htmlspecialchars($option['name'])."\" /><br />\n";
+		$tree .= " />".$option['name']."<input type=\"hidden\" name=\"".$this->getName()."[parents][".$option['id']."]\" value=\"".implode(':', $parentIds)."\" /><input type=\"hidden\" name=\"".$this->getName()."[itemname][".$option['id']."]\" value=\"".htmlspecialchars($option['name'], ENT_COMPAT, _CHARSET)."\" /><br />\n";
 		if( isset( $option['children'] ) ) foreach ($option['children'] as $child) {
 			array_push($parentIds, $option['id']);
 			$this->_renderOptionTree($tree, $this->_optionTree[$child], $prefix.'&nbsp;-', $parentIds);

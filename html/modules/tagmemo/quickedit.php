@@ -17,9 +17,9 @@ include_once ("./include/wiki_helper.php");
 
 $memo_id = isset($_GET["tagmemo_id"]) ? intval($_GET["tagmemo_id"]) : "";
 //$memo_id = isset($_POST["tagmemo_id"]) ? intval($_POST["tagmemo_id"]) : $memo_id;
-$title = empty($_GET["t"]) ? "" : htmlspecialchars(mb_convert_encoding($_GET["t"], _CHARSET, "UTF-8"))."\n";
+$title = empty($_GET["t"]) ? "" : htmlspecialchars(mb_convert_encoding($_GET["t"], _CHARSET, "UTF-8"), ENT_COMPAT, _CHARSET)."\n";
 $url = empty($_GET["u"]) ? "" : $_GET["u"];
-$memo_content = $title . (($url)? htmlspecialchars($url)."\n\n":"");
+$memo_content = $title . (($url)? htmlspecialchars($url, ENT_COMPAT, _CHARSET)."\n\n":"");
 
 // URL中の & 対策
 $url = str_replace("&","%26",$url);
@@ -29,7 +29,7 @@ $uid = empty($_GET["uid"]) ? 0 : (int)$_GET["uid"];
 //ユーザーIDをもらおう
 if(is_object($xoopsUser)){
 	$uid = $xoopsUser->getVar("uid");
-	$uname = htmlspecialchars($xoopsUser->getVar("uname"));
+	$uname = htmlspecialchars($xoopsUser->getVar("uname"), ENT_COMPAT, _CHARSET);
 	$isAdmin = $xoopsUser->isAdmin($xoopsModule->getVar('mid'));
 	$login = true;
 } else {
@@ -37,7 +37,7 @@ if(is_object($xoopsUser)){
 	{
 		$member_handler =& xoops_gethandler('member');
 		$user =& $member_handler->getUser($uid);
-		$uname = htmlspecialchars($user->getVar("uname"));
+		$uname = htmlspecialchars($user->getVar("uname"), ENT_COMPAT, _CHARSET);
 	}
 	$uid = 0;
 	$isAdmin = false;

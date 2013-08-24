@@ -61,7 +61,7 @@ if(strlen($condition)>0){
 	$tagmemo_query=true;
 	$query_condition = $tagmemo_handler->getQueryCondition();
 	$query_condition = stripslashes($query_condition );
-	$query_condition = htmlspecialchars($query_condition );
+	$query_condition = htmlspecialchars($query_condition, ENT_COMPAT, _CHARSET);
 	$tag_condition = $tagmemo_handler->getTagCondition();
 	$tagmemo_related_tags = $tagmemo_handler->getRelatedTags();
 }else{
