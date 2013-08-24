@@ -4,20 +4,20 @@
 */
 
 /**
-* XoopsTableObjectï¿½Ñ¾ï¿½
+* XoopsTableObject·Ñ¾µ
 */
 include_once dirname(__FILE__).'/xoopstableobject.php';
 
 
 /**
-* ï¿½ï¿½ï¿½ï¿½ï¿½Î¥Ç¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¥ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+* ¥¿¥°¤Î¥Ç¡¼¥¿¥ª¥Ö¥¸¥§¥¯¥È
 * @package Persistence
 * @author twodash <twodash@twodash.net>
 */
 class TagmemoTag extends XoopsTableObject
 {
 /**
-* ï¿½ï¿½ï¿½ó¥¹¥È¥é¥¯ï¿½ï¿½
+* ¥³¥ó¥¹¥È¥é¥¯¥¿
 */
 
 	function TagmemoTag()
@@ -27,12 +27,12 @@ class TagmemoTag extends XoopsTableObject
 		$this->initVar('tag', XOBJ_DTYPE_TXTBOX, null, true, 120);
 		$this->initVar('suggest', XOBJ_DTYPE_TXTBOX, null, true, 60);
 
-		//ï¿½×¥é¥¤ï¿½Þ¥ê¡¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+		//¥×¥é¥¤¥Þ¥ê¡¼¥­¡¼¤ÎÄêµÁ
 		$this->setKeyFields(array('tag_id'));
 
-		//AUTO_INCREMENTÂ°-ï¿½Î¥Õ¥ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-		// - ï¿½ï¿½Ä¤Î¥Æ¡ï¿½ï¿½Ö¥ï¿½ï¿½ï¿½Ë¤Ï¡ï¿½AUTO_INCREMENTÂ°-ï¿½ï¿½ï¿½Ä¥Õ¥ï¿½ï¿½ï¿½ï¿½ï¿½É¤ï¿½
-		//   ï¿½ï¿½Ä¤ï¿½ï¿½ï¿½ï¿½Ê¤ï¿½pï¿½ï¿½Ç¤ï¿½ï¿½ï¿½
+		//AUTO_INCREMENTÂ°À­¤Î¥Õ¥£¡¼¥ë¥ÉÄêµÁ
+		// - °ì¤Ä¤Î¥Æ¡¼¥Ö¥ëÆâ¤Ë¤Ï¡¢AUTO_INCREMENTÂ°À­¤ò»ý¤Ä¥Õ¥£¡¼¥ë¥É¤Ï
+		//   °ì¤Ä¤·¤«¤Ê¤¤Á°Äó¤Ç¤¹¡£
 		$this->setAutoIncrementField('tag_id');
 
 	} 
@@ -40,39 +40,39 @@ class TagmemoTag extends XoopsTableObject
 
 /**
 /**
-* ï¿½ï¿½ï¿½ï¿½ï¿½Î¥ï¿½ï¿½Ö¥ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¥Ï¥ï¿½É¥ï¿½
+* ¥¿¥°¤Î¥ª¥Ö¥¸¥§¥¯¥È¥Ï¥ó¥É¥é
 * @package Persistence
 * @author twodash <twodash@twodash.net>
 */
 class TagmemoTagHandler extends XoopsTableObjectHandler
 {
 /**
-* ï¿½ï¿½ï¿½ó¥¹¥È¥é¥¯ï¿½ï¿½
+* ¥³¥ó¥¹¥È¥é¥¯¥¿
 */
     function TagmemoTagHandler(&$db)
     {
     ////////////////////////////////////////
-    // ï¿½Æ¥ï¿½ï¿½é¥¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¬(ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½)
+    // ³Æ¥¯¥é¥¹¶¦ÄÌÉôÊ¬(½ñ´¹ÉÔÍ×)
     ////////////////////////////////////////
 
-        //ï¿½Æ¥ï¿½ï¿½é¥¹ï¿½Î¥ï¿½ï¿½ó¥¹¥È¥é¥¯ï¿½ï¿½ï¿½Æ½ï¿½
-        $this->XoopsTableObjectHandler($db);
+        //¿Æ¥¯¥é¥¹¤Î¥³¥ó¥¹¥È¥é¥¯¥¿¸Æ½Ð
+        $this->DataObjectHandler($db);
         
     ////////////////////////////////////////
-    // ï¿½ï¿½8ï¿½ï¿½ï¿½é¥¹ï¿½ï¿½Í­ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¬
+    // ÇÉÀ¸¥¯¥é¥¹¸ÇÍ­¤ÎÄêµÁÉôÊ¬
     ////////////////////////////////////////
 
-        //ï¿½Ï¥ï¿½É¥ï¿½ï¿½ï¿½Ð¾Ý¥Æ¡ï¿½ï¿½Ö¥ï¿½Ì¾ï¿½ï¿½ï¿½
+        //¥Ï¥ó¥É¥é¤ÎÂÐ¾Ý¥Æ¡¼¥Ö¥ëÌ¾ÄêµÁ
         $this->tableName = $this->db->prefix('tagmemo_tag');
 
-        //ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½é¥¹Ì¾ï¿½Î¤ï¿½Ê¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-        // - É¸ï¿½ï¿½Î¥Í¡ï¿½ï¿½ß¥ó¥°¤Ë½ï¿½ò¤·¤Æ¤ï¿½ï¿½ï¿½ï¿½ï¿½Ë¤ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+        //´ØÏ¢¥¯¥é¥¹Ì¾¾Î¤ò¾®Ê¸»ú¤ÇÄêµÁ
+        // - É¸½à¤Î¥Í¡¼¥ß¥ó¥°¤Ë½àµò¤·¤Æ¤¤¤ë¾ì¹ç¤Ë¤ÏÀßÄêÉÔÍ×
       $this->objectClassName = 'tagmemotag';
     }
 /**
-* ï¿½ï¿½Ä¥ï¿½ï¿½tï¿½Æ¤Î¥ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+* ³ÈÄ¥ÈÇÁ´¤Æ¤Î¥¿¥°¤ò¼èÆÀ
 * @access public
-* @return array ï¿½ï¿½ï¿½ï¿½IDï¿½ò¥­¡ï¿½ï¿½È¤ï¿½ï¿½Æ¥Ç¡ï¿½ï¿½ï¿½ï¿½Ë¥ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+* @return array ¥¿¥°ID¤ò¥­¡¼¤È¤·¤Æ¥Ç¡¼¥¿¤Ë¥¿¥°¤ò»ý¤ÄÇÛÎó
 */
 	function &getAllTagsEx(){
 		$wk_tags = $this->getTags(0,'tag ASC');
@@ -99,10 +99,10 @@ class TagmemoTagHandler extends XoopsTableObjectHandler
 	}
 
 /**
-* ï¿½Íµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+* ¿Íµ¤¥¿¥°¤ò¼èÆÀ
 * @access public
-* @param integer ï¿½ï¿½ï¿½?ï¿½
-* @return array ï¿½ï¿½Ì¤ò¥­¡ï¿½ï¿½È¤ï¿½ï¿½Æ¥Ç¡ï¿½ï¿½ï¿½ï¿½Ë¥ï¿½ï¿½ï¿½IDï¿½È¥ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+* @param integer ¼èÆÀ¿ô
+* @return array ½ç°Ì¤ò¥­¡¼¤È¤·¤Æ¥Ç¡¼¥¿¤Ë¥¿¥°ID¤È¥¿¥°¤ò»ý¤ÄÇÛÎó
 */
 	function getPopularTag($count = 10,$start = 0){
 		$wk_poptags = $this->getTags(0,'f_count DESC',$count,$start);
@@ -119,10 +119,10 @@ class TagmemoTagHandler extends XoopsTableObjectHandler
 		return $ret;
 	}
 /**
-* ï¿½Ç¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+* ºÇ¿·¥¿¥°¤ò¼èÆÀ
 * @access public
-* @param integer ï¿½ï¿½ï¿½?ï¿½
-* @return array ï¿½ï¿½Ì¤ò¥­¡ï¿½ï¿½È¤ï¿½ï¿½Æ¥Ç¡ï¿½ï¿½ï¿½ï¿½Ë¥ï¿½ï¿½ï¿½IDï¿½È¥ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+* @param integer ¼èÆÀ¿ô
+* @return array ½ç°Ì¤ò¥­¡¼¤È¤·¤Æ¥Ç¡¼¥¿¤Ë¥¿¥°ID¤È¥¿¥°¤ò»ý¤ÄÇÛÎó
 */
 	function getResentTag($count = 10,$start = 0){
 		$wk_poptags = $this->getTags(0,'timestamp DESC',$count,$start);
@@ -140,7 +140,7 @@ class TagmemoTagHandler extends XoopsTableObjectHandler
 	}
 	
 	/**
-	*ï¿½ï¿½ï¿½ï¿½Ê¸ï¿½ï¿½ï¿½ó¤«¤ï¿½IDï¿½ï¿½ï¿½Ö¤ï¿½
+	*¥¿¥°Ê¸»úÎó¤«¤éID¤òÊÖ¤¹
 	*@return int
 	*@param string tagvar by ref
 	*/
@@ -153,12 +153,12 @@ class TagmemoTagHandler extends XoopsTableObjectHandler
         return $ret;		
 	}
     /**
-    * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Õ²Ã¾ï¿½ï¿½ï¿½È¤È¤ï¿½Ë¼ï¿½ï¿½ï¿½
-    *@param string order byï¿½ï¿½
+    * ¥¿¥°¤òÉÕ²Ã¾ðÊó¤È¤È¤â¤Ë¼èÆÀ
+    *@param string order by¶ç
     *@param int limit
     *@param int start
-    *@param array ï¿½ï¿½ï¿½ï¿½IDï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-    *@return array ï¿½ï¿½ï¿½ï¿½IDï¿½ò¥­¡ï¿½ï¿½Ë»ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½IDï¿½È¥ï¿½ï¿½ï¿½ï¿½ÈºÇ¿ï¿½ï¿½ï¿½ï¿½Õ¤Î»ï¿½ï¿½Ñ¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+    *@param array ¥á¥â¤ÎID¤ÎÇÛÎó
+    *@return array ¥¿¥°ID¤ò¥­¡¼¤Ë»ý¤Ä ¥¿¥°ID¤È¥¿¥°¤ÈºÇ¿·ÆüÉÕ¤Î»ÈÍÑ¿ô¤ÎÇÛÎó
     */
 		function &getTags($memo_ids=false, $arg_order="", $limit=0, $start=0)
 		{
