@@ -80,7 +80,7 @@ function tagmemo_admin_set_suggest()
 	$res = $xoopsDB->query($query);
 	if ($res)
 	{
-		while($data = mysql_fetch_row($res))
+		while($data = $xoopsDB->fetchRow($res))
 		{
 			$suggest = $data[1];
 			$ka->get_hiragana($suggest);

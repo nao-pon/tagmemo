@@ -18,18 +18,17 @@ $oq = $q = str_replace("\0","",$q);
 
 if ($q !== "")
 {
-	mysql_connect(XOOPS_DB_HOST, XOOPS_DB_USER, XOOPS_DB_PASS) or die(mysql_error());
-	mysql_select_db(XOOPS_DB_NAME); 
+	$link = mysqli_connect(XOOPS_DB_HOST, XOOPS_DB_USER, XOOPS_DB_PASS, XOOPS_DB_NAME) or die(mysql_error());
 	
-	if (function_exists('mysql_set_charset')) {
-		mysql_set_charset('utf8');
+	if (function_exists('mysqli_set_charset')) {
+		mysqli_set_charset($link, 'utf8');
 	} else {
-		mysql_query('SET NAMES utf8');
+		mysqli_query($link, 'SET NAMES utf8');
 	}
 	
-	$q = mysql_real_escape_string($q);
+	$q = mysqli_real_escape_string($link, $q);
 	
-	if ($q == ":" || $q == "¡§")
+	if ($q == ":" || $q == "ï¼š")
 	{
 		$oq = "";
 		$where = "";
@@ -46,9 +45,9 @@ if ($q !== "")
 	$query = "SELECT `tag`, `suggest` FROM `".XOOPS_DB_PREFIX."_tagmemo_tag`".$where.$order." LIMIT 30";
 	
 	$suggests = $tags = array();
-	if ($result = mysql_query($query))
+	if ($result = mysqli_query($link, $query))
 	{
-		while($dat = mysql_fetch_array($result))
+		while($dat = mysqli_fetch_array($result))
 		{
 			$tags[] = '"'.str_replace('"','\"',$dat[0]).'"';
 			$suggests[] = '"'.str_replace('"','\"',$dat[1]).'"';
