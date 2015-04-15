@@ -11,7 +11,7 @@ require_once '../../mainfile.php';
 
 //GIJOE さんのワンタイムチケット
 include_once "./include/gtickets.php" ;
-$myts =& MyTextSanitizer::getInstance();
+(method_exists('MyTextSanitizer', 'sGetInstance') and $myts =& MyTextSanitizer::sGetInstance()) || $myts =& MyTextSanitizer::getInstance();
 
 include_once ("./include/wiki_helper.php");
 
@@ -46,7 +46,7 @@ if($memo_id != ""){
 		if ($memo['uid'] == 0) {
 			//@future password check
 			//$password = isset($_POST["password"]) ? $_POST["password"] : "";
-			//$ts =& MyTextSanitizer::getInstance();
+			//(method_exists('MyTextSanitizer', 'sGetInstance') and $ts =& MyTextSanitizer::sGetInstance()) || $ts =& MyTextSanitizer::getInstance();
 			//if ($ts->stripSlashesGPC($password) != $memo['password'])) {
 			//	$memo['check_pw'] = true;
 			//}

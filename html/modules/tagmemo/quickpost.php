@@ -51,7 +51,7 @@ if(is_object($xoopsUser)){
 } else {
 	// uname, pass があれば uid を Get!
 	if(isset($_POST["uname"]) && isset($_POST["pass"])) {
-		$myts =& MyTextSanitizer::getInstance();
+		(method_exists('MyTextSanitizer', 'sGetInstance') and $myts =& MyTextSanitizer::sGetInstance()) || $myts =& MyTextSanitizer::getInstance();
 		$uname = $myts->stripSlashesGPC($_POST["uname"]);
 		$pass = $myts->stripSlashesGPC($_POST["pass"]);
 		$member_handler =& xoops_gethandler('member');

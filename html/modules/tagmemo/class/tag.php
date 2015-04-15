@@ -221,7 +221,7 @@ class TagmemoTagHandler extends XoopsTableObjectHandler
 				if (!$result) {
 					return $ret;
 				}
-				$ts =& MyTextSanitizer::getInstance();
+				(method_exists('MyTextSanitizer', 'sGetInstance') and $ts =& MyTextSanitizer::sGetInstance()) || $ts =& MyTextSanitizer::getInstance();
 				while ($myrow = $this->db->fetchArray($result)) {
 					$record = array();
 					$wk_id = $myrow['tag_id'];

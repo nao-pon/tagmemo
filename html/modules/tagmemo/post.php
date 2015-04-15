@@ -68,7 +68,7 @@ if(preg_match("/^([^\r\n]{0,120})/i", $title, $matches)){
 }
 
 // タイトル用に装飾タグ(BBコードなど)を除去
-$myts =& MyTextSanitizer::getInstance();
+(method_exists('MyTextSanitizer', 'sGetInstance') and $myts =& MyTextSanitizer::sGetInstance()) || $myts =& MyTextSanitizer::getInstance();
 $title = $myts->displayTarea($title);
 $title = trim(strip_tags(preg_replace('#<(script|style).*?/\\1>#is', '', $title)));
 
@@ -88,7 +88,7 @@ if(is_object($xoopsUser)){
 	// uname, pass があれば uid を Get!
 	if(!empty($_POST["uname"]) && !empty($_POST["pass"])) {
 		include_once(XOOPS_ROOT_PATH."/class/module.textsanitizer.php");
-		$myts =& MyTextSanitizer::getInstance();
+		(method_exists('MyTextSanitizer', 'sGetInstance') and $myts =& MyTextSanitizer::sGetInstance()) || $myts =& MyTextSanitizer::getInstance();
 		$uname = $myts->stripSlashesGPC($_POST["uname"]);
 		$pass = $myts->stripSlashesGPC($_POST["pass"]);
 		$member_handler =& xoops_gethandler('member');
@@ -117,7 +117,7 @@ if($memo_id != 0){
 		redirect_header(XOOPS_URL."/modules/tagmemo/index.php", 3, 'Such memo does not exist');
 	}
 	$memo_owner = $memo_obj->getVar('uid');
-	$ts =& MyTextSanitizer::getInstance();
+	(method_exists('MyTextSanitizer', 'sGetInstance') and $ts =& MyTextSanitizer::sGetInstance()) || $ts =& MyTextSanitizer::getInstance();
 	if ($memo_obj->getVar('public') == 0 && !$isAdmin) {
 		if ($memo_owner == 0) {
 			//@future password check

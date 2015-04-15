@@ -8,7 +8,7 @@
 * XOOPS用ファイルの取り込み
 */
 require_once '../../mainfile.php';
-$myts =& MyTextSanitizer::getInstance();
+(method_exists('MyTextSanitizer', 'sGetInstance') and $myts =& MyTextSanitizer::sGetInstance()) || $myts =& MyTextSanitizer::getInstance();
 
 define("_MD_TAGMEMO_SHORTURL", empty($xoopsModuleConfig['tagmemo_shorturl'])? false : true);
 

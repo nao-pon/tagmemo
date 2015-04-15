@@ -11,7 +11,7 @@ require_once '../../mainfile.php';
 
 //GIJOE さんのワンタイムチケット
 include_once "./include/gtickets.php" ;
-$myts =& MyTextSanitizer::getInstance();
+(method_exists('MyTextSanitizer', 'sGetInstance') and $myts =& MyTextSanitizer::sGetInstance()) || $myts =& MyTextSanitizer::getInstance();
 
 include_once ("./include/wiki_helper.php");
 

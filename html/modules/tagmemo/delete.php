@@ -43,7 +43,7 @@ if($memo_id != 0){
 		if ($memo_owner == 0) {
 			//@future password check
 			//$password = isset($_POST["password"]) ? $_POST["password"] : "";
-			//$ts =& MyTextSanitizer::getInstance();
+			//(method_exists('MyTextSanitizer', 'sGetInstance') and $ts =& MyTextSanitizer::sGetInstance()) || $ts =& MyTextSanitizer::getInstance();
 			//if ($ts->stripSlashesGPC($password) != $memo_obj->getVar('password', 'n')) {
 				redirect_header(XOOPS_URL."/modules/tagmemo/index.php", 3, _NOPERM);
 			//}

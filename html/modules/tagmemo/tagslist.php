@@ -9,7 +9,7 @@
 */
 require_once '../../mainfile.php';
 
-$myts =& MyTextSanitizer::getInstance();
+(method_exists('MyTextSanitizer', 'sGetInstance') and $myts =& MyTextSanitizer::sGetInstance()) || $myts =& MyTextSanitizer::getInstance();
 $tag_id = empty($_GET["tag_id"]) ? "" : preg_replace("/[^\d,]+/","",$_GET["tag_id"]);
 $condition = $tag_id;
 $tag_id = explode(",",$tag_id);

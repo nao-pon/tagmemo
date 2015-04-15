@@ -43,7 +43,7 @@ function tagmemo_search($queryarray, $andor, $limit, $offset, $userid = 0)
 	$sql .= " ORDER BY m.timestamp DESC";
 	$result = $xoopsDB->query($sql,$limit,$offset);
 	
-	$myts =& MyTextSanitizer::getInstance();
+	(method_exists('MyTextSanitizer', 'sGetInstance') and $myts =& MyTextSanitizer::sGetInstance()) || $myts =& MyTextSanitizer::getInstance();
 	
 	// for XOOPS search module.
 	// http://xoops.suinyeze.com/modules/mydownloads/singlefile-cid-6-lid-10.html
