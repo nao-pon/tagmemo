@@ -1075,7 +1075,7 @@ if( ! class_exists( 'XoopsTableObjectHandler' ) ) {
 		 * 
 		 * @return	mixed Array			検索結果レコードの配列
 		 */
-		function &getObjects($criteria = null, $id_as_key = false, $fieldlist="", $distinct = false, $joindef = false)
+		function &getObjects($criteria = null, $id_as_key = false, $fieldlist="", $distinct = false, $joindef = false, $having = "")
 		{
 			$records = array();
 			//今のところは、非常に限定された条件でしかキャッシュを使えない
