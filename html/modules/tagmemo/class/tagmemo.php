@@ -60,7 +60,7 @@ class TagmemoTagmemoHandler {// extends XoopsObjectHandler {
 	/**
 	* コンストラクタ
 	*/
-	function & getInstance(& $db) {
+	public static function & getInstance(& $db) {
 		static $instance;
 		if (!isset ($instance)) {
 			$instance = new TagmemoTagmemoHandler($db);
